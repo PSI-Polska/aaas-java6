@@ -1,0 +1,27 @@
+@startuml
+
+title Call Script when synchronization is not running
+
+actor ExternalSource
+boundary Gateway
+control ScriptsExecutioner as Executioner
+control ScriptsSynchronizer as Synchronizer
+boundary TimeSeriesRepository as TSRepo
+boundary EngineGateway as Engine
+
+ExternalSource -> Gateway: execute(CalculationDefinition)
+Gateway -> Executioner: call
+Executioner -> Synchronizer: isUnderSynchronization?
+Synchronizer -> Executioner: {false}
+' Executioner -\ Gateway: {scriptExecutionStarted}
+Executioner -> TSRepo: read(CalcDef.TsInIds)
+TSRepo -> Executioner: {TSData}
+' Executioner -> Engine: run(CalculationDefinition, TSDataIn})
+Executioner -\ Engine: schedule(CalculationDefinition, TSDataIn})
+Engine -> Engine
+Engine -\ Executioner: {TSDataOut}
+Executioner -> TSRepo: save(TSDataOut)
+TSRepo -> Executioner
+Executioner -> Gateway: {calculationResult}
+
+@enduml
