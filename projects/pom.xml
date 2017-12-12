@@ -49,6 +49,13 @@
                 <version>${version.kotlintest}</version>
                 <scope>test</scope>
             </dependency>
+
+            <dependency>
+                <groupId>com.nhaarman</groupId>
+                <artifactId>mockito-kotlin</artifactId>
+                <version>1.5.0</version>
+                <scope>test</scope>
+            </dependency>
         </dependencies>
     </dependencyManagement>
 
@@ -66,11 +73,6 @@
                             <goals>
                                 <goal>compile</goal>
                             </goals>
-                            <configuration>
-                                <sourceDirs>
-                                    <source>src/main/kotlin</source>
-                                </sourceDirs>
-                            </configuration>
                         </execution>
                         <execution>
                             <id>test-compile</id>
@@ -78,11 +80,6 @@
                             <goals>
                                 <goal>test-compile</goal>
                             </goals>
-                            <configuration>
-                                <sourceDirs>
-                                    <source>src/test/kotlin</source>
-                                </sourceDirs>
-                            </configuration>
                         </execution>
                     </executions>
                 </plugin>
