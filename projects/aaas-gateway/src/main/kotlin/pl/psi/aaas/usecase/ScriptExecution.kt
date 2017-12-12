@@ -20,9 +20,12 @@ interface ScriptExecution {
     fun call(calcDef: CalculationDefinition)
 }
 
-internal class JustScriptExecution(val synchronizer: ScriptSynchronizer) : ScriptExecution {
+internal class JustScriptExecution(val synchronizer: ScriptSynchronizer,
+                                   val tsRepository: TimeSeriesRepository) : ScriptExecution {
 
     override fun call(calcDef: CalculationDefinition) {
         synchronizer.isUnderSynchronization()
+
+        var inTs = calcDef.timeSeriesIdsIn.map { tsRepository.read(it) }
     }
 }
