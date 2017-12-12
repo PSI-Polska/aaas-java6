@@ -5,4 +5,5 @@ typealias TS = Array<Long>
 
 interface TimeSeriesRepository {
     fun read(tsId: TsId): TS
+    fun save(id: TsId, tsValues: TS)
 }
