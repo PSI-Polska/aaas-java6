@@ -10,8 +10,8 @@ import java.util.concurrent.CompletableFuture
  * @property calculationScriptPath not empty path to calculation R script
  */
 // TODO 01.08.2017 kskitek: change TsIdIn and Out to TSDef from TS-API package
-data class CalculationDefinition(val timeSeriesIdsIn: List<Long>,
-                                 val timeSeriesIdsOut: List<Long>,
+data class CalculationDefinition(val timeSeriesIdsIn: Map<String, Long>,
+                                 val timeSeriesIdsOut: Map<String, Long>,
                                  val calculationScriptPath: String)
 
 typealias CalculationResult = CompletableFuture<Unit>
@@ -21,11 +21,14 @@ interface ScriptExecution {
 }
 
 internal class JustScriptExecution(val synchronizer: ScriptSynchronizer,
-                                   val tsRepository: TimeSeriesRepository) : ScriptExecution {
+                                   val tsRepository: TimeSeriesRepository,
+                                   val engine: Engine) : ScriptExecution {
 
     override fun call(calcDef: CalculationDefinition) {
         synchronizer.isUnderSynchronization()
 
-        var inTs = calcDef.timeSeriesIdsIn.map { tsRepository.read(it) }
+        val inTs = calcDef.timeSeriesIdsIn.map { it.key to tsRepository.read(it.value) }
+
+        engine.schedule(calcDef, inTs)
     }
 }
