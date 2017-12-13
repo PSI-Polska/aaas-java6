@@ -7,11 +7,14 @@ import pl.psi.aaas.usecase.Engine
 import pl.psi.aaas.usecase.MappedTS
 import java.util.logging.Logger
 
+
 internal class RServeEngine(val configuration: REngineConfiguration) : Engine {
     private val log = Logger.getLogger(this.javaClass.name)
 
     override fun schedule(calcDef: CalculationDefinition, tsValues: MappedTS): MappedTS {
         val conn = getConnection()
+//        val factory = RenjinScriptEngineFactory()
+//        val scriptEngine = factory.getScriptEngine(SessionBuilder().build())
 
         source(calcDef, conn)
         sendValues(tsValues, conn)
