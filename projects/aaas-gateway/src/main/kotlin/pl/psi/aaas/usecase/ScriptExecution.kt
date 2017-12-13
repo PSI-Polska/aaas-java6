@@ -1,11 +1,9 @@
 package pl.psi.aaas.usecase
 
-import java.util.concurrent.CompletableFuture
-
 typealias Symbol = String
 
 /**
- * DTO to move calculation definition information. Required by [CalculationGateway].
+ * DTO to move calculation definition information.
  *
  * @property timeSeriesIdsIn Time Series IN identifiers
  * @property timeSeriesIdsOut Time Series OUT identifiers
@@ -16,12 +14,19 @@ data class CalculationDefinition(val timeSeriesIdsIn: Map<Symbol, Long>,
                                  val timeSeriesIdsOut: Map<Symbol, Long>,
                                  val calculationScriptPath: String)
 
-typealias CalculationResult = CompletableFuture<Unit>
-
 interface ScriptExecution {
     fun call(calcDef: CalculationDefinition)
 }
 
+/**
+ * Calculation Exception.
+ *
+ * @property message mandatory not empty message
+ * @property cause optional cause
+ */
+class CalculationException(override val message: String, override val cause: Throwable? = null) : RuntimeException(message)
+
+// TODO 13.12.2017 kskitek: hot to name this class?!
 internal class JustScriptExecution(val synchronizer: ScriptSynchronizer,
                                    val tsRepository: TimeSeriesRepository,
                                    val engine: Engine) : ScriptExecution {

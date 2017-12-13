@@ -1,7 +1,7 @@
 package pl.psi.aaas.usecase
 
 typealias TsId = Long
-typealias TS = Array<Long>
+typealias TS = DoubleArray
 
 interface TimeSeriesRepository {
     fun read(tsId: TsId): TS

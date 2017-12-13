@@ -8,16 +8,16 @@ val ValidDefinition = CalculationDefinition(
         mapOf("Y" to 101L, "Z" to 102L),
         "validScriptPath")
 
-val TS1 = arrayOf(1L, 1, 1, 1)
+val TS1 = doubleArrayOf(1.0, 1.0, 1.0, 1.0)
 val TS1M = "A" to TS1
-val TS2 = arrayOf(2L, 2, 2, 2)
+val TS2 = doubleArrayOf(2.0, 2.0, 2.0, 2.0)
 val TS2M = "B" to TS2
-val TS3 = arrayOf(3L, 3, 3, 3)
+val TS3 = doubleArrayOf(3.0, 3.0, 3.0, 3.0)
 val TS3M = "C" to TS3
 
-val TS1Res = arrayOf(-1L, -1, -1, -1)
+val TS1Res = doubleArrayOf(-1.0, -1.0, -1.0, -1.0)
 val TS1ResM = "Y" to TS1Res
-val TS2Res = arrayOf(-2L, -2, -2, -2)
+val TS2Res = doubleArrayOf(-2.0, -2.0, -2.0, -2.0)
 val TS2ResM = "Z" to TS2Res
 
 class ScriptExecutionTest : StringSpec() {
@@ -26,7 +26,7 @@ class ScriptExecutionTest : StringSpec() {
             on { isUnderSynchronization() } doReturn false
         }
         val TsRepo = mock<TimeSeriesRepository> {
-            on { read(any()) } doReturn arrayOf()
+            on { read(any()) } doReturn doubleArrayOf()
             on { read(eq(1L)) } doReturn TS1
             on { read(eq(2L)) } doReturn TS2
             on { read(eq(3L)) } doReturn TS3
