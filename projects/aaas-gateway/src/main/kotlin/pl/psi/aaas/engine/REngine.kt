@@ -23,7 +23,17 @@ internal class RServeEngine(val configuration: REngineConfiguration) : Engine {
     }
 
     private fun mapDfToTS(resultDf: RList, calcDef: CalculationDefinition): MappedTS {
-        TODO("not implemented")
+        val (results, noResults) = calcDef.timeSeriesIdsOut
+                .map { it.key to resultDf[it.key] as REXP? }
+                .partition { it.second != null }
+
+        return if (noResults.isNotEmpty()) {
+            log.severe("""Definition: ${calcDef.calculationScriptPath} did not return required symbols: $noResults""")
+            // TODO 14.12.2017 kskitek: throw exception mby?!
+            emptyList()
+        } else {
+            results.map { it.first to it.second!!.asDoubles() }
+        }
     }
 
     private fun execute(conn: RConnection): REXP {
