@@ -1,6 +1,7 @@
 package pl.psi.aaas.engine
 
 import org.rosuda.REngine.REXP
+import org.rosuda.REngine.RList
 import org.rosuda.REngine.Rserve.RConnection
 import pl.psi.aaas.usecase.CalculationDefinition
 import pl.psi.aaas.usecase.Engine
@@ -13,16 +14,16 @@ internal class RServeEngine(val configuration: REngineConfiguration) : Engine {
 
     override fun schedule(calcDef: CalculationDefinition, tsValues: MappedTS): MappedTS {
         val conn = getConnection()
-//        val factory = RenjinScriptEngineFactory()
-//        val scriptEngine = factory.getScriptEngine(SessionBuilder().build())
 
         source(calcDef, conn)
         sendValues(tsValues, conn)
 //        setAdditionalParameters()
-        val result = execute(conn)
-        val doubles = result.asDoubles() // TODO 13.12.2017 kskitek: what if result is vector?!
+        val resultDf = execute(conn).asList()
+        return mapDfToTS(resultDf, calcDef)
+    }
 
-        return listOf("X" to doubles)
+    private fun mapDfToTS(resultDf: RList, calcDef: CalculationDefinition): MappedTS {
+        TODO("not implemented")
     }
 
     private fun execute(conn: RConnection): REXP {
