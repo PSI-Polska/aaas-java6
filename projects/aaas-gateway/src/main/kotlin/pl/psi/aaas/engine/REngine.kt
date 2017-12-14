@@ -9,7 +9,7 @@ import pl.psi.aaas.usecase.MappedTS
 import java.util.logging.Logger
 
 
-internal class RServeEngine(val configuration: REngineConfiguration) : Engine {
+internal class RServeEngine(private val configuration: REngineConfiguration) : Engine {
     private val log = Logger.getLogger(this.javaClass.name)
 
     override fun schedule(calcDef: CalculationDefinition, tsValues: MappedTS): MappedTS {
@@ -31,9 +31,8 @@ internal class RServeEngine(val configuration: REngineConfiguration) : Engine {
             log.severe("""Definition: ${calcDef.calculationScriptPath} did not return required symbols: $noResults""")
             // TODO 14.12.2017 kskitek: throw exception mby?!
             emptyList()
-        } else {
-            results.map { it.first to it.second!!.asDoubles() }
-        }
+        } else results.map { it.first to it.second!!.asDoubles() }
+
     }
 
     private fun execute(conn: RConnection): REXP {
