@@ -8,6 +8,7 @@ import pl.psi.aaas.usecase.CalculationDefinition
 import pl.psi.aaas.usecase.Engine
 import pl.psi.aaas.usecase.MappedTS
 import pl.psi.aaas.usecase.Symbol
+import java.util.Collections.emptyList
 
 
 class RServeEngine(private val configuration: REngineConfiguration) : Engine {

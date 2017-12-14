@@ -11,8 +11,9 @@
     <name>AAAS</name>
 
     <modules>
-        <module>aaas-gateway</module>
+        <module>api</module>
         <module>sample</module>
+        <module>engine-r</module>
     </modules>
 
     <properties>

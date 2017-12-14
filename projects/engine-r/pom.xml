@@ -2,16 +2,20 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0"
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
-    <modelVersion>4.0.0</modelVersion>
-
     <parent>
         <artifactId>aaas</artifactId>
         <groupId>pl.psi.aaas</groupId>
         <version>0.1-SNAPSHOT</version>
     </parent>
+    <modelVersion>4.0.0</modelVersion>
 
-    <artifactId>sample</artifactId>
-    <name>AAAS :: Sample</name>
+    <artifactId>engine-r</artifactId>
+    <name>AAAS :: Engine :: R</name>
+
+
+    <properties>
+        <version.rserve>1.8.1</version.rserve>
+    </properties>
 
     <dependencies>
         <dependency>
@@ -23,6 +27,13 @@
         <dependency>
             <groupId>org.jetbrains.kotlin</groupId>
             <artifactId>kotlin-stdlib-jre8</artifactId>
+        </dependency>
+
+        <!--required for REngine implementation-->
+        <dependency>
+            <groupId>org.rosuda.REngine</groupId>
+            <artifactId>Rserve</artifactId>
+            <version>${version.rserve}</version>
         </dependency>
 
     </dependencies>

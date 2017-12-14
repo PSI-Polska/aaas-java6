@@ -10,12 +10,8 @@
         <version>0.1-SNAPSHOT</version>
     </parent>
 
-    <artifactId>aaas-gateway</artifactId>
-    <name>AAAS :: Gateway</name>
-
-    <properties>
-        <version.rserve>1.8.1</version.rserve>
-    </properties>
+    <artifactId>api</artifactId>
+    <name>AAAS :: API</name>
 
     <dependencies>
         <dependency>
@@ -36,13 +32,6 @@
         <dependency>
             <groupId>org.apache.logging.log4j</groupId>
             <artifactId>log4j-core</artifactId>
-        </dependency>
-
-        <!--required for REngine implementation-->
-        <dependency>
-            <groupId>org.rosuda.REngine</groupId>
-            <artifactId>Rserve</artifactId>
-            <version>${version.rserve}</version>
         </dependency>
 
     </dependencies>

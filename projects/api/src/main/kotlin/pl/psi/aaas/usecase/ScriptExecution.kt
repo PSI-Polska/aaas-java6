@@ -9,7 +9,6 @@ typealias Symbol = String
  * @property timeSeriesIdsOut Time Series OUT identifiers
  * @property calculationScriptPath not empty path to calculation R script
  */
-// TODO 01.08.2017 kskitek: change TsIdIn and Out to TSDef from TS-API package
 data class CalculationDefinition(val timeSeriesIdsIn: Map<Symbol, Long>,
                                  val timeSeriesIdsOut: Map<Symbol, Long>,
                                  val calculationScriptPath: String)
