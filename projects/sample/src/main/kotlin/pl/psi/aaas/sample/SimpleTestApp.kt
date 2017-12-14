@@ -1,25 +1,23 @@
-package pl.psi.aaas
+package pl.psi.aaas.sample
 
+import pl.psi.aaas.Facade
 import pl.psi.aaas.engine.REngineConfiguration
 import pl.psi.aaas.engine.RServeEngine
 import pl.psi.aaas.usecase.*
-import javax.inject.Inject
 
+object SimpleTestApp {
+    @JvmStatic
+    fun main(args: Array<String>) {
+        val facade: Facade = FixedFacade
 
-interface Facade {
-    fun callScript(calcDef: CalculationDefinition)
-}
+        facade.callScript(prepCalcDef1())
+    }
 
+    fun prepCalcDef1(): CalculationDefinition {
+        val inIds = mapOf("A" to 1L, "B" to 2L)
+        val outIds = mapOf("C" to 3L)
 
-/**
- * Calculation endpoint.
- */
-class CdiFacade : Facade {
-    @Inject
-    lateinit var exec: ScriptExecution
-
-    override fun callScript(calcDef: CalculationDefinition) {
-        exec.call(calcDef)
+        return CalculationDefinition(inIds, outIds, "/var/userScripts/add.R")
     }
 }
 

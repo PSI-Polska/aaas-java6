@@ -12,7 +12,7 @@
 
     <modules>
         <module>aaas-gateway</module>
-        <module>aaas-rengine</module>
+        <module>sample</module>
     </modules>
 
     <properties>

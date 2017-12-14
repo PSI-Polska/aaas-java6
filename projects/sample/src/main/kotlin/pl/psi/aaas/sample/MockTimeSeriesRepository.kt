@@ -1,6 +1,9 @@
-package pl.psi.aaas.usecase
+package pl.psi.aaas.sample
 
 import org.apache.logging.log4j.LogManager
+import pl.psi.aaas.usecase.TS
+import pl.psi.aaas.usecase.TimeSeriesRepository
+import pl.psi.aaas.usecase.TsId
 
 internal class MockTimeSeriesRepository : TimeSeriesRepository {
     private val log = LogManager.getLogger()

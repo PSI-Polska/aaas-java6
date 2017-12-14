@@ -26,8 +26,8 @@ interface ScriptExecution {
  */
 class CalculationException(override val message: String, override val cause: Throwable? = null) : RuntimeException(message)
 
-// TODO 13.12.2017 kskitek: hot to name this class?!
-internal class JustScriptExecution(val synchronizer: ScriptSynchronizer,
+// TODO 13.12.2017 kskitek: how to name this class?!
+class JustScriptExecution(val synchronizer: ScriptSynchronizer,
                                    val tsRepository: TimeSeriesRepository,
                                    val engine: Engine) : ScriptExecution {
 

@@ -10,7 +10,7 @@ import pl.psi.aaas.usecase.MappedTS
 import pl.psi.aaas.usecase.Symbol
 
 
-internal class RServeEngine(private val configuration: REngineConfiguration) : Engine {
+class RServeEngine(private val configuration: REngineConfiguration) : Engine {
     private val log = LogManager.getLogger()
 
     override fun schedule(calcDef: CalculationDefinition, tsValues: MappedTS): MappedTS {
@@ -68,4 +68,4 @@ internal class RServeEngine(private val configuration: REngineConfiguration) : E
     private fun getConnection(): RConnection = RConnection(configuration.address, configuration.port)
 }
 
-internal data class REngineConfiguration(val address: String, val port: Int)
+data class REngineConfiguration(val address: String, val port: Int)
