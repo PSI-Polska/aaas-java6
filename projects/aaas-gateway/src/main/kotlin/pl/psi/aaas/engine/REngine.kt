@@ -43,10 +43,12 @@ internal class RServeEngine(private val configuration: REngineConfiguration) : E
 
     private fun sendValues(tsValues: MappedTS, conn: RConnection) {
         tsValues.forEach { conn.assign(it.first, it.second) }
+        val allVectors = tsValues.map { it.first }.joinToString()
+        conn.voidEval("""dfIn <- data.frame($allVectors)""")
     }
 
     private fun source(calcDef: CalculationDefinition, conn: RConnection) {
-        log.fine("""Sourcing: ${calcDef.calculationScriptPath} """)
+        log.fine("""Sourcing: ${calcDef.calculationScriptPath}""")
         conn.voidEval("""source("${calcDef.calculationScriptPath}")""")
     }
 
