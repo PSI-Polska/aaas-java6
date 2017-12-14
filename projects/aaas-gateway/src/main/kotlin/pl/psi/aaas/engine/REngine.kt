@@ -1,16 +1,16 @@
 package pl.psi.aaas.engine
 
+import org.apache.logging.log4j.LogManager
 import org.rosuda.REngine.REXP
 import org.rosuda.REngine.RList
 import org.rosuda.REngine.Rserve.RConnection
 import pl.psi.aaas.usecase.CalculationDefinition
 import pl.psi.aaas.usecase.Engine
 import pl.psi.aaas.usecase.MappedTS
-import java.util.logging.Logger
 
 
 internal class RServeEngine(private val configuration: REngineConfiguration) : Engine {
-    private val log = Logger.getLogger(this.javaClass.name)
+    private val log = LogManager.getLogger()
 
     override fun schedule(calcDef: CalculationDefinition, tsValues: MappedTS): MappedTS {
         val conn = getConnection()
@@ -28,7 +28,7 @@ internal class RServeEngine(private val configuration: REngineConfiguration) : E
                 .partition { it.second != null }
 
         return if (noResults.isNotEmpty()) {
-            log.severe("""Definition: ${calcDef.calculationScriptPath} did not return required symbols: $noResults""")
+            log.error("""Definition: ${calcDef.calculationScriptPath} did not return required symbols: $noResults""")
             // TODO 14.12.2017 kskitek: throw exception mby?!
             emptyList()
         } else results.map { it.first to it.second!!.asDoubles() }
@@ -36,7 +36,7 @@ internal class RServeEngine(private val configuration: REngineConfiguration) : E
     }
 
     private fun execute(conn: RConnection): REXP {
-        log.fine("Calling script")
+        log.debug("Calling script")
         return conn.eval("dfOut <- run(dfIn)")
         // TODO 13.12.2017 kskitek: handle exceptions here
     }
@@ -48,7 +48,7 @@ internal class RServeEngine(private val configuration: REngineConfiguration) : E
     }
 
     private fun source(calcDef: CalculationDefinition, conn: RConnection) {
-        log.fine("""Sourcing: ${calcDef.calculationScriptPath}""")
+        log.debug("""Sourcing: ${calcDef.calculationScriptPath}""")
         conn.voidEval("""source("${calcDef.calculationScriptPath}")""")
     }
 

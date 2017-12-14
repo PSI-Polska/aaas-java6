@@ -24,7 +24,7 @@ class CdiFacade : Facade {
 }
 
 object FixedFacade : Facade {
-    val engine: Engine = RServeEngine(REngineConfiguration("", 1))
+    val engine: Engine = RServeEngine(REngineConfiguration("192.168.99.100", 6311))
     val synchronizer: ScriptSynchronizer = NoSynchronizationSynchronizer()
     val tsRepository: TimeSeriesRepository = MockTimeSeriesRepository()
 
