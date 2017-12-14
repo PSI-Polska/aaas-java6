@@ -34,6 +34,11 @@
             <artifactId>mockito-kotlin</artifactId>
         </dependency>
 
+        <dependency>
+            <groupId>org.apache.logging.log4j</groupId>
+            <artifactId>log4j-core</artifactId>
+        </dependency>
+
         <!--required for REngine implementation-->
         <dependency>
             <groupId>org.rosuda.REngine</groupId>
