@@ -43,5 +43,5 @@ class JustScriptExecution(val synchronizer: ScriptSynchronizer,
 
     private fun symbolToTsId(calcDef: CalculationDefinition, it: Pair<Symbol, TS>) =
             // TODO 12.12.2017 kskitek: throw error when null!!!
-            calcDef.timeSeriesIdsOut.get(it.first)!!
+            calcDef.timeSeriesIdsOut[it.first]!!
 }

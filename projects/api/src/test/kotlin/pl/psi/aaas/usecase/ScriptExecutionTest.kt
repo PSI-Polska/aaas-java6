@@ -3,23 +3,6 @@ package pl.psi.aaas.usecase
 import com.nhaarman.mockito_kotlin.*
 import io.kotlintest.specs.StringSpec
 
-val ValidDefinition = CalculationDefinition(
-        mapOf("A" to 1L, "B" to 2L, "C" to 3L),
-        mapOf("Y" to 101L, "Z" to 102L),
-        "validScriptPath")
-
-val TS1 = doubleArrayOf(1.0, 1.0, 1.0, 1.0)
-val TS1M = "A" to TS1
-val TS2 = doubleArrayOf(2.0, 2.0, 2.0, 2.0)
-val TS2M = "B" to TS2
-val TS3 = doubleArrayOf(3.0, 3.0, 3.0, 3.0)
-val TS3M = "C" to TS3
-
-val TS1Res = doubleArrayOf(-1.0, -1.0, -1.0, -1.0)
-val TS1ResM = "Y" to TS1Res
-val TS2Res = doubleArrayOf(-2.0, -2.0, -2.0, -2.0)
-val TS2ResM = "Z" to TS2Res
-
 class ScriptExecutionTest : StringSpec() {
     init {
         val NoSynchronizationSynchronizer = mock<ScriptSynchronizer> {
@@ -37,7 +20,7 @@ class ScriptExecutionTest : StringSpec() {
 
         "Validation" {
             TODO("Validation cases")
-        }
+        }.config(enabled = false)
 
         "ScriptExecutioner checks with Synchronizer if it can run" {
 
@@ -50,7 +33,7 @@ class ScriptExecutionTest : StringSpec() {
 
         "ScriptsExecutioner waits until synchronization is finished" {
             TODO("Synchronization cases")
-        }
+        }.config(enabled = false)
 
         "ScriptsExecutioner reads all time series defined in TsIn" {
             val out = JustScriptExecution(NoSynchronizationSynchronizer, TsRepo, MockEngine)
@@ -62,7 +45,7 @@ class ScriptExecutionTest : StringSpec() {
 
         "ScriptExecutioner fails when TS reading fails" {
             TODO()
-        }
+        }.config(enabled = false)
 
         "ScriptExecutioner schedules calculation with mapped time series" {
             val out = JustScriptExecution(NoSynchronizationSynchronizer, TsRepo, MockEngine)
@@ -75,7 +58,7 @@ class ScriptExecutionTest : StringSpec() {
 
         "ScriptExecutioner fails when Engine fails" {
             TODO()
-        }
+        }.config(enabled = false)
 
         "ScriptExecutioner maps and saves returned from Engine data" {
             val out = JustScriptExecution(NoSynchronizationSynchronizer, TsRepo, MockEngine)
@@ -88,6 +71,6 @@ class ScriptExecutionTest : StringSpec() {
 
         "ScriptExecutioner fails when TS saving fails" {
             TODO()
-        }
+        }.config(enabled = false)
     }
 }

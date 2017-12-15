@@ -29,6 +29,16 @@
             <artifactId>kotlin-stdlib-jre8</artifactId>
         </dependency>
 
+        <dependency>
+            <groupId>io.kotlintest</groupId>
+            <artifactId>kotlintest</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>com.nhaarman</groupId>
+            <artifactId>mockito-kotlin</artifactId>
+        </dependency>
+
         <!--required for REngine implementation-->
         <dependency>
             <groupId>org.rosuda.REngine</groupId>

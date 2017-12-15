@@ -10,19 +10,24 @@ import pl.psi.aaas.usecase.MappedTS
 import pl.psi.aaas.usecase.Symbol
 import java.util.Collections.emptyList
 
+fun RServeEngine(configuration: REngineConfiguration): Engine = RServeEngine(DefaultRConnectionProvider(configuration))
 
-class RServeEngine(private val configuration: REngineConfiguration) : Engine {
+class RServeEngine(private val connectionProvider: RConnectionProvider) : Engine {
     private val log = LogManager.getLogger()
 
     override fun schedule(calcDef: CalculationDefinition, tsValues: MappedTS): MappedTS {
-        val conn = getConnection()
+        val conn = connectionProvider.getConnection()
 
         source(calcDef, conn)
         sendValues(tsValues, conn)
-//        setAdditionalParameters()
+//        setAdditionalParameters(calcDef, conn)
         val resultDf = execute(conn).asList()
         logDataFrame(resultDf)
         return mapDataFrameToTS(resultDf, calcDef)
+    }
+
+    private fun setAdditionalParameters(calcDef: CalculationDefinition, conn: RConnection) {
+        TODO("not implemented")
     }
 
     private fun logDataFrame(resultDf: RList) {
@@ -65,8 +70,14 @@ class RServeEngine(private val configuration: REngineConfiguration) : Engine {
         log.debug("""Sourcing: ${calcDef.calculationScriptPath}""")
         conn.voidEval("""source("${calcDef.calculationScriptPath}")""")
     }
-
-    private fun getConnection(): RConnection = RConnection(configuration.address, configuration.port)
 }
 
 data class REngineConfiguration(val address: String, val port: Int)
+
+interface RConnectionProvider {
+    fun getConnection(): RConnection
+}
+
+internal class DefaultRConnectionProvider(val configuration: REngineConfiguration) : RConnectionProvider {
+    override fun getConnection(): RConnection = RConnection(configuration.address, configuration.port)
+}
