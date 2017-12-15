@@ -9,10 +9,10 @@ class ScriptExecutionTest : StringSpec() {
             on { isUnderSynchronization() } doReturn false
         }
         val TsRepo = mock<TimeSeriesRepository> {
-            on { read(any()) } doReturn doubleArrayOf()
-            on { read(eq(1L)) } doReturn TS1
-            on { read(eq(2L)) } doReturn TS2
-            on { read(eq(3L)) } doReturn TS3
+            on { read(any(), any(), any()) } doReturn doubleArrayOf()
+            on { read(eq(1L), any(), any()) } doReturn TS1
+            on { read(eq(2L), any(), any()) } doReturn TS2
+            on { read(eq(3L), any(), any()) } doReturn TS3
         }
         val MockEngine = mock<Engine> {
             on { schedule(any(), any()) } doReturn listOf(TS1ResM, TS2ResM)
@@ -40,7 +40,7 @@ class ScriptExecutionTest : StringSpec() {
 
             out.call(ValidDefinition)
 
-            verify(TsRepo, times(ValidDefinition.timeSeriesIdsIn.size)).read(any())
+            verify(TsRepo, times(ValidDefinition.timeSeriesIdsIn.size)).read(any(), any(), any())
         }
 
         "ScriptExecutioner fails when TS reading fails" {

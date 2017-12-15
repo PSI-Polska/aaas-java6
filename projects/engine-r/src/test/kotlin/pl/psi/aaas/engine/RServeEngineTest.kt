@@ -5,6 +5,7 @@ import io.kotlintest.specs.StringSpec
 import pl.psi.aaas.usecase.CalculationDefinition
 import pl.psi.aaas.usecase.Engine
 import pl.psi.aaas.usecase.MappedTS
+import java.time.ZonedDateTime
 
 
 class RServeEngineTest : StringSpec() {
@@ -12,6 +13,8 @@ class RServeEngineTest : StringSpec() {
     val ValidDefinition = CalculationDefinition(
             mapOf("A" to 1L, "B" to 2L, "C" to 3L),
             mapOf("Y" to 101L, "Z" to 102L),
+            ZonedDateTime.now(),
+            ZonedDateTime.now().plusDays(1),
             "validScriptPath")
 
     val TS1M = "A" to doubleArrayOf(1.0, 1.0, 1.0, 1.0)

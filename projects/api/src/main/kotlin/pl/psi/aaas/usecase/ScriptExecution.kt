@@ -1,6 +1,9 @@
 package pl.psi.aaas.usecase
 
+import java.time.ZonedDateTime
+
 typealias Symbol = String
+typealias Parameters = Map<String, String>
 
 /**
  * DTO to move calculation definition information.
@@ -9,9 +12,12 @@ typealias Symbol = String
  * @property timeSeriesIdsOut Time Series OUT identifiers
  * @property calculationScriptPath not empty path to calculation R script
  */
-data class CalculationDefinition(val timeSeriesIdsIn: Map<Symbol, Long>,
-                                 val timeSeriesIdsOut: Map<Symbol, Long>,
-                                 val calculationScriptPath: String)
+data class CalculationDefinition(val timeSeriesIdsIn: Map<Symbol, Long> = emptyMap(),
+                                 val timeSeriesIdsOut: Map<Symbol, Long> = emptyMap(),
+                                 val begin: ZonedDateTime,
+                                 val end: ZonedDateTime,
+                                 val calculationScriptPath: String,
+                                 val additionalParameters: Parameters = emptyMap())
 
 interface ScriptExecution {
     fun call(calcDef: CalculationDefinition)
@@ -33,7 +39,7 @@ class JustScriptExecution(val synchronizer: ScriptSynchronizer,
     override fun call(calcDef: CalculationDefinition) {
         synchronizer.isUnderSynchronization()
 
-        val inTs = calcDef.timeSeriesIdsIn.map { it.key to tsRepository.read(it.value) }
+        val inTs = calcDef.timeSeriesIdsIn.map { it.key to tsRepository.read(it.value, calcDef.begin, calcDef.end) }
 
         val mappedResult = engine.schedule(calcDef, inTs)
 

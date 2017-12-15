@@ -4,6 +4,7 @@ import pl.psi.aaas.Facade
 import pl.psi.aaas.engine.REngineConfiguration
 import pl.psi.aaas.engine.RServeEngine
 import pl.psi.aaas.usecase.*
+import java.time.ZonedDateTime
 
 object SimpleTestApp {
     @JvmStatic
@@ -16,8 +17,10 @@ object SimpleTestApp {
     fun prepCalcDef1(): CalculationDefinition {
         val inIds = mapOf("A" to 1L, "B" to 2L)
         val outIds = mapOf("C" to 3L)
+        val begin = ZonedDateTime.now()
+        val end = begin.plusDays(1)
 
-        return CalculationDefinition(inIds, outIds, "/var/userScripts/add.R")
+        return CalculationDefinition(inIds, outIds, begin, end, "/var/userScripts/add.R")
     }
 }
 
