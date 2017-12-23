@@ -1,0 +1,18 @@
+@startuml
+
+title Synchronous communication
+
+actor PSIproduct
+boundary SyncGateway as Sync <<WebService>> <<MethodCall>>
+boundary Gateway
+boundary Engine as Engine
+
+PSIproduct -> Sync: execute{CalculationDefinition}
+Sync -> Gateway: execute(CalculationDefinition)
+Gateway -> Engine: call
+Engine -> Engine
+Engine -> Gateway: {calculationResult}
+Gateway -> Sync: {calculationResult}
+Sync -> PSIproduct: {calculationResult}
+
+@enduml

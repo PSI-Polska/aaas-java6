@@ -1,0 +1,18 @@
+@startuml
+
+title Asynchronous communication
+
+actor PSIproduct
+boundary AsyncGateway as Async <<JMS>>
+boundary Gateway
+boundary Engine as Engine
+
+PSIproduct -\ Async: queue{CalculationDefinition}
+Async -\ Gateway: queue(CalculationDefinition)
+Gateway -> Engine: call
+Engine -> Engine
+Engine -> Gateway: {calculationResult}
+Gateway -\ Async: queue{calculationResult}
+Async -\ PSIproduct: queue{calculationResult}
+
+@enduml

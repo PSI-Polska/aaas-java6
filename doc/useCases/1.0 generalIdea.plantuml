@@ -4,12 +4,12 @@ title General idea
 
 actor PSIproduct
 boundary Gateway
-' control ScriptsExecutioner as Executioner
-boundary Engine as Engine
+boundary Engine as Engine <<R>> <<Python>> <<Spark>> <<Matlab>>
 
 PSIproduct -> Gateway: execute(CalculationDefinition)
 Gateway -> Engine: call
 Engine -> Engine
 Engine -> Gateway: {calculationResult}
+Gateway -> PSIproduct: {calculationResult}
 
 @enduml
