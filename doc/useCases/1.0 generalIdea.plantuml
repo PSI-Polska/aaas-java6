@@ -1,0 +1,15 @@
+@startuml
+
+title General idea
+
+actor PSIproduct
+boundary Gateway
+' control ScriptsExecutioner as Executioner
+boundary Engine as Engine
+
+PSIproduct -> Gateway: execute(CalculationDefinition)
+Gateway -> Engine: call
+Engine -> Engine
+Engine -> Gateway: {calculationResult}
+
+@enduml
