@@ -1,6 +1,6 @@
 @startuml
 
-title Call Script when synchronization is not running
+title Call Script when synchronization is not running and data is read from TSDB
 
 actor ExternalSource
 boundary Gateway
@@ -16,10 +16,8 @@ Gateway -> Executioner: call
 ' Validator -> Executioner: true
 Executioner -> Synchronizer: isUnderSynchronization?
 Synchronizer -> Executioner: {false}
-' Executioner -\ Gateway: {scriptExecutionStarted}
 Executioner -> TSRepo: read(CalcDef.TsInIds)
 TSRepo -> Executioner: {TSData}
-' Executioner -> Engine: run(CalculationDefinition, TSDataIn})
 Executioner -\ Engine: schedule(CalculationDefinition, TSDataIn})
 Engine -> Engine
 Engine -\ Executioner: {TSDataOut}
