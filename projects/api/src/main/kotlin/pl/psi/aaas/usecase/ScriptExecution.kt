@@ -31,17 +31,20 @@ interface ScriptExecution {
  */
 class CalculationException(override val message: String, override val cause: Throwable? = null) : RuntimeException(message)
 
-// TODO 13.12.2017 kskitek: how to name this class?!
-class JustScriptExecution(val synchronizer: ScriptSynchronizer,
-                                   val tsRepository: TimeSeriesRepository,
-                                   val engine: Engine) : ScriptExecution {
+class TimeSeriesBasedScriptExecution(val synchronizer: ScriptSynchronizer,
+                                     val tsRepository: TimeSeriesRepository,
+                                     val engine: Engine,
+                                     private val statistics: SettableStatistics = JmxStatistics) : ScriptExecution {
 
     override fun call(calcDef: CalculationDefinition) {
         synchronizer.isUnderSynchronization()
 
         val inTs = calcDef.timeSeriesIdsIn.map { it.key to tsRepository.read(it.value, calcDef.begin, calcDef.end) }
 
+        statistics.currentlyExecutingNo.incrementAndGet()
         val mappedResult = engine.schedule(calcDef, inTs)
+        statistics.currentlyExecutingNo.decrementAndGet()
+        statistics.executedTasksNo.incrementAndGet()
 
         mappedResult.map { symbolToTsId(calcDef, it) to it.second }
                 .forEach { tsRepository.save(it.first, it.second) }

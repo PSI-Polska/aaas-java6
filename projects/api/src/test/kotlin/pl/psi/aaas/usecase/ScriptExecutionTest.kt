@@ -24,7 +24,7 @@ class ScriptExecutionTest : StringSpec() {
 
         "ScriptExecutioner checks with Synchronizer if it can run" {
 
-            val out = JustScriptExecution(NoSynchronizationSynchronizer, TsRepo, MockEngine)
+            val out = TimeSeriesBasedScriptExecution(NoSynchronizationSynchronizer, TsRepo, MockEngine)
 
             out.call(ValidDefinition)
 
@@ -36,7 +36,7 @@ class ScriptExecutionTest : StringSpec() {
         }.config(enabled = false)
 
         "ScriptsExecutioner reads all time series defined in TsIn" {
-            val out = JustScriptExecution(NoSynchronizationSynchronizer, TsRepo, MockEngine)
+            val out = TimeSeriesBasedScriptExecution(NoSynchronizationSynchronizer, TsRepo, MockEngine)
 
             out.call(ValidDefinition)
 
@@ -48,7 +48,7 @@ class ScriptExecutionTest : StringSpec() {
         }.config(enabled = false)
 
         "ScriptExecutioner schedules calculation with mapped time series" {
-            val out = JustScriptExecution(NoSynchronizationSynchronizer, TsRepo, MockEngine)
+            val out = TimeSeriesBasedScriptExecution(NoSynchronizationSynchronizer, TsRepo, MockEngine)
             val expectedMappedTS = listOf("A" to TS1, "B" to TS2, "C" to TS3)
 
             out.call(ValidDefinition)
@@ -61,7 +61,7 @@ class ScriptExecutionTest : StringSpec() {
         }.config(enabled = false)
 
         "ScriptExecutioner maps and saves returned from Engine data" {
-            val out = JustScriptExecution(NoSynchronizationSynchronizer, TsRepo, MockEngine)
+            val out = TimeSeriesBasedScriptExecution(NoSynchronizationSynchronizer, TsRepo, MockEngine)
 
             out.call(ValidDefinition)
 
