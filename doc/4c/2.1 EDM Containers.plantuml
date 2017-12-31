@@ -21,6 +21,7 @@ cloud {
 ' * Communication is done synchronously with method calls - tight integration
 ' * Scripts are available for both, RStudio and R through Git repository
 ' * Use case from Rstudio works exaclty the same way as Use case from product
+' * Engines, Scripts repository are dockerized, ready to be run on k8s or openshift
 
 User <--> PSI
 BA <--> rstdio
@@ -32,17 +33,14 @@ engine <-right-> scripts
 
 skinparam actor {
   BorderColor black
-  BackgroundColor gold
   ArrowColor black
 }
 skinparam component {
   BorderColor black
-  BackgroundColor gold
   ArrowColor black
 }
 skinparam database {
   BorderColor black
-  BackgroundColor gold
   ArrowColor black
 }
 @enduml

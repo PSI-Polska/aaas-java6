@@ -19,6 +19,7 @@ cloud {
 ' * where is the source/binary evaluated by the engine
 '   * how it is defined? on what data? what API - will it be the same as production?
 '   * how it is provided to the engine? statically? dynamically?
+' * what with "openshift issue"?
 
 User <--> PSI
 PSI <--> 3as
@@ -27,18 +28,14 @@ PSI <--> 3as
 
 skinparam actor {
   BorderColor black
-  BackgroundColor gold
   ArrowColor black
 }
 skinparam component {
   BorderColor black
-  BackgroundColor gold
   ArrowColor black
 }
 skinparam database {
   BorderColor black
-  BackgroundColor gold
   ArrowColor black
 }
-
 @enduml
