@@ -1,0 +1,37 @@
+@startuml
+skinparam componentStyle uml2
+
+title EDM/PSImarket components
+
+actor User
+actor BusinessAnalyst as BA
+package {
+    database TSDB as tsdb
+    component PSIProduct as PSI <<PSImarket>>
+}
+component RStudio as rstdio
+database ScriptsRepository as scripts <<Git>>
+component AAAS as 3as
+cloud {
+    component Engines as engine <<R>>
+}
+
+' No point in providing AIORAE components - it is far from beeing fided.
+' TOOD draw components based on original image and add narration.
+
+skinparam actor {
+  BorderColor black
+  BackgroundColor gold
+  ArrowColor black
+}
+skinparam component {
+  BorderColor black
+  BackgroundColor gold
+  ArrowColor black
+}
+skinparam database {
+  BorderColor black
+  BackgroundColor gold
+  ArrowColor black
+}
+@enduml

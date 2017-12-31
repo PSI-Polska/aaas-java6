@@ -7,6 +7,7 @@ boundary SyncGateway as Sync <<WebService>> <<MethodCall>>
 boundary Gateway
 boundary Engine as Engine
 
+autonumber
 PSIproduct -> Sync: execute{CalculationDefinition}
 Sync -> Gateway: execute(CalculationDefinition)
 Gateway -> Engine: call

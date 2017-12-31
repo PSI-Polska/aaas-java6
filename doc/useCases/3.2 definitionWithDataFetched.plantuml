@@ -7,6 +7,7 @@ boundary Gateway
 boundary DataRepository as Repo
 boundary Engine as Engine
 
+autonumber
 PSIproduct -> Gateway: execute(CalculationDefinition, dataSourceDefinition)
 Gateway -> Repo: fetch(dataSourceDefinition)
 Repo -> Gateway: data

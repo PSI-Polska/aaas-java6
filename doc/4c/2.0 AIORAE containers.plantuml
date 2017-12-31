@@ -1,0 +1,44 @@
+@startuml
+skinparam componentStyle uml2
+
+title AI OR AE Containers
+
+actor User
+package {
+    component PSIProduct as PSI
+    database DB
+}
+component AAAS as 3as
+cloud {
+  component Engines as engine
+}
+
+' Questions:
+' * where comes the data from?
+' * how communication is done? sync/async, coupled/decoupled?
+' * where is the source/binary evaluated by the engine
+'   * how it is defined? on what data? what API - will it be the same as production?
+'   * how it is provided to the engine? statically? dynamically?
+
+User <--> PSI
+PSI <--> 3as
+3as <--> engine
+
+
+skinparam actor {
+  BorderColor black
+  BackgroundColor gold
+  ArrowColor black
+}
+skinparam component {
+  BorderColor black
+  BackgroundColor gold
+  ArrowColor black
+}
+skinparam database {
+  BorderColor black
+  BackgroundColor gold
+  ArrowColor black
+}
+
+@enduml

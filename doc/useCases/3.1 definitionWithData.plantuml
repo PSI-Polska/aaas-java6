@@ -6,6 +6,7 @@ actor PSIproduct
 boundary Gateway
 boundary Engine as Engine
 
+autonumber
 PSIproduct -> Gateway: execute(CalculationDefinition, data)
 ' note left: data is already passed
 ' Gateway -> Engine: {data}

@@ -6,6 +6,9 @@ actor PSIproduct
 boundary Gateway
 boundary Engine as Engine
 
+' TODO what with scenarios when there is no data passed but for eg. TS is returned?
+
+autonumber
 PSIproduct -> Gateway: execute(CalculationDefinition)
 Gateway -> Engine: call
 Engine -> Engine

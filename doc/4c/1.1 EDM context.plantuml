@@ -1,0 +1,29 @@
+@startuml
+skinparam componentStyle uml2
+
+title EDM/PSImarket Context
+
+actor User
+actor BusinessAnalyst as BA
+component PSIProduct as PSI <<PSImarket>>
+component RStudio as rstdio
+component AAAS as 3as
+component Engine as engine <<R>>
+
+' The most basic Community EDM need:
+' provide already existing artificial inteligence (forecasting) solutions based on R.
+' Provide means for BAs to work with production data.
+' Goals:
+' * R as engine
+' * Provide means for BAs to work with production data.
+' * TS based
+' * simple to set up (3AS together with the engine)
+
+User <--> PSI
+BA <--> rstdio
+PSI <--> 3as
+rstdio <--> 3as
+3as <--> engine
+
+
+@enduml

@@ -1,0 +1,48 @@
+@startuml
+skinparam componentStyle uml2
+
+title EDM/PSImarket Containers
+
+actor User
+actor BusinessAnalyst as BA
+package {
+    database TSDB as tsdb
+    component PSIProduct as PSI <<PSImarket>>
+}
+component RStudio as rstdio
+database ScriptsRepository as scripts <<Git>>
+component AAAS as 3as
+cloud {
+    component Engines as engine <<R>>
+}
+
+' Answers:
+' * Data (TS) is provided by PSImarket and passed through 3AS to R
+' * Communication is done synchronously with method calls - tight integration
+' * Scripts are available for both, RStudio and R through Git repository
+' * Use case from Rstudio works exaclty the same way as Use case from product
+
+User <--> PSI
+BA <--> rstdio
+rstdio <--> scripts
+PSI <--> 3as
+rstdio <--> 3as
+3as <--> engine
+engine <-right-> scripts
+
+skinparam actor {
+  BorderColor black
+  BackgroundColor gold
+  ArrowColor black
+}
+skinparam component {
+  BorderColor black
+  BackgroundColor gold
+  ArrowColor black
+}
+skinparam database {
+  BorderColor black
+  BackgroundColor gold
+  ArrowColor black
+}
+@enduml

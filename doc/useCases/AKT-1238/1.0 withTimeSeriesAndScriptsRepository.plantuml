@@ -10,6 +10,7 @@ control ScriptsSynchronizer as Synchronizer
 boundary TimeSeriesRepository as TSRepo
 boundary EngineGateway as Engine
 
+autonumber
 ExternalSource -> Gateway: execute(CalculationDefinition)
 Gateway -> Executioner: call
 ' Executioner -> Validator: validate(CalculationDefinition)
