@@ -1,4 +1,5 @@
 @startuml
+skinparam dpi 200
 
 title Call Script when synchronization is not running and data is read from TSDB
 

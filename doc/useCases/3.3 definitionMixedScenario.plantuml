@@ -1,0 +1,24 @@
+@startuml
+skinparam dpi 200
+
+title Definition does not require additional data
+
+actor PSIproduct
+boundary Gateway as jms <<JMS>>
+boundary Gateway as ws <<WebService>>
+database AuxDB as auxdb
+boundary Engine as Engine
+
+' TODO what with scenarios when there is no data passed but for eg. TS is returned?
+
+autonumber
+PSIproduct ->jms: execute(CalculationDefinition)
+jms -> Engine: call
+Engine -> Engine
+Engine -> auxdb: {calculationResult}
+PSIproduct -> ws: getResult
+ws -> auxdb
+auxdb -> ws
+ws -> PSIproduct: {calculationResult}
+
+@enduml

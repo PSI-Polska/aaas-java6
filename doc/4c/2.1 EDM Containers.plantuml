@@ -1,5 +1,7 @@
 @startuml
-skinparam componentStyle uml2
+skinparam dpi 200
+' skinparam backgroundColor transparent
+' skinparam monochrome true
 
 title EDM/PSImarket Containers
 
