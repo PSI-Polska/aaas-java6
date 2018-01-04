@@ -10,7 +10,9 @@ boundary Engine as Engine
 
 autonumber
 PSIproduct -\ Async: queue{CalculationDefinition}
+activate Async
 Async -\ Gateway: queue(CalculationDefinition)
+deactivate Async
 Gateway -> Engine: call
 Engine -> Engine
 Engine -> Gateway: {calculationResult}

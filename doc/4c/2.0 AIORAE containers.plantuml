@@ -14,11 +14,12 @@ cloud {
 }
 
 ' Questions:
-' * where comes the data from?
+' * where comes the data from? from product? direct connection to the Engine?
 ' * how communication is done? sync/async, coupled/decoupled?
 ' * where is the source/binary evaluated by the engine
 '   * how it is defined? on what data? what API - will it be the same as production?
 '   * how it is provided to the engine? statically? dynamically?
+' * the same question applies to trained models
 ' * what with "openshift issue"?
 
 User <--> PSI

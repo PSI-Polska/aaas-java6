@@ -9,12 +9,16 @@ boundary Gateway
 boundary Engine as Engine
 
 autonumber
+activate PSIproduct
 PSIproduct -> Sync: execute{CalculationDefinition}
+activate Sync
 Sync -> Gateway: execute(CalculationDefinition)
 Gateway -> Engine: call
 Engine -> Engine
 Engine -> Gateway: {calculationResult}
 Gateway -> Sync: {calculationResult}
+deactivate Sync
 Sync -> PSIproduct: {calculationResult}
+deactivate PSIproduct
 
 @enduml

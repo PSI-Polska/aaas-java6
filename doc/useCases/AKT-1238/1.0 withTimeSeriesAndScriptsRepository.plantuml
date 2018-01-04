@@ -20,7 +20,7 @@ Executioner -> Synchronizer: isUnderSynchronization?
 Synchronizer -> Executioner: {false}
 Executioner -> TSRepo: read(CalcDef.TsInIds)
 TSRepo -> Executioner: {TSData}
-Executioner -\ Engine: schedule(CalculationDefinition, TSDataIn})
+Executioner -\ Engine: call(CalculationDefinition, TSDataIn})
 Engine -> Engine
 Engine -\ Executioner: {TSDataOut}
 Executioner -> TSRepo: save(TSDataOut)
