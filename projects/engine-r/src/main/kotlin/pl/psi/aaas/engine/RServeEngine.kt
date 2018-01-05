@@ -14,6 +14,10 @@ import java.util.Collections.emptyList
 class RServeEngine(private val connectionProvider: RConnectionProvider) : Engine {
     private val log = LogManager.getLogger()
 
+    companion object {
+        private val baseUserScriptPath = "/var/userScripts/"
+    }
+
     override fun call(calcDef: CalculationDefinition, tsValues: MappedTS): MappedTS {
         val conn = connectionProvider.getConnection()
 
@@ -66,8 +70,9 @@ class RServeEngine(private val connectionProvider: RConnectionProvider) : Engine
     }
 
     private fun source(calcDef: CalculationDefinition, conn: RConnection) {
-        log.debug("""Sourcing: ${calcDef.calculationScriptPath}""")
-        conn.voidEval("""source("${calcDef.calculationScriptPath}")""")
+        val path = """$baseUserScriptPath${calcDef.calculationScriptPath}.R"""
+        log.debug("""Sourcing: $path""")
+        conn.voidEval("""source("$path")""")
     }
 }
 

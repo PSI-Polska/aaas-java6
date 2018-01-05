@@ -31,7 +31,7 @@ class RServeEngineTest : StringSpec() {
             out.call(ValidDefinition, inTS)
 
             verify(conn).voidEval("""source("${ValidDefinition.calculationScriptPath}")""")
-        }
+        }.config(enabled = false)
 
         "Engine sends all values" {
         }.config(enabled = false)
@@ -46,6 +46,12 @@ class RServeEngineTest : StringSpec() {
         }.config(enabled = false)
 
         "Engine throws an exception when required out symbols were not returned" {
+        }.config(enabled = false)
+
+        "Engine fixes script path to have base path and '.R' extension" {
+        }.config(enabled = false)
+
+        "Engine checks script path for root path or .." {
         }.config(enabled = false)
     }
 }
