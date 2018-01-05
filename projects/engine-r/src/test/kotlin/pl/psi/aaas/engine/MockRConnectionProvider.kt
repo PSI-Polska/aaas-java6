@@ -6,7 +6,9 @@ import org.rosuda.REngine.REXPList
 import org.rosuda.REngine.RList
 import org.rosuda.REngine.Rserve.RConnection
 
-class MockRConnectionProvider : RConnectionProvider {
+val EmptyConfiguration = REngineConfiguration("", 1)
+
+class MockRConnectionProvider(override var configuration: REngineConfiguration = EmptyConfiguration) : RConnectionProvider {
     private val conn = mock<RConnection>
     {
         on { eval("dfOut <- run(dfIn)") } doReturn REXPList(getResult())

@@ -10,8 +10,6 @@ import pl.psi.aaas.usecase.MappedTS
 import pl.psi.aaas.usecase.Symbol
 import java.util.Collections.emptyList
 
-fun RServeEngine(configuration: REngineConfiguration): Engine = RServeEngine(DefaultRConnectionProvider(configuration))
-
 // TODO this engine implementation is basedon TimeSeries.Split it or rename it.
 class RServeEngine(private val connectionProvider: RConnectionProvider) : Engine {
     private val log = LogManager.getLogger()
@@ -76,9 +74,6 @@ class RServeEngine(private val connectionProvider: RConnectionProvider) : Engine
 data class REngineConfiguration(val address: String, val port: Int)
 
 interface RConnectionProvider {
-    fun getConnection(): RConnection
-}
-
-internal class DefaultRConnectionProvider(private val configuration: REngineConfiguration) : RConnectionProvider {
-    override fun getConnection(): RConnection = RConnection(configuration.address, configuration.port)
+    var configuration: REngineConfiguration
+    fun getConnection(): RConnection = RConnection(configuration.address, configuration.port)
 }

@@ -136,8 +136,23 @@
     <developers>
         <developer>
             <name>Krzysztof Skitek</name>
-            <email>kskitek@psi.pl</email>
+            <email>krzysztof.skitek@gmail.com</email>
         </developer>
     </developers>
 
+
+    <scm>
+        <developerConnection>scm:git:https://gitlab.com/edmpsi/aaas.git</developerConnection>
+    </scm>
+
+    <distributionManagement>
+        <repository>
+            <id>releases</id>
+            <url>http://EM-ABG-13-CI03.psi.de:8084/repository/releases/</url>
+        </repository>
+        <snapshotRepository>
+            <id>snapshots</id>
+            <url>http://EM-ABG-13-CI03.psi.de:8084/repository/snapshots/</url>
+        </snapshotRepository>
+    </distributionManagement>
 </project>

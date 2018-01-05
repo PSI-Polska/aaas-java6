@@ -2,6 +2,7 @@ package pl.psi.aaas.sample
 
 import pl.psi.aaas.Facade
 import pl.psi.aaas.engine.NoSynchronizationSynchronizer
+import pl.psi.aaas.engine.RConnectionProvider
 import pl.psi.aaas.engine.REngineConfiguration
 import pl.psi.aaas.engine.RServeEngine
 import pl.psi.aaas.usecase.*
@@ -51,8 +52,12 @@ object SimpleTestApp {
     }
 }
 
+val LocalConfiguration = REngineConfiguration("localhost", 6311)
+
+class LocalRConnectionProvider(override var configuration: REngineConfiguration = LocalConfiguration) : RConnectionProvider
+
 object FixedFacade : Facade {
-    private val engine: Engine = RServeEngine(REngineConfiguration("localhost", 6311))
+    private val engine: Engine = RServeEngine(LocalRConnectionProvider())
     private val synchronizer: ScriptSynchronizer = NoSynchronizationSynchronizer()
     private val tsRepository: TimeSeriesRepository = MockTimeSeriesRepository()
 

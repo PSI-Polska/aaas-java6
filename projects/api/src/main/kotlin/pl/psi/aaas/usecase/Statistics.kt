@@ -24,10 +24,10 @@ object JmxStatistics : SettableStatistics {
     //    @get:ManagedOperation(id = "Executed tasks number")
     override val executedTasks: Int
         get() = executedTasksNo.get()
-    @get:java.beans.BeanProperty
+//    @get:java.beans.BeanProperty
     override val currentlyExecuting: Int
         get() = currentlyExecutingNo.get()
-    @get:java.beans.BeanProperty
+//    @get:java.beans.BeanProperty
     override val failedTasks: Int
         get() = failedTasksNo.get()
 }
