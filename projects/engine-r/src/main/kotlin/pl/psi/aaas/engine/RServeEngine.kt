@@ -50,7 +50,7 @@ class RServeEngine(private val connectionProvider: RConnectionProvider) : Engine
     }
 
     private fun logMissingResults(missingResults: List<Pair<Symbol, REXP?>>, calcDef: CalculationDefinition) {
-        val missingSymbols = missingResults.map { it.first }.joinToString()
+        val missingSymbols = missingResults.joinToString { it.first }
         log.error("""Definition: ${calcDef.calculationScriptPath} did not return required symbols: $missingSymbols""")
     }
 
@@ -61,7 +61,7 @@ class RServeEngine(private val connectionProvider: RConnectionProvider) : Engine
     }
 
     private fun sendValues(tsValues: MappedTS, conn: RConnection) {
-        val allVectors = tsValues.map { it.first }.joinToString()
+        val allVectors = tsValues.joinToString { it.first }
         log.debug("""Sending values $allVectors""")
         tsValues.forEach { conn.assign(it.first, it.second) }
         conn.voidEval("""dfIn <- data.frame($allVectors)""")
@@ -79,6 +79,6 @@ interface RConnectionProvider {
     fun getConnection(): RConnection
 }
 
-internal class DefaultRConnectionProvider(val configuration: REngineConfiguration) : RConnectionProvider {
+internal class DefaultRConnectionProvider(private val configuration: REngineConfiguration) : RConnectionProvider {
     override fun getConnection(): RConnection = RConnection(configuration.address, configuration.port)
 }

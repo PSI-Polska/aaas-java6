@@ -6,16 +6,16 @@ import pl.psi.aaas.usecase.timeseries.TimeSeriesBasedCalculationExecution
 
 class CalculationExecutionTest : StringSpec() {
     init {
-        val NoSynchronizationSynchronizer = mock<ScriptSynchronizer> {
+        val noSynchronizationSynchronizer = mock<ScriptSynchronizer> {
             on { isUnderSynchronization() } doReturn false
         }
-        val TsRepo = mock<TimeSeriesRepository> {
+        val tsRepo = mock<TimeSeriesRepository> {
             on { read(any(), any(), any()) } doReturn doubleArrayOf()
             on { read(eq(1L), any(), any()) } doReturn TS1
             on { read(eq(2L), any(), any()) } doReturn TS2
             on { read(eq(3L), any(), any()) } doReturn TS3
         }
-        val MockEngine = mock<Engine> {
+        val mockEngine = mock<Engine> {
             on { call(any(), any()) } doReturn listOf(TS1ResM, TS2ResM)
         }
 
@@ -25,11 +25,11 @@ class CalculationExecutionTest : StringSpec() {
 
         "ScriptExecutioner checks with Synchronizer if it can run" {
 
-            val out = TimeSeriesBasedCalculationExecution(NoSynchronizationSynchronizer, TsRepo, MockEngine)
+            val out = TimeSeriesBasedCalculationExecution(noSynchronizationSynchronizer, tsRepo, mockEngine)
 
             out.call(ValidDefinition)
 
-            verify(NoSynchronizationSynchronizer).isUnderSynchronization()
+            verify(noSynchronizationSynchronizer).isUnderSynchronization()
         }
 
         "ScriptsExecutioner waits until synchronization is finished" {
@@ -37,11 +37,11 @@ class CalculationExecutionTest : StringSpec() {
         }.config(enabled = false)
 
         "ScriptsExecutioner reads all time series defined in TsIn" {
-            val out = TimeSeriesBasedCalculationExecution(NoSynchronizationSynchronizer, TsRepo, MockEngine)
+            val out = TimeSeriesBasedCalculationExecution(noSynchronizationSynchronizer, tsRepo, mockEngine)
 
             out.call(ValidDefinition)
 
-            verify(TsRepo, times(ValidDefinition.timeSeriesIdsIn.size)).read(any(), any(), any())
+            verify(tsRepo, times(ValidDefinition.timeSeriesIdsIn.size)).read(any(), any(), any())
         }
 
         "ScriptExecutioner fails when TS reading fails" {
@@ -49,12 +49,12 @@ class CalculationExecutionTest : StringSpec() {
         }.config(enabled = false)
 
         "ScriptExecutioner schedules calculation with mapped time series" {
-            val out = TimeSeriesBasedCalculationExecution(NoSynchronizationSynchronizer, TsRepo, MockEngine)
+            val out = TimeSeriesBasedCalculationExecution(noSynchronizationSynchronizer, tsRepo, mockEngine)
             val expectedMappedTS = listOf("A" to TS1, "B" to TS2, "C" to TS3)
 
             out.call(ValidDefinition)
 
-            verify(MockEngine).call(ValidDefinition, expectedMappedTS)
+            verify(mockEngine).call(ValidDefinition, expectedMappedTS)
         }
 
         "ScriptExecutioner fails when Engine fails" {
@@ -62,12 +62,12 @@ class CalculationExecutionTest : StringSpec() {
         }.config(enabled = false)
 
         "ScriptExecutioner maps and saves returned from Engine data" {
-            val out = TimeSeriesBasedCalculationExecution(NoSynchronizationSynchronizer, TsRepo, MockEngine)
+            val out = TimeSeriesBasedCalculationExecution(noSynchronizationSynchronizer, tsRepo, mockEngine)
 
             out.call(ValidDefinition)
 
-            verify(TsRepo).save(101L, TS1Res)
-            verify(TsRepo).save(102L, TS2Res)
+            verify(tsRepo).save(101L, TS1Res)
+            verify(tsRepo).save(102L, TS2Res)
         }
 
         "ScriptExecutioner fails when TS saving fails" {

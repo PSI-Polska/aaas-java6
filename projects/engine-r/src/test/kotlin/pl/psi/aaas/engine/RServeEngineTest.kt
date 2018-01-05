@@ -10,17 +10,17 @@ import java.time.ZonedDateTime
 
 class RServeEngineTest : StringSpec() {
 
-    val ValidDefinition = CalculationDefinition(
+    private val ValidDefinition = CalculationDefinition(
             mapOf("A" to 1L, "B" to 2L, "C" to 3L),
             mapOf("Y" to 101L, "Z" to 102L),
             ZonedDateTime.now(),
             ZonedDateTime.now().plusDays(1),
             "validScriptPath")
 
-    val TS1M = "A" to doubleArrayOf(1.0, 1.0, 1.0, 1.0)
-    val TS2M = "B" to doubleArrayOf(2.0, 2.0, 2.0, 2.0)
+    private val TS1M = "A" to doubleArrayOf(1.0, 1.0, 1.0, 1.0)
+    private val TS2M = "B" to doubleArrayOf(2.0, 2.0, 2.0, 2.0)
 
-    val inTS: MappedTS = listOf(TS1M, TS2M)
+    private val inTS: MappedTS = listOf(TS1M, TS2M)
 
     init {
         val connectionProvider = MockRConnectionProvider()

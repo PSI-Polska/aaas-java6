@@ -41,7 +41,7 @@ object SimpleTestApp {
         thread { cs.start() }
     }
 
-    fun prepCalcDef1(): CalculationDefinition {
+    private fun prepCalcDef1(): CalculationDefinition {
         val inIds = mapOf("A" to 1L, "B" to 2L)
         val outIds = mapOf("C" to 3L)
         val begin = ZonedDateTime.now()
@@ -52,9 +52,9 @@ object SimpleTestApp {
 }
 
 object FixedFacade : Facade {
-    val engine: Engine = RServeEngine(REngineConfiguration("localhost", 6311))
-    val synchronizer: ScriptSynchronizer = NoSynchronizationSynchronizer()
-    val tsRepository: TimeSeriesRepository = MockTimeSeriesRepository()
+    private val engine: Engine = RServeEngine(REngineConfiguration("localhost", 6311))
+    private val synchronizer: ScriptSynchronizer = NoSynchronizationSynchronizer()
+    private val tsRepository: TimeSeriesRepository = MockTimeSeriesRepository()
 
     override fun callScript(calcDef: CalculationDefinition) {
         val scriptExecution = TimeSeriesBasedCalculationExecution(engine = engine, synchronizer = synchronizer, tsRepository = tsRepository)
