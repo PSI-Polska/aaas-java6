@@ -13,9 +13,9 @@ internal class MockTimeSeriesRepository : TimeSeriesRepository {
 
     override fun read(tsId: TsId, begin: ZonedDateTime, end: ZonedDateTime): TS = ts
 
-    override fun save(id: TsId, tsValues: TS) {
+    override fun save(tsId: TsId, tsValues: TS) {
         log.info("SAVING")
-        log.info("\tid = $id")
+        log.info("\ttsId = $tsId")
         log.info("\tsize = ${tsValues.size}")
     }
 

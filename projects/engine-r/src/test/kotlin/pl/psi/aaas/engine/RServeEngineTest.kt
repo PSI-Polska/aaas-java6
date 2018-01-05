@@ -28,7 +28,7 @@ class RServeEngineTest : StringSpec() {
         val conn = connectionProvider.getConnection()
 
         "Engine passes script path" {
-            out.schedule(ValidDefinition, inTS)
+            out.call(ValidDefinition, inTS)
 
             verify(conn).voidEval("""source("${ValidDefinition.calculationScriptPath}")""")
         }
@@ -37,7 +37,7 @@ class RServeEngineTest : StringSpec() {
         }.config(enabled = false)
 
         "Engine executes a run method" {
-            out.schedule(ValidDefinition, inTS)
+            out.call(ValidDefinition, inTS)
 
             verify(conn).eval("dfOut <- run(dfIn)")
         }

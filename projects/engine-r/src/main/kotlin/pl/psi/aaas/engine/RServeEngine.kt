@@ -12,10 +12,11 @@ import java.util.Collections.emptyList
 
 fun RServeEngine(configuration: REngineConfiguration): Engine = RServeEngine(DefaultRConnectionProvider(configuration))
 
+// TODO this engine implementation is basedon TimeSeries.Split it or rename it.
 class RServeEngine(private val connectionProvider: RConnectionProvider) : Engine {
     private val log = LogManager.getLogger()
 
-    override fun schedule(calcDef: CalculationDefinition, tsValues: MappedTS): MappedTS {
+    override fun call(calcDef: CalculationDefinition, tsValues: MappedTS): MappedTS {
         val conn = connectionProvider.getConnection()
 
         source(calcDef, conn)

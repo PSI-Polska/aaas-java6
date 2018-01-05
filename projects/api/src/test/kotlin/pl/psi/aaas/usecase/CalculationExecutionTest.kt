@@ -2,8 +2,9 @@ package pl.psi.aaas.usecase
 
 import com.nhaarman.mockito_kotlin.*
 import io.kotlintest.specs.StringSpec
+import pl.psi.aaas.usecase.timeseries.TimeSeriesBasedCalculationExecution
 
-class ScriptExecutionTest : StringSpec() {
+class CalculationExecutionTest : StringSpec() {
     init {
         val NoSynchronizationSynchronizer = mock<ScriptSynchronizer> {
             on { isUnderSynchronization() } doReturn false
@@ -15,7 +16,7 @@ class ScriptExecutionTest : StringSpec() {
             on { read(eq(3L), any(), any()) } doReturn TS3
         }
         val MockEngine = mock<Engine> {
-            on { schedule(any(), any()) } doReturn listOf(TS1ResM, TS2ResM)
+            on { call(any(), any()) } doReturn listOf(TS1ResM, TS2ResM)
         }
 
         "Validation" {
@@ -24,7 +25,7 @@ class ScriptExecutionTest : StringSpec() {
 
         "ScriptExecutioner checks with Synchronizer if it can run" {
 
-            val out = TimeSeriesBasedScriptExecution(NoSynchronizationSynchronizer, TsRepo, MockEngine)
+            val out = TimeSeriesBasedCalculationExecution(NoSynchronizationSynchronizer, TsRepo, MockEngine)
 
             out.call(ValidDefinition)
 
@@ -36,7 +37,7 @@ class ScriptExecutionTest : StringSpec() {
         }.config(enabled = false)
 
         "ScriptsExecutioner reads all time series defined in TsIn" {
-            val out = TimeSeriesBasedScriptExecution(NoSynchronizationSynchronizer, TsRepo, MockEngine)
+            val out = TimeSeriesBasedCalculationExecution(NoSynchronizationSynchronizer, TsRepo, MockEngine)
 
             out.call(ValidDefinition)
 
@@ -48,12 +49,12 @@ class ScriptExecutionTest : StringSpec() {
         }.config(enabled = false)
 
         "ScriptExecutioner schedules calculation with mapped time series" {
-            val out = TimeSeriesBasedScriptExecution(NoSynchronizationSynchronizer, TsRepo, MockEngine)
+            val out = TimeSeriesBasedCalculationExecution(NoSynchronizationSynchronizer, TsRepo, MockEngine)
             val expectedMappedTS = listOf("A" to TS1, "B" to TS2, "C" to TS3)
 
             out.call(ValidDefinition)
 
-            verify(MockEngine).schedule(ValidDefinition, expectedMappedTS)
+            verify(MockEngine).call(ValidDefinition, expectedMappedTS)
         }
 
         "ScriptExecutioner fails when Engine fails" {
@@ -61,7 +62,7 @@ class ScriptExecutionTest : StringSpec() {
         }.config(enabled = false)
 
         "ScriptExecutioner maps and saves returned from Engine data" {
-            val out = TimeSeriesBasedScriptExecution(NoSynchronizationSynchronizer, TsRepo, MockEngine)
+            val out = TimeSeriesBasedCalculationExecution(NoSynchronizationSynchronizer, TsRepo, MockEngine)
 
             out.call(ValidDefinition)
 

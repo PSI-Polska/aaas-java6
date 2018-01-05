@@ -1,9 +1,11 @@
 package pl.psi.aaas.sample
 
 import pl.psi.aaas.Facade
+import pl.psi.aaas.engine.NoSynchronizationSynchronizer
 import pl.psi.aaas.engine.REngineConfiguration
 import pl.psi.aaas.engine.RServeEngine
 import pl.psi.aaas.usecase.*
+import pl.psi.aaas.usecase.timeseries.TimeSeriesBasedCalculationExecution
 import java.lang.management.ManagementFactory
 import java.rmi.server.RMISocketFactory
 import java.time.ZonedDateTime
@@ -55,7 +57,7 @@ object FixedFacade : Facade {
     val tsRepository: TimeSeriesRepository = MockTimeSeriesRepository()
 
     override fun callScript(calcDef: CalculationDefinition) {
-        val scriptExecution = TimeSeriesBasedScriptExecution(engine = engine, synchronizer = synchronizer, tsRepository = tsRepository)
+        val scriptExecution = TimeSeriesBasedCalculationExecution(engine = engine, synchronizer = synchronizer, tsRepository = tsRepository)
 
         scriptExecution.call(calcDef)
     }
