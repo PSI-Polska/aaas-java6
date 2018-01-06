@@ -8,14 +8,6 @@ component PSIProduct as PSI
 component AAAS as 3as
 component Engine as engine
 
-' The most basic Community AIORAE need:
-' provide already existing artificial inteligence, data engeneering solutions to PSIproduct.
-' This means using as "The engine": python, R, mathematica, matlab, julia to name a few.
-' Goals:
-' * simple to add to product
-' * able to use at least: R, python (which means Keras). Opened for extensions.
-' * simple to set up (3AS together with the engine)
-
 User <--> PSI
 PSI <--> 3as
 3as <--> engine
