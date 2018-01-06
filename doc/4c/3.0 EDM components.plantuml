@@ -19,19 +19,4 @@ cloud {
 ' No point in providing AIORAE components - it is far from beeing fided.
 ' TOOD draw components based on original image and add narration.
 
-skinparam actor {
-  BorderColor black
-  BackgroundColor gold
-  ArrowColor black
-}
-skinparam component {
-  BorderColor black
-  BackgroundColor gold
-  ArrowColor black
-}
-skinparam database {
-  BorderColor black
-  BackgroundColor gold
-  ArrowColor black
-}
 @enduml

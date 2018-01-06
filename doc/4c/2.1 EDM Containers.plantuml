@@ -1,7 +1,6 @@
 @startuml
 skinparam dpi 200
-' skinparam backgroundColor transparent
-' skinparam monochrome true
+skinparam backgroundColor transparent
 
 title EDM/PSImarket Containers
 
@@ -33,16 +32,4 @@ rstdio <--> 3as
 3as <--> engine
 engine <-right-> scripts
 
-skinparam actor {
-  BorderColor black
-  ArrowColor black
-}
-skinparam component {
-  BorderColor black
-  ArrowColor black
-}
-skinparam database {
-  BorderColor black
-  ArrowColor black
-}
 @enduml

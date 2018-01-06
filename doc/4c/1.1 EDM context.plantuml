@@ -1,5 +1,6 @@
 @startuml
 skinparam dpi 200
+skinparam backgroundColor transparent
 
 title PSImarket Context
 
@@ -15,6 +16,5 @@ BA <--> rstdio
 PSI <--> 3as
 rstdio <--> 3as
 3as <--> engine
-
 
 @enduml

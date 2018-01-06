@@ -1,5 +1,6 @@
 @startuml
 skinparam dpi 200
+skinparam backgroundColor transparent
 
 title AI OR AE Context
 
@@ -11,6 +12,5 @@ component Engine as engine
 User <--> PSI
 PSI <--> 3as
 3as <--> engine
-
 
 @enduml

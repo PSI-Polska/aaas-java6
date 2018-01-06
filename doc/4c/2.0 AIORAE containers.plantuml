@@ -1,5 +1,6 @@
 @startuml
 skinparam dpi 200
+skinparam backgroundColor transparent
 
 title AI OR AE Containers
 
@@ -13,30 +14,8 @@ cloud {
   component Engines as engine
 }
 
-' Questions:
-' * where comes the data from? from product? direct connection to the Engine?
-' * how communication is done? sync/async, coupled/decoupled?
-' * where is the source/binary evaluated by the engine
-'   * how it is defined? on what data? what API - will it be the same as production?
-'   * how it is provided to the engine? statically? dynamically?
-' * the same question applies to trained models
-' * what with "openshift issue"?
-
 User <--> PSI
 PSI <--> 3as
 3as <--> engine
 
-
-skinparam actor {
-  BorderColor black
-  ArrowColor black
-}
-skinparam component {
-  BorderColor black
-  ArrowColor black
-}
-skinparam database {
-  BorderColor black
-  ArrowColor black
-}
 @enduml
