@@ -1,30 +1,48 @@
 @startuml
 skinparam dpi 200
+skinparam backgroundColor transparent
 
-title Call Script when synchronization is not running and data is read from TSDB
+title Call Script when synchronization is not running
 
-actor ExternalSource
+actor PSImarket
 boundary Gateway
-control ScriptsExecutioner as Executioner
-' entity DefinitionValidator as Validator
+control TimeSeriesScriptsExecutioner as Executioner
 control ScriptsSynchronizer as Synchronizer
 boundary TimeSeriesRepository as TSRepo
-boundary EngineGateway as Engine
+boundary REngine as Engine
 
 autonumber
-ExternalSource -> Gateway: execute(CalculationDefinition)
-Gateway -> Executioner: call
-' Executioner -> Validator: validate(CalculationDefinition)
-' Validator -> Executioner: true
+PSImarket -> Gateway: execute(CalculationDefinition)
+activate PSImarket
+activate Gateway
+Gateway -\ Executioner: call
+deactivate Gateway
+activate Executioner
 Executioner -> Synchronizer: isUnderSynchronization?
+activate Synchronizer
 Synchronizer -> Executioner: {false}
-Executioner -> TSRepo: read(CalcDef.TsInIds)
-TSRepo -> Executioner: {TSData}
+deactivate Synchronizer
+||||
+Executioner -> TSRepo: read( In TimeSeries Ids)
+activate TSRepo
+TSRepo -> Executioner: {TSDataIn}
+deactivate TSRepo
+||||
 Executioner -\ Engine: call(CalculationDefinition, TSDataIn})
+activate Engine
 Engine -> Engine
 Engine -\ Executioner: {TSDataOut}
-Executioner -> TSRepo: save(TSDataOut)
+deactivate Engine
+||||
+Executioner -> TSRepo: save(OutTSIds, TSDataOut)
+activate TSRepo
 TSRepo -> Executioner
+deactivate TSRepo
 Executioner -> Gateway: {calculationResult}
+deactivate Executioner
+activate Gateway
+Gateway -> PSImarket: calculationDone
+deactivate Gateway
+deactivate PSImarket
 
 @enduml

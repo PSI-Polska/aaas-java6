@@ -9,27 +9,23 @@ actor BusinessAnalyst as BA
 package {
     database TSDB as tsdb
     component PSIProduct as PSI <<PSImarket>>
+    component AAAS as 3as
 }
 component RStudio as rstdio
 database ScriptsRepository as scripts <<Git>>
-component AAAS as 3as
 cloud {
     component Engines as engine <<R>>
 }
-
-' Answers:
-' * Data (TS) is provided by PSImarket and passed through 3AS to R
-' * Communication is done synchronously with method calls - tight integration
-' * Scripts are available for both, RStudio and R through Git repository
-' * Use case from Rstudio works exaclty the same way as Use case from product
-' * Engines, Scripts repository are dockerized, ready to be run on k8s or openshift
+database ModelsRepository as models
 
 User <--> PSI
 BA <--> rstdio
-rstdio <--> scripts
-PSI <--> 3as
-rstdio <--> 3as
-3as <--> engine
-engine <-right-> scripts
+rstdio <--> scripts : git
+PSI <--> tsdb
+PSI <--> 3as : method calls
+rstdio <--> 3as : Rserve/GPB
+3as <--> engine : Rserve/GPB
+engine <-right-> scripts : git
+engine <--> models
 
 @enduml

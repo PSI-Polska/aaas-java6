@@ -2,7 +2,7 @@
 skinparam dpi 200
 skinparam backgroundColor transparent
 
-title PSImarket Context
+title EDM/PSImarket Context
 
 actor User
 actor BusinessAnalyst as BA
