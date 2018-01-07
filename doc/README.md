@@ -1,8 +1,20 @@
 # Introduction to Algorithm As A Service (AAAS)
 
+Table of Contents
+- [Introduction to Algorithm As A Service (AAAS)](#introduction-to-algorithm-as-a-service-aaas)
+    - [Context of usage and Containers](#context-of-usage-and-containers)
+        - [1. Context of 3AS usages](#1-context-of-3as-usages)
+            - [1.1 Context of 3AS in PSImarket](#11-context-of-3as-in-psimarket)
+        - [2. Containers](#2-containers)
+            - [2.1 EDM/PSImarket Containers](#21-edmpsimarket-containers)
+        - [3. EDM Components](#3-edm-components)
+    - [Use cases](#use-cases)
+        - [1. The most general idea](#1-the-most-general-idea)
+        - [1.1 EDM general idea](#11-edm-general-idea)
+
 ## Context of usage and Containers
 
-### 1. Context of 3AS usage
+### 1. Context of 3AS usages
 
 The most basic Community AIORAE needs:
 
