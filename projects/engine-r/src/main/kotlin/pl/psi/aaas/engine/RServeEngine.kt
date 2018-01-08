@@ -1,9 +1,9 @@
 package pl.psi.aaas.engine
 
-import org.apache.logging.log4j.LogManager
 import org.rosuda.REngine.REXP
 import org.rosuda.REngine.RList
 import org.rosuda.REngine.Rserve.RConnection
+import org.slf4j.LoggerFactory
 import pl.psi.aaas.usecase.CalculationDefinition
 import pl.psi.aaas.usecase.Engine
 import pl.psi.aaas.usecase.MappedTS
@@ -12,7 +12,7 @@ import java.util.Collections.emptyList
 
 // TODO this engine implementation is basedon TimeSeries.Split it or rename it.
 class RServeEngine(private val connectionProvider: RConnectionProvider) : Engine {
-    private val log = LogManager.getLogger()
+    private val log = LoggerFactory.getLogger(RServeEngine::class.java)
 
     companion object {
         private val baseUserScriptPath = "/var/userScripts/"

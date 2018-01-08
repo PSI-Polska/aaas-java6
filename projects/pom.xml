@@ -26,6 +26,7 @@
         <version.kotlintest>2.0.7</version.kotlintest>
 
         <!-- dependencies properties -->
+        <version.slf4j>1.7.25</version.slf4j>
     </properties>
 
     <dependencyManagement>
@@ -43,13 +44,10 @@
                 <version>${version.kotlin}</version>
             </dependency>
 
-
             <dependency>
-                <groupId>org.apache.logging.log4j</groupId>
-                <artifactId>log4j-bom</artifactId>
-                <version>2.10.0</version>
-                <scope>import</scope>
-                <type>pom</type>
+                <groupId>org.slf4j</groupId>
+                <artifactId>slf4j-api</artifactId>
+                <version>${version.slf4j}</version>
             </dependency>
 
             <!-- test dependencies -->

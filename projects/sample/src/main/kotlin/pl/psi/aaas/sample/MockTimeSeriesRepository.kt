@@ -1,13 +1,13 @@
 package pl.psi.aaas.sample
 
-import org.apache.logging.log4j.LogManager
+import org.slf4j.LoggerFactory
 import pl.psi.aaas.usecase.TS
 import pl.psi.aaas.usecase.TimeSeriesRepository
 import pl.psi.aaas.usecase.TsId
 import java.time.ZonedDateTime
 
 internal class MockTimeSeriesRepository : TimeSeriesRepository {
-    private val log = LogManager.getLogger()
+    private val log = LoggerFactory.getLogger(MockTimeSeriesRepository::class.java)
 
     private val ts = (1 until 24 * 356).toList().map { it.toDouble() }.toDoubleArray()
 

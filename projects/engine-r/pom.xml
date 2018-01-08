@@ -30,6 +30,11 @@
         </dependency>
 
         <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-api</artifactId>
+        </dependency>
+
+        <dependency>
             <groupId>io.kotlintest</groupId>
             <artifactId>kotlintest</artifactId>
         </dependency>
