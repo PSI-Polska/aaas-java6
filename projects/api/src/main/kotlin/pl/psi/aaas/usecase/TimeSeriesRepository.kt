@@ -3,7 +3,7 @@ package pl.psi.aaas.usecase
 import java.time.ZonedDateTime
 
 typealias TsId = Long
-typealias TS = Array<Double?>
+typealias TS = DoubleArray // TODO change to Array<Double?>
 
 /**
  * TimeSeries data repository used by TimeSeries based [CalculationExecution] implementations.

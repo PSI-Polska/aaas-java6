@@ -10,7 +10,7 @@ class CalculationExecutionTest : StringSpec() {
             on { isUnderSynchronization() } doReturn false
         }
         val tsRepo = mock<TimeSeriesRepository> {
-            on { read(any(), any(), any()) } doReturn arrayOf()
+            on { read(any(), any(), any()) } doReturn doubleArrayOf()
             on { read(eq(1L), any(), any()) } doReturn TS1
             on { read(eq(2L), any(), any()) } doReturn TS2
             on { read(eq(3L), any(), any()) } doReturn TS3

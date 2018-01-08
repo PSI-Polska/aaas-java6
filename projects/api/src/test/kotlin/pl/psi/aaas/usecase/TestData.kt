@@ -9,11 +9,11 @@ val ValidDefinition = CalculationDefinition(
         ZonedDateTime.now().plusDays(1),
         "validScriptPath")
 
-val TS1 = arrayOf<Double?>(1.0, 1.0, 1.0, 1.0)
-val TS2 = arrayOf<Double?>(2.0, 2.0, 2.0, 2.0)
-val TS3 = arrayOf<Double?>(3.0, 3.0, 3.0, 3.0)
+val TS1 = doubleArrayOf(1.0, 1.0, 1.0, 1.0)
+val TS2 = doubleArrayOf(2.0, 2.0, 2.0, 2.0)
+val TS3 = doubleArrayOf(3.0, 3.0, 3.0, 3.0)
 
-val TS1Res = arrayOf<Double?>(-1.0, -1.0, -1.0, -1.0)
+val TS1Res = doubleArrayOf(-1.0, -1.0, -1.0, -1.0)
 val TS1ResM = "Y" to TS1Res
-val TS2Res = arrayOf<Double?>(-2.0, -2.0, -2.0, -2.0)
+val TS2Res = doubleArrayOf(-2.0, -2.0, -2.0, -2.0)
 val TS2ResM = "Z" to TS2Res
