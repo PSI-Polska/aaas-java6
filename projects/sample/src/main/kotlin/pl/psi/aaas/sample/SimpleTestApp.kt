@@ -48,11 +48,11 @@ object SimpleTestApp {
         val begin = ZonedDateTime.now()
         val end = begin.plusDays(1)
 
-        return CalculationDefinition(inIds, outIds, begin, end, "/var/userScripts/add.R")
+        return CalculationDefinition(inIds, outIds, begin, end, "add")
     }
 }
 
-val LocalConfiguration = REngineConfiguration("localhost", 6311)
+val LocalConfiguration = REngineConfiguration("192.168.99.100", 6311)
 
 class LocalRConnectionProvider(override var configuration: REngineConfiguration = LocalConfiguration) : RConnectionProvider
 
