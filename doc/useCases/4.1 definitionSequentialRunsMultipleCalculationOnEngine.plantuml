@@ -1,0 +1,23 @@
+@startuml
+skinparam dpi 200
+
+title Sequential Run on R and Python computational engines (multiple calculations)
+
+actor PSIproduct
+boundary Gateway
+boundary Engine as Engine1 <<R>>
+boundary Engine as Engine2 <<Python>>
+
+' TODO what with scenarios when there is no data passed but for eg. TS is returned?
+
+autonumber
+PSIproduct -> Gateway: execute(CalculationDefinition1)
+Gateway -> Engine1: call1(CalculationDefinition1)
+Engine1 -> Engine1: calculation1
+Engine1 -> Gateway: {calculationResult1}
+Gateway -> Engine2: call2(CalculationDefinition2, calculationResult1)
+Engine2 -> Engine2: {data preprocessing}
+Engine2 -> Engine2: calculation2
+Engine2 -> Gateway: {calculationResult2}
+Gateway -> PSIproduct: {calculationResult2}
+@enduml
