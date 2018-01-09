@@ -63,6 +63,23 @@
                 <artifactId>kotlin-maven-plugin</artifactId>
                 <inherited>true</inherited>
             </plugin>
+
+            <plugin>
+                <groupId>io.fabric8</groupId>
+                <artifactId>docker-maven-plugin</artifactId>
+                <version>0.23.0</version>
+                <configuration>
+                    <machine>
+                        <name>default</name>
+                    </machine>
+                    <images>
+                        <image>
+                            <name>repository.gitlab.com/edmpsi/aaas/engine-r</name>
+                            <dockerFile>Dockerfile</dockerFile>
+                        </image>
+                    </images>
+                </configuration>
+            </plugin>
         </plugins>
     </build>
 </project>
