@@ -1,5 +1,6 @@
 @startuml
 skinparam dpi 200
+skinparam backgroundColor transparent
 
 title Synchronous communication
 
@@ -13,8 +14,8 @@ activate PSIproduct
 PSIproduct -> Sync: execute{CalculationDefinition}
 activate Sync
 Sync -> Gateway: execute(CalculationDefinition)
-Gateway -> Engine: call
-Engine -> Engine
+Gateway -> Engine: call(CalculationDefinition)
+Engine -> Engine: calculation
 Engine -> Gateway: {calculationResult}
 Gateway -> Sync: {calculationResult}
 deactivate Sync

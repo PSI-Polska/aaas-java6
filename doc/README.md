@@ -85,7 +85,18 @@ The simplest and most basic form of our requirements is to call some prepared de
 
 ![](useCases/General%20idea.png)
 
-### 1.1 EDM general idea
+### 1.1 The algorithm call with asynchronous communication
+
+This kind of architecture is more precise description of general sketch, shown in previous section. The process is asynchronous from the point of view of business user. An additional gateway has been introduced in order to coordinate the flow of computational process. In particular one can imagine an instantiation of multiple computational engines and passing the calculation request to chosen one or multiple ones, the latter in the case of parallel execution.
+
+![](useCases/Asynchronous%20communication.png)
+
+### 1.2 The algorithm call with synchronous communication
+
+![](useCases/Synchronous%20communication.png)
+
+
+### 1.2 EDM general idea
 
 EDM/PSI market use case is Time Series forecasting using R.
 
