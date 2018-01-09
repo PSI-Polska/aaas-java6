@@ -2,6 +2,8 @@ package pl.psi.aaas.engine
 
 import com.nhaarman.mockito_kotlin.doReturn
 import com.nhaarman.mockito_kotlin.mock
+import org.rosuda.REngine.REXP
+import org.rosuda.REngine.REXPDouble
 import org.rosuda.REngine.REXPList
 import org.rosuda.REngine.RList
 import org.rosuda.REngine.Rserve.RConnection
@@ -11,14 +13,15 @@ val EmptyConfiguration = REngineConfiguration("", 1)
 class MockRConnectionProvider(override var configuration: REngineConfiguration = EmptyConfiguration) : RConnectionProvider {
     private val conn = mock<RConnection>
     {
-        on { eval("dfOut <- run(dfIn)") } doReturn REXPList(getResult())
+        on { eval("dfOut <- run(dfIn, additionalParameters)") } doReturn REXPList(getResult())
     }
 
     override fun getConnection(): RConnection = conn
 
     private fun getResult(): RList {
         val ret = RList()
-        ret.put("C", listOf(1))
+        ret.put("Y", REXPDouble(1.0))
+        ret.put("Z", REXPDouble(2.0))
         return ret
     }
 }
