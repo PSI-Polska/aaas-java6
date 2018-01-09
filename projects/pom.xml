@@ -24,6 +24,7 @@
         <kotlin.compiler.incremental>true</kotlin.compiler.incremental>
         <version.kotlin>1.2.10</version.kotlin>
         <version.kotlintest>2.0.7</version.kotlintest>
+        <version.dokka>0.9.15</version.dokka>
 
         <!-- dependencies properties -->
         <version.slf4j>1.7.25</version.slf4j>
@@ -111,22 +112,28 @@
 
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-javadoc-plugin</artifactId>
-                <version>2.10.4</version>
-                <executions>
-                    <execution>
-                        <id>attach-javadocs</id>
-                        <goals>
-                            <goal>jar</goal>
-                        </goals>
-                    </execution>
-                </executions>
+                <artifactId>maven-release-plugin</artifactId>
+                <version>2.5.3</version>
             </plugin>
 
             <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-release-plugin</artifactId>
-                <version>2.5.3</version>
+                <groupId>org.jetbrains.dokka</groupId>
+                <artifactId>dokka-maven-plugin</artifactId>
+                <version>${version.dokka}</version>
+                <executions>
+                    <execution>
+                        <phase>pre-site</phase>
+                        <goals>
+                            <goal>dokka</goal>
+                        </goals>
+                    </execution>
+                    <execution>
+                        <id>attach-javadocs</id>
+                        <goals>
+                            <goal>javadoc</goal>
+                        </goals>
+                    </execution>
+                </executions>
             </plugin>
         </plugins>
     </build>
@@ -137,7 +144,6 @@
             <email>krzysztof.skitek@gmail.com</email>
         </developer>
     </developers>
-
 
     <scm>
         <developerConnection>scm:git:https://gitlab.com/edmpsi/aaas.git</developerConnection>
@@ -153,4 +159,13 @@
             <url>http://EM-ABG-13-CI03.psi.de:8084/repository/snapshots/</url>
         </snapshotRepository>
     </distributionManagement>
+
+    <pluginRepositories>
+        <pluginRepository>
+            <id>jcenter</id>
+            <name>JCenter</name>
+            <url>https://jcenter.bintray.com/</url>
+        </pluginRepository>
+    </pluginRepositories>
+
 </project>
