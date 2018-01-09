@@ -78,7 +78,10 @@ Below diagrams describe different use cases on sequence diagrams gradually intro
 
 ### 1. The most general idea
 
-The simplest and most basic form of our requirements is to call some prepared definition on the Engine through gateway/bridge component (thus integration with PSIproduct consumes small amount of effort).
+The simplest and most basic form of our requirements is to call some prepared definition on the Engine through gateway/bridge component (thus integration with PSIproduct consumes small amount of effort). Such a general idea can be turn into many particular use cases involving single call of external computational engine, e.g.:
+* forecasting/predicting with already prepared forecasting model,
+* categorizing the data with respect to trained and available Machine Learning model,
+* an application of a unsupervised Machine Learning on provided data.
 
 ![](useCases/General%20idea.png)
 
