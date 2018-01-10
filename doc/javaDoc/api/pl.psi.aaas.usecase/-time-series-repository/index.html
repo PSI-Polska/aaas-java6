@@ -1,0 +1,37 @@
+<HTML>
+<HEAD>
+<meta charset="UTF-8">
+<title>TimeSeriesRepository - api</title>
+<link rel="stylesheet" href="..\..\..\style.css">
+</HEAD>
+<BODY>
+<a href="../../index.html">api</a>&nbsp;/&nbsp;<a href="../index.html">pl.psi.aaas.usecase</a>&nbsp;/&nbsp;<a href=".">TimeSeriesRepository</a><br/>
+<br/>
+<h1>TimeSeriesRepository</h1>
+<code><span class="keyword">interface </span><span class="identifier">TimeSeriesRepository</span></code>
+<p>TimeSeries data repository used by TimeSeries based <a href="../-calculation-execution/index.html">CalculationExecution</a> implementations.</p>
+<h3>Functions</h3>
+<table>
+<tbody>
+<tr>
+<td>
+<p><a href="read.html">read</a></p>
+</td>
+<td>
+<code><span class="keyword">abstract</span> <span class="keyword">fun </span><span class="identifier">read</span><span class="symbol">(</span><span class="identifier" id="pl.psi.aaas.usecase.TimeSeriesRepository$read(kotlin.Long, java.time.ZonedDateTime, java.time.ZonedDateTime)/tsId">tsId</span><span class="symbol">:</span>&nbsp;<a href="../-ts-id.html"><span class="identifier">TsId</span></a><span class="symbol">, </span><span class="identifier" id="pl.psi.aaas.usecase.TimeSeriesRepository$read(kotlin.Long, java.time.ZonedDateTime, java.time.ZonedDateTime)/begin">begin</span><span class="symbol">:</span>&nbsp;<span class="identifier">ZonedDateTime</span><span class="symbol">, </span><span class="identifier" id="pl.psi.aaas.usecase.TimeSeriesRepository$read(kotlin.Long, java.time.ZonedDateTime, java.time.ZonedDateTime)/end">end</span><span class="symbol">:</span>&nbsp;<span class="identifier">ZonedDateTime</span><span class="symbol">)</span><span class="symbol">: </span><a href="../-t-s.html"><span class="identifier">TS</span></a></code>
+<p>Read time series.</p>
+</td>
+</tr>
+<tr>
+<td>
+<p><a href="save.html">save</a></p>
+</td>
+<td>
+<code><span class="keyword">abstract</span> <span class="keyword">fun </span><span class="identifier">save</span><span class="symbol">(</span><span class="identifier" id="pl.psi.aaas.usecase.TimeSeriesRepository$save(kotlin.Long, kotlin.DoubleArray)/tsId">tsId</span><span class="symbol">:</span>&nbsp;<a href="../-ts-id.html"><span class="identifier">TsId</span></a><span class="symbol">, </span><span class="identifier" id="pl.psi.aaas.usecase.TimeSeriesRepository$save(kotlin.Long, kotlin.DoubleArray)/tsValues">tsValues</span><span class="symbol">:</span>&nbsp;<a href="../-t-s.html"><span class="identifier">TS</span></a><span class="symbol">)</span><span class="symbol">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-unit/index.html"><span class="identifier">Unit</span></a></code>
+<p>Save time series data.</p>
+</td>
+</tr>
+</tbody>
+</table>
+</BODY>
+</HTML>

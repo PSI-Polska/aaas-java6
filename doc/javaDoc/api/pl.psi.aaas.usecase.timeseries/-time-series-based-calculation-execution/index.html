@@ -1,0 +1,72 @@
+<HTML>
+<HEAD>
+<meta charset="UTF-8">
+<title>TimeSeriesBasedCalculationExecution - api</title>
+<link rel="stylesheet" href="..\..\..\style.css">
+</HEAD>
+<BODY>
+<a href="../../index.html">api</a>&nbsp;/&nbsp;<a href="../index.html">pl.psi.aaas.usecase.timeseries</a>&nbsp;/&nbsp;<a href=".">TimeSeriesBasedCalculationExecution</a><br/>
+<br/>
+<h1>TimeSeriesBasedCalculationExecution</h1>
+<code><span class="keyword">class </span><span class="identifier">TimeSeriesBasedCalculationExecution</span>&nbsp;<span class="symbol">:</span>&nbsp;<a href="../../pl.psi.aaas.usecase/-calculation-execution/index.html"><span class="identifier">CalculationExecution</span></a></code>
+<p>CalculationExecution implementation based on TimeSeries.
+TimeSeries values are read from <a href="../../pl.psi.aaas.usecase/-time-series-repository/index.html">TimeSeriesRepository</a> before the call and the results are saved back with repository after the call.
+CalculationExecution uses <a href="../../pl.psi.aaas.usecase/-script-synchronizer/index.html">ScriptSynchronizer</a> to wait for synchronization to end in case synchronization is ongoing.</p>
+<h3>Constructors</h3>
+<table>
+<tbody>
+<tr>
+<td>
+<p><a href="-init-.html">&lt;init&gt;</a></p>
+</td>
+<td>
+<code><span class="identifier">TimeSeriesBasedCalculationExecution</span><span class="symbol">(</span><span class="identifier" id="pl.psi.aaas.usecase.timeseries.TimeSeriesBasedCalculationExecution$<init>(pl.psi.aaas.usecase.ScriptSynchronizer, pl.psi.aaas.usecase.TimeSeriesRepository, pl.psi.aaas.usecase.Engine)/synchronizer">synchronizer</span><span class="symbol">:</span>&nbsp;<a href="../../pl.psi.aaas.usecase/-script-synchronizer/index.html"><span class="identifier">ScriptSynchronizer</span></a><span class="symbol">, </span><span class="identifier" id="pl.psi.aaas.usecase.timeseries.TimeSeriesBasedCalculationExecution$<init>(pl.psi.aaas.usecase.ScriptSynchronizer, pl.psi.aaas.usecase.TimeSeriesRepository, pl.psi.aaas.usecase.Engine)/tsRepository">tsRepository</span><span class="symbol">:</span>&nbsp;<a href="../../pl.psi.aaas.usecase/-time-series-repository/index.html"><span class="identifier">TimeSeriesRepository</span></a><span class="symbol">, </span><span class="identifier" id="pl.psi.aaas.usecase.timeseries.TimeSeriesBasedCalculationExecution$<init>(pl.psi.aaas.usecase.ScriptSynchronizer, pl.psi.aaas.usecase.TimeSeriesRepository, pl.psi.aaas.usecase.Engine)/engine">engine</span><span class="symbol">:</span>&nbsp;<a href="../../pl.psi.aaas.usecase/-engine/index.html"><span class="identifier">Engine</span></a><span class="symbol">)</span></code>
+<p>CalculationExecution implementation based on TimeSeries.
+TimeSeries values are read from <a href="../../pl.psi.aaas.usecase/-time-series-repository/index.html">TimeSeriesRepository</a> before the call and the results are saved back with repository after the call.
+CalculationExecution uses <a href="../../pl.psi.aaas.usecase/-script-synchronizer/index.html">ScriptSynchronizer</a> to wait for synchronization to end in case synchronization is ongoing.</p>
+</td>
+</tr>
+</tbody>
+</table>
+<h3>Properties</h3>
+<table>
+<tbody>
+<tr>
+<td>
+<p><a href="engine.html">engine</a></p>
+</td>
+<td>
+<code><span class="keyword">val </span><span class="identifier">engine</span><span class="symbol">: </span><a href="../../pl.psi.aaas.usecase/-engine/index.html"><span class="identifier">Engine</span></a></code></td>
+</tr>
+<tr>
+<td>
+<p><a href="synchronizer.html">synchronizer</a></p>
+</td>
+<td>
+<code><span class="keyword">val </span><span class="identifier">synchronizer</span><span class="symbol">: </span><a href="../../pl.psi.aaas.usecase/-script-synchronizer/index.html"><span class="identifier">ScriptSynchronizer</span></a></code></td>
+</tr>
+<tr>
+<td>
+<p><a href="ts-repository.html">tsRepository</a></p>
+</td>
+<td>
+<code><span class="keyword">val </span><span class="identifier">tsRepository</span><span class="symbol">: </span><a href="../../pl.psi.aaas.usecase/-time-series-repository/index.html"><span class="identifier">TimeSeriesRepository</span></a></code></td>
+</tr>
+</tbody>
+</table>
+<h3>Functions</h3>
+<table>
+<tbody>
+<tr>
+<td>
+<p><a href="call.html">call</a></p>
+</td>
+<td>
+<code><span class="keyword">fun </span><span class="identifier">call</span><span class="symbol">(</span><span class="identifier" id="pl.psi.aaas.usecase.timeseries.TimeSeriesBasedCalculationExecution$call(pl.psi.aaas.usecase.CalculationDefinition)/calcDef">calcDef</span><span class="symbol">:</span>&nbsp;<a href="../../pl.psi.aaas.usecase/-calculation-definition/index.html"><span class="identifier">CalculationDefinition</span></a><span class="symbol">)</span><span class="symbol">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-unit/index.html"><span class="identifier">Unit</span></a></code>
+<p>Call the calculation.</p>
+</td>
+</tr>
+</tbody>
+</table>
+</BODY>
+</HTML>

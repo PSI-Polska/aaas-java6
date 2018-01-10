@@ -1,0 +1,154 @@
+<HTML>
+<HEAD>
+<meta charset="UTF-8">
+<title>pl.psi.aaas.usecase - api</title>
+<link rel="stylesheet" href="..\..\style.css">
+</HEAD>
+<BODY>
+<a href="../index.html">api</a>&nbsp;/&nbsp;<a href=".">pl.psi.aaas.usecase</a><br/>
+<br/>
+<h2>Package pl.psi.aaas.usecase</h2>
+<h3>Types</h3>
+<table>
+<tbody>
+<tr>
+<td>
+<p><a href="-calculation-definition/index.html">CalculationDefinition</a></p>
+</td>
+<td>
+<code><span class="keyword">data</span> <span class="keyword">class </span><span class="identifier">CalculationDefinition</span></code>
+<p>DTO to move calculation definition information.</p>
+</td>
+</tr>
+<tr>
+<td>
+<p><a href="-calculation-execution/index.html">CalculationExecution</a></p>
+</td>
+<td>
+<code><span class="keyword">interface </span><span class="identifier">CalculationExecution</span></code>
+<p>CalculationExecution interface describes calculation use cases.</p>
+</td>
+</tr>
+<tr>
+<td>
+<p><a href="-engine/index.html">Engine</a></p>
+</td>
+<td>
+<code><span class="keyword">interface </span><span class="identifier">Engine</span></code>
+<p>The calculation engine implemntations are used by use cases implementations (<a href="-calculation-execution/index.html">CalculationExecution</a>).</p>
+</td>
+</tr>
+<tr>
+<td>
+<p><a href="-jmx-statistics/index.html">JmxStatistics</a></p>
+</td>
+<td>
+<code><span class="keyword">object </span><span class="identifier">JmxStatistics</span>&nbsp;<span class="symbol">:</span>&nbsp;<a href="-settable-statistics/index.html"><span class="identifier">SettableStatistics</span></a></code></td>
+</tr>
+<tr>
+<td>
+<p><a href="-script-synchronizer/index.html">ScriptSynchronizer</a></p>
+</td>
+<td>
+<code><span class="keyword">interface </span><span class="identifier">ScriptSynchronizer</span></code>
+<p>ScriptSynchronizer is responsible for signaling ongoing synchronization of scripts on engine instances
+to implementations of <a href="-calculation-execution/index.html">CalculationExecution</a>.
+It is important that no script execution is done during synchronization of scripts on engine instances.</p>
+</td>
+</tr>
+<tr>
+<td>
+<p><a href="-settable-statistics/index.html">SettableStatistics</a></p>
+</td>
+<td>
+<code><span class="keyword">interface </span><span class="identifier">SettableStatistics</span>&nbsp;<span class="symbol">:</span>&nbsp;<a href="-statistics/index.html"><span class="identifier">Statistics</span></a></code></td>
+</tr>
+<tr>
+<td>
+<p><a href="-statistics/index.html">Statistics</a></p>
+</td>
+<td>
+<code><span class="keyword">interface </span><span class="identifier">Statistics</span></code></td>
+</tr>
+<tr>
+<td>
+<p><a href="-time-series-repository/index.html">TimeSeriesRepository</a></p>
+</td>
+<td>
+<code><span class="keyword">interface </span><span class="identifier">TimeSeriesRepository</span></code>
+<p>TimeSeries data repository used by TimeSeries based <a href="-calculation-execution/index.html">CalculationExecution</a> implementations.</p>
+</td>
+</tr>
+</tbody>
+</table>
+<h3>Exceptions</h3>
+<table>
+<tbody>
+<tr>
+<td>
+<p><a href="-calculation-exception/index.html">CalculationException</a></p>
+</td>
+<td>
+<code><span class="keyword">open</span> <span class="keyword">class </span><span class="identifier">CalculationException</span>&nbsp;<span class="symbol">:</span>&nbsp;<a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-runtime-exception/index.html"><span class="identifier">RuntimeException</span></a></code>
+<p>Calculation Exception.</p>
+</td>
+</tr>
+<tr>
+<td>
+<p><a href="-time-series-access-exception/index.html">TimeSeriesAccessException</a></p>
+</td>
+<td>
+<code><span class="keyword">class </span><span class="identifier">TimeSeriesAccessException</span>&nbsp;<span class="symbol">:</span>&nbsp;<a href="-calculation-exception/index.html"><span class="identifier">CalculationException</span></a></code>
+<p>TimeSeries access operations exception.</p>
+</td>
+</tr>
+</tbody>
+</table>
+<h3>Type Aliases</h3>
+<table>
+<tbody>
+<tr>
+<td>
+<p><a href="-mapped-t-s.html">MappedTS</a></p>
+</td>
+<td>
+<code><span class="keyword">typealias </span><span class="identifier">MappedTS</span>&nbsp;<span class="symbol">=</span>&nbsp;<a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/-list/index.html"><span class="identifier">List</span></a><span class="symbol">&lt;</span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-pair/index.html"><span class="identifier">Pair</span></a><span class="symbol">&lt;</span><a href="-symbol.html"><span class="identifier">Symbol</span></a><span class="symbol">,</span>&nbsp;<a href="-t-s.html"><span class="identifier">TS</span></a><span class="symbol">&gt;</span><span class="symbol">&gt;</span></code>
+<p>List of mapped time series values with Symbol.</p>
+</td>
+</tr>
+<tr>
+<td>
+<p><a href="-parameters.html">Parameters</a></p>
+</td>
+<td>
+<code><span class="keyword">typealias </span><span class="identifier">Parameters</span>&nbsp;<span class="symbol">=</span>&nbsp;<a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/-map/index.html"><span class="identifier">Map</span></a><span class="symbol">&lt;</span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html"><span class="identifier">String</span></a><span class="symbol">,</span>&nbsp;<a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html"><span class="identifier">String</span></a><span class="symbol">&gt;</span></code>
+<p>Parameters of calculation.</p>
+</td>
+</tr>
+<tr>
+<td>
+<p><a href="-symbol.html">Symbol</a></p>
+</td>
+<td>
+<code><span class="keyword">typealias </span><span class="identifier">Symbol</span>&nbsp;<span class="symbol">=</span>&nbsp;<a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html"><span class="identifier">String</span></a></code>
+<p>Time series Symbol.</p>
+</td>
+</tr>
+<tr>
+<td>
+<p><a href="-t-s.html">TS</a></p>
+</td>
+<td>
+<code><span class="keyword">typealias </span><span class="identifier">TS</span>&nbsp;<span class="symbol">=</span>&nbsp;<a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-double-array/index.html"><span class="identifier">DoubleArray</span></a></code></td>
+</tr>
+<tr>
+<td>
+<p><a href="-ts-id.html">TsId</a></p>
+</td>
+<td>
+<code><span class="keyword">typealias </span><span class="identifier">TsId</span>&nbsp;<span class="symbol">=</span>&nbsp;<a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-long/index.html"><span class="identifier">Long</span></a></code></td>
+</tr>
+</tbody>
+</table>
+</BODY>
+</HTML>

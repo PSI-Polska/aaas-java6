@@ -1,0 +1,81 @@
+<HTML>
+<HEAD>
+<meta charset="UTF-8">
+<title>CalculationDefinition - api</title>
+<link rel="stylesheet" href="..\..\..\style.css">
+</HEAD>
+<BODY>
+<a href="../../index.html">api</a>&nbsp;/&nbsp;<a href="../index.html">pl.psi.aaas.usecase</a>&nbsp;/&nbsp;<a href=".">CalculationDefinition</a><br/>
+<br/>
+<h1>CalculationDefinition</h1>
+<code><span class="keyword">data</span> <span class="keyword">class </span><span class="identifier">CalculationDefinition</span></code>
+<p>DTO to move calculation definition information.</p>
+<h3>Constructors</h3>
+<table>
+<tbody>
+<tr>
+<td>
+<p><a href="-init-.html">&lt;init&gt;</a></p>
+</td>
+<td>
+<code><span class="identifier">CalculationDefinition</span><span class="symbol">(</span><span class="identifier" id="pl.psi.aaas.usecase.CalculationDefinition$<init>(kotlin.collections.Map((kotlin.String, kotlin.Long)), kotlin.collections.Map((kotlin.String, kotlin.Long)), java.time.ZonedDateTime, java.time.ZonedDateTime, kotlin.String, kotlin.collections.Map((kotlin.String, )))/timeSeriesIdsIn">timeSeriesIdsIn</span><span class="symbol">:</span>&nbsp;<a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/-map/index.html"><span class="identifier">Map</span></a><span class="symbol">&lt;</span><a href="../-symbol.html"><span class="identifier">Symbol</span></a><span class="symbol">,</span>&nbsp;<a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-long/index.html"><span class="identifier">Long</span></a><span class="symbol">&gt;</span>&nbsp;<span class="symbol">=</span>&nbsp;emptyMap()<span class="symbol">, </span><span class="identifier" id="pl.psi.aaas.usecase.CalculationDefinition$<init>(kotlin.collections.Map((kotlin.String, kotlin.Long)), kotlin.collections.Map((kotlin.String, kotlin.Long)), java.time.ZonedDateTime, java.time.ZonedDateTime, kotlin.String, kotlin.collections.Map((kotlin.String, )))/timeSeriesIdsOut">timeSeriesIdsOut</span><span class="symbol">:</span>&nbsp;<a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/-map/index.html"><span class="identifier">Map</span></a><span class="symbol">&lt;</span><a href="../-symbol.html"><span class="identifier">Symbol</span></a><span class="symbol">,</span>&nbsp;<a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-long/index.html"><span class="identifier">Long</span></a><span class="symbol">&gt;</span>&nbsp;<span class="symbol">=</span>&nbsp;emptyMap()<span class="symbol">, </span><span class="identifier" id="pl.psi.aaas.usecase.CalculationDefinition$<init>(kotlin.collections.Map((kotlin.String, kotlin.Long)), kotlin.collections.Map((kotlin.String, kotlin.Long)), java.time.ZonedDateTime, java.time.ZonedDateTime, kotlin.String, kotlin.collections.Map((kotlin.String, )))/begin">begin</span><span class="symbol">:</span>&nbsp;<span class="identifier">ZonedDateTime</span><span class="symbol">, </span><span class="identifier" id="pl.psi.aaas.usecase.CalculationDefinition$<init>(kotlin.collections.Map((kotlin.String, kotlin.Long)), kotlin.collections.Map((kotlin.String, kotlin.Long)), java.time.ZonedDateTime, java.time.ZonedDateTime, kotlin.String, kotlin.collections.Map((kotlin.String, )))/end">end</span><span class="symbol">:</span>&nbsp;<span class="identifier">ZonedDateTime</span><span class="symbol">, </span><span class="identifier" id="pl.psi.aaas.usecase.CalculationDefinition$<init>(kotlin.collections.Map((kotlin.String, kotlin.Long)), kotlin.collections.Map((kotlin.String, kotlin.Long)), java.time.ZonedDateTime, java.time.ZonedDateTime, kotlin.String, kotlin.collections.Map((kotlin.String, )))/calculationScriptPath">calculationScriptPath</span><span class="symbol">:</span>&nbsp;<a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html"><span class="identifier">String</span></a><span class="symbol">, </span><span class="identifier" id="pl.psi.aaas.usecase.CalculationDefinition$<init>(kotlin.collections.Map((kotlin.String, kotlin.Long)), kotlin.collections.Map((kotlin.String, kotlin.Long)), java.time.ZonedDateTime, java.time.ZonedDateTime, kotlin.String, kotlin.collections.Map((kotlin.String, )))/additionalParameters">additionalParameters</span><span class="symbol">:</span>&nbsp;<a href="../-parameters.html"><span class="identifier">Parameters</span></a>&nbsp;<span class="symbol">=</span>&nbsp;emptyMap()<span class="symbol">)</span></code>
+<p>DTO to move calculation definition information.</p>
+</td>
+</tr>
+</tbody>
+</table>
+<h3>Properties</h3>
+<table>
+<tbody>
+<tr>
+<td>
+<p><a href="additional-parameters.html">additionalParameters</a></p>
+</td>
+<td>
+<code><span class="keyword">val </span><span class="identifier">additionalParameters</span><span class="symbol">: </span><a href="../-parameters.html"><span class="identifier">Parameters</span></a></code></td>
+</tr>
+<tr>
+<td>
+<p><a href="begin.html">begin</a></p>
+</td>
+<td>
+<code><span class="keyword">val </span><span class="identifier">begin</span><span class="symbol">: </span><span class="identifier">ZonedDateTime</span></code></td>
+</tr>
+<tr>
+<td>
+<p><a href="calculation-script-path.html">calculationScriptPath</a></p>
+</td>
+<td>
+<code><span class="keyword">val </span><span class="identifier">calculationScriptPath</span><span class="symbol">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html"><span class="identifier">String</span></a></code>
+<p>not empty path to calculation R script</p>
+</td>
+</tr>
+<tr>
+<td>
+<p><a href="end.html">end</a></p>
+</td>
+<td>
+<code><span class="keyword">val </span><span class="identifier">end</span><span class="symbol">: </span><span class="identifier">ZonedDateTime</span></code></td>
+</tr>
+<tr>
+<td>
+<p><a href="time-series-ids-in.html">timeSeriesIdsIn</a></p>
+</td>
+<td>
+<code><span class="keyword">val </span><span class="identifier">timeSeriesIdsIn</span><span class="symbol">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/-map/index.html"><span class="identifier">Map</span></a><span class="symbol">&lt;</span><a href="../-symbol.html"><span class="identifier">Symbol</span></a><span class="symbol">,</span>&nbsp;<a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-long/index.html"><span class="identifier">Long</span></a><span class="symbol">&gt;</span></code>
+<p>Time Series IN identifiers</p>
+</td>
+</tr>
+<tr>
+<td>
+<p><a href="time-series-ids-out.html">timeSeriesIdsOut</a></p>
+</td>
+<td>
+<code><span class="keyword">val </span><span class="identifier">timeSeriesIdsOut</span><span class="symbol">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/-map/index.html"><span class="identifier">Map</span></a><span class="symbol">&lt;</span><a href="../-symbol.html"><span class="identifier">Symbol</span></a><span class="symbol">,</span>&nbsp;<a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-long/index.html"><span class="identifier">Long</span></a><span class="symbol">&gt;</span></code>
+<p>Time Series OUT identifiers</p>
+</td>
+</tr>
+</tbody>
+</table>
+</BODY>
+</HTML>

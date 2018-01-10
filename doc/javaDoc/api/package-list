@@ -1,0 +1,6 @@
+$dokka.format:html
+$dokka.linkExtension:html
+
+pl.psi.aaas
+pl.psi.aaas.usecase
+pl.psi.aaas.usecase.timeseries

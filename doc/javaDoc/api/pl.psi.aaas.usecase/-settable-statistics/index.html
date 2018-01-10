@@ -1,0 +1,77 @@
+<HTML>
+<HEAD>
+<meta charset="UTF-8">
+<title>SettableStatistics - api</title>
+<link rel="stylesheet" href="..\..\..\style.css">
+</HEAD>
+<BODY>
+<a href="../../index.html">api</a>&nbsp;/&nbsp;<a href="../index.html">pl.psi.aaas.usecase</a>&nbsp;/&nbsp;<a href=".">SettableStatistics</a><br/>
+<br/>
+<h1>SettableStatistics</h1>
+<code><span class="keyword">interface </span><span class="identifier">SettableStatistics</span>&nbsp;<span class="symbol">:</span>&nbsp;<a href="../-statistics/index.html"><span class="identifier">Statistics</span></a></code>
+<h3>Properties</h3>
+<table>
+<tbody>
+<tr>
+<td>
+<p><a href="currently-executing-no.html">currentlyExecutingNo</a></p>
+</td>
+<td>
+<code><span class="keyword">abstract</span> <span class="keyword">val </span><span class="identifier">currentlyExecutingNo</span><span class="symbol">: </span><span class="identifier">AtomicInteger</span></code></td>
+</tr>
+<tr>
+<td>
+<p><a href="executed-tasks-no.html">executedTasksNo</a></p>
+</td>
+<td>
+<code><span class="keyword">abstract</span> <span class="keyword">val </span><span class="identifier">executedTasksNo</span><span class="symbol">: </span><span class="identifier">AtomicInteger</span></code></td>
+</tr>
+<tr>
+<td>
+<p><a href="failed-tasks-no.html">failedTasksNo</a></p>
+</td>
+<td>
+<code><span class="keyword">abstract</span> <span class="keyword">val </span><span class="identifier">failedTasksNo</span><span class="symbol">: </span><span class="identifier">AtomicInteger</span></code></td>
+</tr>
+</tbody>
+</table>
+<h3>Inherited Properties</h3>
+<table>
+<tbody>
+<tr>
+<td>
+<p><a href="../-statistics/currently-executing.html">currentlyExecuting</a></p>
+</td>
+<td>
+<code><span class="keyword">abstract</span> <span class="keyword">val </span><span class="identifier">currentlyExecuting</span><span class="symbol">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html"><span class="identifier">Int</span></a></code></td>
+</tr>
+<tr>
+<td>
+<p><a href="../-statistics/executed-tasks.html">executedTasks</a></p>
+</td>
+<td>
+<code><span class="keyword">abstract</span> <span class="keyword">val </span><span class="identifier">executedTasks</span><span class="symbol">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html"><span class="identifier">Int</span></a></code></td>
+</tr>
+<tr>
+<td>
+<p><a href="../-statistics/failed-tasks.html">failedTasks</a></p>
+</td>
+<td>
+<code><span class="keyword">abstract</span> <span class="keyword">val </span><span class="identifier">failedTasks</span><span class="symbol">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html"><span class="identifier">Int</span></a></code></td>
+</tr>
+</tbody>
+</table>
+<h3>Inheritors</h3>
+<table>
+<tbody>
+<tr>
+<td>
+<p><a href="../-jmx-statistics/index.html">JmxStatistics</a></p>
+</td>
+<td>
+<code><span class="keyword">object </span><span class="identifier">JmxStatistics</span>&nbsp;<span class="symbol">:</span>&nbsp;<span class="identifier">SettableStatistics</span></code></td>
+</tr>
+</tbody>
+</table>
+</BODY>
+</HTML>

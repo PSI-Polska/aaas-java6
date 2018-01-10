@@ -1,0 +1,39 @@
+<HTML>
+<HEAD>
+<meta charset="UTF-8">
+<title>ScriptSynchronizer - api</title>
+<link rel="stylesheet" href="..\..\..\style.css">
+</HEAD>
+<BODY>
+<a href="../../index.html">api</a>&nbsp;/&nbsp;<a href="../index.html">pl.psi.aaas.usecase</a>&nbsp;/&nbsp;<a href=".">ScriptSynchronizer</a><br/>
+<br/>
+<h1>ScriptSynchronizer</h1>
+<code><span class="keyword">interface </span><span class="identifier">ScriptSynchronizer</span></code>
+<p>ScriptSynchronizer is responsible for signaling ongoing synchronization of scripts on engine instances
+to implementations of <a href="../-calculation-execution/index.html">CalculationExecution</a>.
+It is important that no script execution is done during synchronization of scripts on engine instances.</p>
+<h3>Functions</h3>
+<table>
+<tbody>
+<tr>
+<td>
+<p><a href="is-under-synchronization.html">isUnderSynchronization</a></p>
+</td>
+<td>
+<code><span class="keyword">abstract</span> <span class="keyword">fun </span><span class="identifier">isUnderSynchronization</span><span class="symbol">(</span><span class="symbol">)</span><span class="symbol">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-boolean/index.html"><span class="identifier">Boolean</span></a></code>
+<p>Returns true if synchronization is ongoing.</p>
+</td>
+</tr>
+<tr>
+<td>
+<p><a href="wait-end.html">waitEnd</a></p>
+</td>
+<td>
+<code><span class="keyword">abstract</span> <span class="keyword">fun </span><span class="identifier">waitEnd</span><span class="symbol">(</span><span class="symbol">)</span><span class="symbol">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-unit/index.html"><span class="identifier">Unit</span></a></code>
+<p>Waits for synchronization to end.</p>
+</td>
+</tr>
+</tbody>
+</table>
+</BODY>
+</HTML>

@@ -1,0 +1,44 @@
+<HTML>
+<HEAD>
+<meta charset="UTF-8">
+<title>CalculationExecution - api</title>
+<link rel="stylesheet" href="..\..\..\style.css">
+</HEAD>
+<BODY>
+<a href="../../index.html">api</a>&nbsp;/&nbsp;<a href="../index.html">pl.psi.aaas.usecase</a>&nbsp;/&nbsp;<a href=".">CalculationExecution</a><br/>
+<br/>
+<h1>CalculationExecution</h1>
+<code><span class="keyword">interface </span><span class="identifier">CalculationExecution</span></code>
+<p>CalculationExecution interface describes calculation use cases.</p>
+<h3>Functions</h3>
+<table>
+<tbody>
+<tr>
+<td>
+<p><a href="call.html">call</a></p>
+</td>
+<td>
+<code><span class="keyword">abstract</span> <span class="keyword">fun </span><span class="identifier">call</span><span class="symbol">(</span><span class="identifier" id="pl.psi.aaas.usecase.CalculationExecution$call(pl.psi.aaas.usecase.CalculationDefinition)/calcDef">calcDef</span><span class="symbol">:</span>&nbsp;<a href="../-calculation-definition/index.html"><span class="identifier">CalculationDefinition</span></a><span class="symbol">)</span><span class="symbol">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-unit/index.html"><span class="identifier">Unit</span></a></code>
+<p>Call the calculation.</p>
+</td>
+</tr>
+</tbody>
+</table>
+<h3>Inheritors</h3>
+<table>
+<tbody>
+<tr>
+<td>
+<p><a href="../../pl.psi.aaas.usecase.timeseries/-time-series-based-calculation-execution/index.html">TimeSeriesBasedCalculationExecution</a></p>
+</td>
+<td>
+<code><span class="keyword">class </span><span class="identifier">TimeSeriesBasedCalculationExecution</span>&nbsp;<span class="symbol">:</span>&nbsp;<span class="identifier">CalculationExecution</span></code>
+<p>CalculationExecution implementation based on TimeSeries.
+TimeSeries values are read from <a href="../-time-series-repository/index.html">TimeSeriesRepository</a> before the call and the results are saved back with repository after the call.
+CalculationExecution uses <a href="../-script-synchronizer/index.html">ScriptSynchronizer</a> to wait for synchronization to end in case synchronization is ongoing.</p>
+</td>
+</tr>
+</tbody>
+</table>
+</BODY>
+</HTML>
