@@ -66,8 +66,8 @@ class CalculationExecutionTest : StringSpec() {
 
             out.call(ValidDefinition)
 
-            verify(tsRepo).save(101L, TS1Res)
-            verify(tsRepo).save(102L, TS2Res)
+            verify(tsRepo).save(101L, ValidDefinition.begin, TS1Res)
+            verify(tsRepo).save(102L, ValidDefinition.begin, TS2Res)
         }
 
         "ScriptExecutioner fails when TS saving fails" {

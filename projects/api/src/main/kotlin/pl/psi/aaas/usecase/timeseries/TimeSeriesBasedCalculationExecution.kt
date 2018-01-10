@@ -19,7 +19,7 @@ class TimeSeriesBasedCalculationExecution(val synchronizer: ScriptSynchronizer,
         val mappedResult = engine.call(calcDef, inTs)
 
         mappedResult.map { symbolToTsId(calcDef, it) to it.second }
-                .forEach { tsRepository.save(it.first, it.second) }
+                .forEach { tsRepository.save(it.first, calcDef.begin, it.second) } // TODO maybe in dates should be saparated from out dates?
     }
 
     private fun symbolToTsId(calcDef: CalculationDefinition, it: Pair<Symbol, TS>) =

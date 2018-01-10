@@ -16,7 +16,7 @@ interface TimeSeriesRepository {
      * @param begin date and time of time series begin
      * @param end date and time of time series end
      *
-     * @return time series array // TODO nullable
+     * @return time series array
      */
     @Throws(TimeSeriesAccessException::class)
     fun read(tsId: TsId, begin: ZonedDateTime, end: ZonedDateTime): TS
@@ -25,10 +25,11 @@ interface TimeSeriesRepository {
      * Save time series data.
      *
      * @param tsId identifies time series to save values on
-     * @param tsValues time series values array // TODO nullable
+     * @param begin first date used to save values array
+     * @param tsValues time series values array
      */
     @Throws(TimeSeriesAccessException::class)
-    fun save(tsId: TsId, tsValues: TS) // TODO, begin: ZonedDateTime)
+    fun save(tsId: TsId, begin: ZonedDateTime, tsValues: TS)
 }
 
 /**
