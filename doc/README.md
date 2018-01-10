@@ -1,7 +1,8 @@
 # Introduction to Algorithm As A Service (AAAS)
 
-Table of Contents
+## Table of Contents
 - [Introduction to Algorithm As A Service (AAAS)](#introduction-to-algorithm-as-a-service-aaas)
+    - [Table of Contents](#table-of-contents)
     - [Context of usage and Containers](#context-of-usage-and-containers)
         - [1. Context of 3AS usages](#1-context-of-3as-usages)
             - [1.1 Context of 3AS in PSImarket](#11-context-of-3as-in-psimarket)
