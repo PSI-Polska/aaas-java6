@@ -2,7 +2,7 @@
 skinparam dpi 200
 skinparam backgroundColor transparent
 
-title Call Script when synchronization is not running
+title Call forecasting script when synchronization is not running
 
 actor PSImarket
 boundary Gateway
@@ -10,6 +10,7 @@ control TimeSeriesScriptsExecutioner as Executioner
 control ScriptsSynchronizer as Synchronizer
 boundary TimeSeriesRepository as TSRepo
 boundary REngine as Engine
+database ModelsRepository as Models
 
 autonumber
 PSImarket -> Gateway: execute(CalculationDefinition)
@@ -30,7 +31,9 @@ deactivate TSRepo
 ||||
 Executioner -\ Engine: call(CalculationDefinition, TSDataIn})
 activate Engine
-Engine -> Engine
+Engine -> Models: getModels( CalculationDefinition )
+Models -> Engine: model
+Engine -> Engine: 
 Engine -\ Executioner: {TSDataOut}
 deactivate Engine
 ||||
