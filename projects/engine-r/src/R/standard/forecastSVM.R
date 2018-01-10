@@ -24,7 +24,7 @@ prepareDataForForecast <- function(dfParameters){
         filter(name == "seasonLevel") %>%
         summarise(value))
 
-
+    print("Preparing forecast vector")
     dfTimeseries <- as.data.frame(seq(from = as.POSIXct(forecastBeg, format = "%Y-%m-%dT%H:%M"), to = as.POSIXct(forecastEnd, format = "%Y-%m-%dT%H:%M"), by = resolution))
     colnames(dfTimeseries) <- c("DateTime")
     dfTimeseries$seasonLevels <- factor(x = rep(seasonLevel, nrow(dfTimeseries)), levels = c("1", "2", "3"))
@@ -38,6 +38,7 @@ run <- function(dfData, dfParameters){
 
     dfData <- prepareDataForForecast(dfParameters)
 
+    print("Prepare data")
     # create day of week feature
     dfData$dayOfWeek <- as.factor(dayOfWeek(timeDate(dfData$DateTime)))
     # create hour feature
@@ -46,8 +47,11 @@ run <- function(dfData, dfParameters){
     dataset <- data.frame(predict(dummyVars(~ dayOfWeek + hour + seasonLevels + DateTime, data = dfData), newdata = dfData))
     dataset$DateTime <- as.POSIXct(dataset$DateTime, origin = "1970-01-01", tz = "GMT")
 
+    print("Read model")
     model <- readRDS(filePath)
     NdataSetCols <- ncol(dataset)
+
+    print("Predict")
     Prediction <- predict(model, dataset[, 1 : (NdataSetCols - 1)])
 
     return(data.frame(Prediction))

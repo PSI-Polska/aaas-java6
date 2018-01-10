@@ -53,5 +53,11 @@ class RServeEngineTest : StringSpec() {
 
         "Engine checks script path for root path or .." {
         }.config(enabled = false)
+
+        "Execution engine can be RList()" {
+        }.config(enabled = false)
+
+        "Execution engine can be numeric value" {
+        }.config(enabled = false)
     }
 }

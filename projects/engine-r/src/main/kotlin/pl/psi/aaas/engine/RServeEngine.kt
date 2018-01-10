@@ -23,7 +23,7 @@ class RServeEngine(private val connectionProvider: RConnectionProvider) : Engine
         calcDef.sourceScript(conn)
         tsValues.sendValues(conn)
         calcDef.prepareParameters(conn)
-        val resultDf = execute(conn).asList()
+        val resultDf = execute(conn).processResults(calcDef)
         resultDf.logRList()
         return resultDf.mapDataFrameToTS(calcDef)
     }
@@ -49,8 +49,9 @@ internal fun CalculationDefinition.prepareParameters(conn: RConnection) {
 }
 
 internal fun CalculationDefinition.sourceScript(conn: RConnection) {
-    val path = """$baseUserScriptPath${calculationScriptPath}.R"""
+    val path = """$baseUserScriptPath$calculationScriptPath.R"""
     log.debug("""Sourcing: $path""")
+    conn.voidEval("""writeLines("##\nStarted execution of: $path\n##")""")
     conn.voidEval("""source("$path")""")
 }
 
@@ -63,7 +64,7 @@ internal fun MappedTS.sendValues(conn: RConnection) {
 }
 
 internal fun RList.logRList() {
-    val dfColumns = keys().joinToString()
+    val dfColumns = keys()?.joinToString() ?: ""
     log.debug("""Result DF columns: $dfColumns""")
 }
 
@@ -79,6 +80,16 @@ internal fun RList.mapDataFrameToTS(calcDef: CalculationDefinition): MappedTS {
     }
 
 }
+
+internal fun REXP.processResults(calcDef: CalculationDefinition): RList =
+        when {
+            isList    -> asList()
+            isNumeric -> RList()
+            else      -> {
+                log.warn("""Definition: $calcDef returned ${this.toDebugString()}""")
+                RList()
+            }
+        }
 
 internal fun CalculationDefinition.partitionResults(dataFrame: RList): Pair<List<Pair<Symbol, REXP>>, List<Pair<Symbol, REXP?>>> {
     val (results, missingResults) = timeSeriesIdsOut
