@@ -1,5 +1,6 @@
 @startuml
 skinparam dpi 200
+skinparam backgroundColor transparent
 
 title Definition is passed with data
 
@@ -7,12 +8,13 @@ actor PSIproduct
 boundary Gateway
 boundary Engine as Engine
 
+
 autonumber
 PSIproduct -> Gateway: execute(CalculationDefinition, data)
 ' note left: data is already passed
 ' Gateway -> Engine: {data}
-Gateway -> Engine: call(data)
-Engine -> Engine
+Gateway -> Engine: call(CalculationDefinition, data)
+Engine -> Engine: calculation
 Engine -> Gateway: {calculationResult}
 Gateway -> PSIproduct: {calculationResult}
 

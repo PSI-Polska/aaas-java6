@@ -1,5 +1,6 @@
 @startuml
 skinparam dpi 200
+skinparam backgroundColor transparent
 
 title Sequential Run on R and Python computational engines (multiple calculations)
 
