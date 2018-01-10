@@ -146,7 +146,9 @@
     </developers>
 
     <scm>
-        <developerConnection>scm:git:https://gitlab.com/edmpsi/aaas.git</developerConnection>
+        <url>https://gitlab.com/edmpsi/aaas.git</url>
+        <connection>scm:git:git@gitlab.com:edmpsi/aaas.git</connection>
+        <developerConnection>scm:git:git@gitlab.com:edmpsi/aaas.git</developerConnection>
     </scm>
 
     <distributionManagement>
