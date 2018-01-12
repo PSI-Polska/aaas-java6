@@ -8,7 +8,7 @@
     <artifactId>aaas</artifactId>
     <version>0.1-SNAPSHOT</version>
     <packaging>pom</packaging>
-    <name>AAAS</name>
+    <name>AaaS</name>
 
     <modules>
         <module>api</module>

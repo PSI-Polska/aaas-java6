@@ -2,6 +2,7 @@ package pl.psi.aaas.engine
 
 import com.nhaarman.mockito_kotlin.verify
 import io.kotlintest.specs.StringSpec
+import pl.psi.aaas.engine.r.RServeEngine
 import pl.psi.aaas.usecase.CalculationDefinition
 import pl.psi.aaas.usecase.Engine
 import pl.psi.aaas.usecase.MappedTS

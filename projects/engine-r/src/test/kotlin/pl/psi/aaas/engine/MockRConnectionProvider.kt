@@ -2,11 +2,12 @@ package pl.psi.aaas.engine
 
 import com.nhaarman.mockito_kotlin.doReturn
 import com.nhaarman.mockito_kotlin.mock
-import org.rosuda.REngine.REXP
 import org.rosuda.REngine.REXPDouble
 import org.rosuda.REngine.REXPList
 import org.rosuda.REngine.RList
 import org.rosuda.REngine.Rserve.RConnection
+import pl.psi.aaas.engine.r.RConnectionProvider
+import pl.psi.aaas.engine.r.REngineConfiguration
 
 val EmptyConfiguration = REngineConfiguration("", 1)
 

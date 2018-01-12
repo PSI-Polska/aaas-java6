@@ -2,11 +2,12 @@ package pl.psi.aaas.sample
 
 import pl.psi.aaas.Facade
 import pl.psi.aaas.engine.NoSynchronizationSynchronizer
-import pl.psi.aaas.engine.RConnectionProvider
-import pl.psi.aaas.engine.REngineConfiguration
-import pl.psi.aaas.engine.RServeEngine
+import pl.psi.aaas.engine.r.RConnectionProvider
+import pl.psi.aaas.engine.r.REngineConfiguration
+import pl.psi.aaas.engine.r.RServeEngine
 import pl.psi.aaas.usecase.*
 import pl.psi.aaas.usecase.timeseries.TimeSeriesBasedCalculationExecution
+import pl.psi.aaas.usecase.timeseries.TimeSeriesRepository
 import java.lang.management.ManagementFactory
 import java.rmi.server.RMISocketFactory
 import java.time.ZonedDateTime

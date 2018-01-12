@@ -1,4 +1,4 @@
-package pl.psi.aaas.engine
+package pl.psi.aaas.engine.r
 
 import org.rosuda.REngine.Rserve.RConnection
 

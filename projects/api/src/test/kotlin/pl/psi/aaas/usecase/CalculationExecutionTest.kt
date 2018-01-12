@@ -3,6 +3,7 @@ package pl.psi.aaas.usecase
 import com.nhaarman.mockito_kotlin.*
 import io.kotlintest.specs.StringSpec
 import pl.psi.aaas.usecase.timeseries.TimeSeriesBasedCalculationExecution
+import pl.psi.aaas.usecase.timeseries.TimeSeriesRepository
 
 class CalculationExecutionTest : StringSpec() {
     init {

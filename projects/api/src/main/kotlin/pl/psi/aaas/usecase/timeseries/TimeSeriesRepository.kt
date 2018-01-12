@@ -1,9 +1,10 @@
-package pl.psi.aaas.usecase
+package pl.psi.aaas.usecase.timeseries
 
+import pl.psi.aaas.usecase.CalculationException
 import java.time.ZonedDateTime
 
 typealias TsId = Long
-typealias TS = DoubleArray // TODO change to Array<Double?>
+typealias TS = DoubleArray
 
 /**
  * TimeSeries data repository used by TimeSeries based [CalculationExecution] implementations.

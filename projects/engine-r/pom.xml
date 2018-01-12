@@ -10,7 +10,7 @@
     <modelVersion>4.0.0</modelVersion>
 
     <artifactId>engine-r</artifactId>
-    <name>AAAS :: Engine :: R</name>
+    <name>AaaS :: Engine :: R</name>
 
 
     <properties>

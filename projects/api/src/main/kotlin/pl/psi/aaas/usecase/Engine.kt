@@ -1,5 +1,7 @@
 package pl.psi.aaas.usecase
 
+import pl.psi.aaas.usecase.timeseries.TS
+
 /**
  * List of mapped time series values with Symbol.
  */

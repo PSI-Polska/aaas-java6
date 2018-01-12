@@ -1,12 +1,12 @@
-package pl.psi.aaas.engine
+package pl.psi.aaas.engine.r
 
 import org.rosuda.REngine.REXP
 import org.rosuda.REngine.RList
 import org.rosuda.REngine.Rserve.RConnection
 import org.rosuda.REngine.Rserve.RserveException
 import org.slf4j.LoggerFactory
-import pl.psi.aaas.engine.RServeEngine.Companion.baseUserScriptPath
-import pl.psi.aaas.engine.RServeEngine.Companion.log
+import pl.psi.aaas.engine.r.RServeEngine.Companion.baseUserScriptPath
+import pl.psi.aaas.engine.r.RServeEngine.Companion.log
 import pl.psi.aaas.usecase.*
 
 // TODO this engine implementation is basedon TimeSeries.Split it or rename it.
