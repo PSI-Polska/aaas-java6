@@ -21,12 +21,12 @@ class RServeEngine(private val connectionProvider: RConnectionProvider) : Engine
                 val conn = connectionProvider.getConnection()
                 log.debug("Evaluating " + calcDef)
 
-        calcDef.sourceScript(conn)
-        tsValues.sendValues(conn)
-        calcDef.prepareParameters(conn)
-        val resultDf = execute(conn).processResults(calcDef)
-        resultDf.logRList()
-        return resultDf.mapDataFrameToTS(calcDef)
+                calcDef.sourceScript(conn)
+                tsValues.sendValues(conn)
+                calcDef.prepareParameters(conn)
+                val resultDf = execute(conn).processResults(calcDef)
+                resultDf.logRList()
+                resultDf.mapDataFrameToTS(calcDef)
             } catch (ex: RserveException) {
                 ex.printStackTrace()
                 throw CalculationException(ex.message ?: "There was an error during calculation.")
@@ -84,9 +84,9 @@ internal fun RList.mapDataFrameToTS(calcDef: CalculationDefinition): MappedTS {
 
 internal fun REXP.processResults(calcDef: CalculationDefinition): RList =
         when {
-            isList    -> asList()
+            isList -> asList()
             isNumeric -> RList()
-            else      -> {
+            else -> {
                 log.warn("""Definition: $calcDef returned ${this.toDebugString()}""")
                 RList()
             }

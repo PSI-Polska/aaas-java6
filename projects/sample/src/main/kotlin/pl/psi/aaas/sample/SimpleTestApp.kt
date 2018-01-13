@@ -14,7 +14,6 @@ import java.lang.management.ManagementFactory
 import java.rmi.server.RMISocketFactory
 import java.time.ZonedDateTime
 
-
 object SimpleTestApp {
     @JvmStatic
     fun main(args: Array<String>) {
