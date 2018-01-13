@@ -1,6 +1,8 @@
 package pl.psi.aaas.sample
 
 import pl.psi.aaas.Facade
+import pl.psi.aaas.StatisticsEngine
+import pl.psi.aaas.StatsDConfig
 import pl.psi.aaas.engine.NoSynchronizationSynchronizer
 import pl.psi.aaas.engine.r.RConnectionProvider
 import pl.psi.aaas.engine.r.REngineConfiguration
@@ -11,36 +13,13 @@ import pl.psi.aaas.usecase.timeseries.TimeSeriesRepository
 import java.lang.management.ManagementFactory
 import java.rmi.server.RMISocketFactory
 import java.time.ZonedDateTime
-import javax.management.MBeanServer
-import javax.management.ObjectName
-import javax.management.remote.JMXConnectorServerFactory
-import javax.management.remote.JMXServiceURL
-import kotlin.concurrent.thread
 
 
 object SimpleTestApp {
     @JvmStatic
     fun main(args: Array<String>) {
         val facade: Facade = FixedFacade
-        initMBean()
-
-//        fixedRateTimer(period = TimeUnit.SECONDS.toMillis(2)) {
-            facade.callScript(prepCalcDef1())
-//        }
-    }
-
-    private fun initMBean() {
-        val mbs = ManagementFactory.getPlatformMBeanServer()
-        val nameObject = ObjectName("pl.psi.aaas.usecase:type=Statistics")
-        mbs.registerMBean(JmxStatistics, nameObject)
-        initRmiJmx(mbs)
-    }
-
-    private fun initRmiJmx(mbs: MBeanServer?) {
-        thread { RMISocketFactory.getDefaultSocketFactory().createServerSocket(9998) }
-        val url = JMXServiceURL("service:jmx:rmi:///jndi/rmi://localhost:9998/server")
-        val cs = JMXConnectorServerFactory.newJMXConnectorServer(url, null, mbs)
-        thread { cs.start() }
+        facade.callScript(prepCalcDef1())
     }
 
     private fun prepCalcDef1(): CalculationDefinition {
@@ -49,7 +28,7 @@ object SimpleTestApp {
         val begin = ZonedDateTime.now()
         val end = begin.plusDays(1)
 
-        return CalculationDefinition(inIds, outIds, begin, end, "/var/userScripts/add.R")
+        return CalculationDefinition(inIds, outIds, begin, end, "add")
     }
 }
 
@@ -58,7 +37,7 @@ val LocalConfiguration = REngineConfiguration("localhost", 6311)
 class LocalRConnectionProvider(override var configuration: REngineConfiguration = LocalConfiguration) : RConnectionProvider
 
 object FixedFacade : Facade {
-    private val engine: Engine = RServeEngine(LocalRConnectionProvider())
+    private val engine: Engine = StatisticsEngine(RServeEngine(LocalRConnectionProvider()), StatsDConfig("localhost", 8125))
     private val synchronizer: ScriptSynchronizer = NoSynchronizationSynchronizer()
     private val tsRepository: TimeSeriesRepository = MockTimeSeriesRepository()
 

@@ -1,7 +1,5 @@
 # Introduction to Algorithm As A Service (AAAS)
 
-<!-- TOC -->
-
 - [Introduction to Algorithm As A Service (AAAS)](#introduction-to-algorithm-as-a-service-aaas)
     - [Context of usage and Containers](#context-of-usage-and-containers)
         - [1. Context of AaaS usages](#1-context-of-aaas-usages)
@@ -122,9 +120,9 @@ The scenario where no additional data is required for the calculation
 
 ![](useCases/Definition%20does%20not%20require%20additional%20data.png)
 
-### 1.4 The required data is passed together with calculation definition 
+### 1.4 The required data is passed together with calculation definition
 
-Probably one of the most often scenario. The responsibility of calling application is to provide both the calculation definition and the accompanied data. For instance, one can imagine the forecasting scenario for given period of time (which is a part of calculation definition) where a vector of predictors is also expected (e.g. the forecasted weather conditions time series).  
+Probably one of the most often scenario. The responsibility of calling application is to provide both the calculation definition and the accompanied data. For instance, one can imagine the forecasting scenario for given period of time (which is a part of calculation definition) where a vector of predictors is also expected (e.g. the forecasted weather conditions time series).
 
 ![](useCases/Definition%20is%20passed%20with%20data.png)
 
@@ -136,13 +134,13 @@ Scenario where the responsibility of retrieving the data needed by an algorithm 
 
 ### 1.6 Mixed scenario (with auxuliary data base)
 
-Here an additional, auxiliary data base is involved. This data base stores the result of the calculation, which can be further accessed from the application. 
+Here an additional, auxiliary data base is involved. This data base stores the result of the calculation, which can be further accessed from the application.
 
 ![](useCases/Definition%20of%20mixed%20scenario.png)
 
 ### 1.7 Sequential run on computational engines
 
-The calculation can be of multistep nature, there fore it can be realised by multiple computational engines. In the example below one can see the R calculation followed by Python execution. In particular the R computational instance can be involved in multicriteria optimization which results in a family of solution forming a Pareto front. The Python computational engine incorporates the user preferences and choses one of Pareto-optimal solutions which is most relevant from the point of view of user preferences. 
+The calculation can be of multistep nature, there fore it can be realised by multiple computational engines. In the example below one can see the R calculation followed by Python execution. In particular the R computational instance can be involved in multicriteria optimization which results in a family of solution forming a Pareto front. The Python computational engine incorporates the user preferences and choses one of Pareto-optimal solutions which is most relevant from the point of view of user preferences.
 
 ![](useCases/Sequential%20Run%20on%20R%20and%20Python%20computational%20engines.png)
 

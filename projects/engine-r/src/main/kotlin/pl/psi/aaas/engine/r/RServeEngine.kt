@@ -16,9 +16,10 @@ class RServeEngine(private val connectionProvider: RConnectionProvider) : Engine
         internal val baseUserScriptPath = "/var/userScripts/"
     }
 
-    override fun call(calcDef: CalculationDefinition, tsValues: MappedTS): MappedTS {
-        val conn = connectionProvider.getConnection()
-        log.debug("Evaluating " + calcDef)
+    override fun call(calcDef: CalculationDefinition, tsValues: MappedTS): MappedTS =
+            try {
+                val conn = connectionProvider.getConnection()
+                log.debug("Evaluating " + calcDef)
 
         calcDef.sourceScript(conn)
         tsValues.sendValues(conn)
@@ -26,15 +27,15 @@ class RServeEngine(private val connectionProvider: RConnectionProvider) : Engine
         val resultDf = execute(conn).processResults(calcDef)
         resultDf.logRList()
         return resultDf.mapDataFrameToTS(calcDef)
-    }
-
-    private fun execute(conn: RConnection): REXP =
-            try {
-                log.debug("Calling script")
-                conn.eval("dfOut <- run(dfIn, additionalParameters)")
             } catch (ex: RserveException) {
-                throw CalculationException(ex.message ?: "Calculation failed", ex)
+                ex.printStackTrace()
+                throw CalculationException(ex.message ?: "There was an error during calculation.")
             }
+
+    private fun execute(conn: RConnection): REXP {
+        log.debug("Calling script")
+        return conn.eval("dfOut <- run(dfIn, additionalParameters)")
+    }
 }
 
 internal fun CalculationDefinition.prepareParameters(conn: RConnection) {
