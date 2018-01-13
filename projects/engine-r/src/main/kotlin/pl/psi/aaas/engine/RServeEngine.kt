@@ -32,13 +32,10 @@ class RServeEngine(private val connectionProvider: RConnectionProvider) : Engine
                 throw CalculationException(ex.message ?: "There was an error during calculation.")
             }
 
-    private fun execute(conn: RConnection): REXP =
-            try {
-                log.debug("Calling script")
-                conn.eval("dfOut <- run(dfIn, additionalParameters)")
-            } catch (ex: RserveException) {
-                throw CalculationException(ex.message ?: "Calculation failed", ex)
-            }
+    private fun execute(conn: RConnection): REXP {
+        log.debug("Calling script")
+        return conn.eval("dfOut <- run(dfIn, additionalParameters)")
+    }
 }
 
 internal fun CalculationDefinition.prepareParameters(conn: RConnection) {
