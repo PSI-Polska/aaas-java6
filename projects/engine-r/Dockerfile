@@ -7,21 +7,22 @@ ENV REPOSITORY_ADDRESS scriptsRepo
 
 EXPOSE $RPORT
 
-RUN mkdir -p /var/userScripts
-RUN mkdir -p /var/trainedModels
+RUN mkdir -p /var/userScripts \
+    && mkdir -p /var/trainedModels
 
 # TODO git repo keys directory
 
 RUN apt-get update \
     && apt-get install -y git libpq-dev libcurl4-openssl-dev
 
-COPY src/R/installPackages.R /usr/local/src/scripts/installPackages.R
-RUN ["Rscript", "/usr/local/src/scripts/installPackages.R"]
-
-WORKDIR /var/userScripts/
 COPY src/R/*.R /var/userScripts/
 COPY src/R/standard/*.R /var/userScripts/
 
 COPY src/docker/start.sh /usr/local/src/scripts/start.sh
+
+COPY src/R/installPackages.R /usr/local/src/scripts/installPackages.R
+RUN ["Rscript", "/usr/local/src/scripts/installPackages.R"]
+
+WORKDIR /var/userScripts/
 
 ENTRYPOINT ["/usr/local/src/scripts/start.sh"]
