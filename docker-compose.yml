@@ -1,0 +1,21 @@
+version: '3.2'
+services:
+  engine:
+    image: registry.gitlab.com/edmpsi/engine/r:0.2
+    # volumes:
+     #- :/var/userScripts/
+     #- :/var/trainedModels/
+    ports:
+     - 6311:6311
+#    networks:
+#     - monitoring
+
+  grafana:
+    image: kamon/grafana_graphite
+    ports:
+      - 80:80
+      - 81:81
+      - 2003:2003
+      - 8125:8125/udp
+      - 8126:8126
+
