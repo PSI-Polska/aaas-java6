@@ -1,6 +1,6 @@
 # Title     : Forecasting with the SVM method
 # Objective : TODO
-# Created by: kskitek, rbachorz
+# Created by: kskitek
 # Created on: 2017-08-31
 # Major rewrite: 2018-01-19 (rbachorz()
 
@@ -10,6 +10,7 @@ library(TTR)
 library(caret)
 library(e1071)
 library(futile.logger)
+library(data.table)
 
 run <- function(dfData, dfParameters){
     flog.threshold(INFO)
