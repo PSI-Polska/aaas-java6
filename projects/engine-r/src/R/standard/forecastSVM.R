@@ -10,6 +10,7 @@ library(TTR)
 library(caret)
 library(e1071)
 library(futile.logger)
+library(data.table)
 
 prepareDataForForecast <- function(dfData, dfParameters){
   
@@ -25,11 +26,16 @@ prepareDataForForecast <- function(dfData, dfParameters){
         filter(name == "resolution") %>%
         summarise(value))
 
-
+    
     flog.info("forecastSVM: preparing vector of predictors")
-    dfPredictors <- as.data.frame(seq(from = as.POSIXct(forecastBeg, format = "%Y-%m-%dT%H:%M"), to = as.POSIXct(forecastEnd, format = "%Y-%m-%dT%H:%M") - 1, by = resolution))
+    #print(dfData)
+    
+    dfPredictors <- as.data.frame(seq(from = as.POSIXct(forecastBeg, format = "%Y-%m-%dT%H:%M"), to = as.POSIXct(forecastEnd, format = "%Y-%m-%dT%H:%M"), by = resolution))
+    
+    #print(dfPredictors)
+    
     colnames(dfPredictors) <- c("DateTime")
-    dfPredictors$Temperature <- dfData$Temperature
+    dfPredictors$Temperature[1] <- dfData$Temperature
     dfPredictors$WorkingDay <- as.factor(dfData$WorkingDay)
     
     return(dfPredictors)
@@ -63,6 +69,7 @@ run <- function(dfData, dfParameters){
 
     flog.info("forecastSVM: predicting")
     Prediction <- predict(model, featuresResponse.DF)
+    print(data.frame(Prediction))
     return(data.frame(Prediction))
 }
 
