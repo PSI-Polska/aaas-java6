@@ -2,14 +2,19 @@
 # Objective : TODO
 # Created by: kskitek
 # Created on: 2017-08-31
+# Major rewrite: 2018-01-19 (rbachorz()
+
 library(timeDate)
 library(dplyr)
 library(TTR)
 library(caret)
 library(e1071)
-library(randomForest)
+library(futile.logger)
 
 prepareDataForForecast <- function(dfData, dfParameters){
+  
+    flog.threshold(INFO)
+  
     forecastBeg <- as.character(dfParameters %>%
         filter(name == "forecastBeg") %>%
         summarise(value))
@@ -21,33 +26,27 @@ prepareDataForForecast <- function(dfData, dfParameters){
         summarise(value))
 
 
-    print("Preparing vector of predictors")
+    flog.info("forecastSVM: preparing vector of predictors")
     dfPredictors <- as.data.frame(seq(from = as.POSIXct(forecastBeg, format = "%Y-%m-%dT%H:%M"), to = as.POSIXct(forecastEnd, format = "%Y-%m-%dT%H:%M") - 1, by = resolution))
-    #print(nrow(dfPredictors))
-    #print(dfPredictors)
-    #print(nrow(dfData))
     colnames(dfPredictors) <- c("DateTime")
     dfPredictors$Temperature <- dfData$Temperature
     dfPredictors$WorkingDay <- as.factor(dfData$WorkingDay)
     
-    #print(dfPredictors)
     return(dfPredictors)
 }
 
 run <- function(dfData, dfParameters){
-    print("Entering forecast")
+    flog.info("forecastSVM: entering forecastSVM")
     filePath <- as.character(dfParameters %>% filter(name == "pathModelIn") %>% summarise(value))
-    print("Entering prepareDataForForecast")
+    flog.info("forecastSVM: entering prepareDataForForecast")
     dfData <- prepareDataForForecast(dfData, dfParameters)
-    print("Left prepareDataForForecast")
-    
+    flog.info("forecastSVM: left prepareDataForForecast")
+
     #calendar preciction creation
-    str(dfData)
+    flog.info("forecastSVM: one-hot encoding")
     dfData$dayOfWeek <- as.factor(dayOfWeek(timeDate(dfData$DateTime)))
     dfData$hour <- as.factor(format(dfData$DateTime, "%H"))
     dfData$month <- as.factor(format(dfData$DateTime, "%m"))
-    print("calendar predictors: done")
-    str(dfData)
     
     #one-hot encoding
     #definition of the size of space
@@ -58,13 +57,11 @@ run <- function(dfData, dfParameters){
     
     DVobject <- dummyVars(~ dayOfWeek + hour + month + Temperature + WorkingDay, data = dfData)
     featuresResponse.DF <- as.data.table(predict(DVobject, newdata = dfData))
-    print("one-hot encoding: done")
     
-    print("Read model")
+    flog.info("forecastSVM: reding in the model")
     model <- readRDS(filePath)
-    #NdataSetCols <- ncol(dataset)
 
-    print("Predict")
+    flog.info("forecastSVM: predicting")
     Prediction <- predict(model, featuresResponse.DF)
     return(data.frame(Prediction))
 }
