@@ -2,16 +2,19 @@
 # Objective : TODO
 # Created by: kskitek, rbachorz
 # Created on: 2017-08-31
+# Major rewrite: 2018-01-19 (rbachorz()
 
 library(timeDate)
 library(dplyr)
 library(TTR)
 library(caret)
 library(e1071)
-library(randomForest)
+library(futile.logger)
 
 run <- function(dfData, dfParameters){
-    print("reading parameters")
+    flog.threshold(INFO)
+  
+    flog.info("TrainSVM: reading parameters")
     filePath <- as.character(dfParameters %>%
         filter(name == "pathModelOut") %>%
         summarise(value))
@@ -25,17 +28,10 @@ run <- function(dfData, dfParameters){
         filter(name == "resolution") %>%
         summarise(value))
 
-    print("incoming values:")
-    print(filePath)
-    print(subsetBeg)
-    print(subsetEnd)
-    print(resolution)
     
-    
-    print("Preparing data")
+    flog.info("TrainSVM: preparing the data")
     DateTime <- seq(from = as.POSIXct(subsetBeg, format = "%Y-%m-%dT%H:%M"), to = as.POSIXct(subsetEnd, format = "%Y-%m-%dT%H:%M"), by = resolution)
     dfData <- cbind(dfData, DateTime)
-    str(dfData)
     dfData <- dfData %>% filter(! is.na(Load) & ! is.na(DateTime))
 
     #calendar preciction creation
@@ -60,6 +56,7 @@ run <- function(dfData, dfParameters){
     
     trainingData <- featuresResponse.DF[, featureResponseColumns, with = FALSE]
 
+    flog.info("TrainSVM: training - beginning")
     # SVM
     type <- "eps-regression" #regression
     u <- -4 # -3,-2,-1,0,1,2,3
@@ -76,7 +73,7 @@ run <- function(dfData, dfParameters){
                   gamma = gam,
                   cost = cost)
 
-    print("Saving SVM results")
+    flog.info("TrainSVM: saving the result")
     saveRDS(svmFit, file = filePath)
     return(1)
 }

@@ -3,6 +3,8 @@
 # Created by: rbachorz
 # Created on: 2018-01-19
 
+library(futile.logger)
+
 wdir="E:\\R\\EDM\\aaas\\projects\\engine-r\\src\\R\\standard"
 setwd(wdir)
 
