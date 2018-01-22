@@ -39,6 +39,17 @@ run <- function(dfData, dfParameters){
     dfData$dayOfWeek <- as.factor(dayOfWeek(timeDate(dfData$DateTime)))
     dfData$hour <- as.factor(format(dfData$DateTime, "%H"))
     dfData$month <- as.factor(format(dfData$DateTime, "%m"))
+
+    dfData$WorkingDay <- as.factor(dfData$WorkingDay)
+    
+    flog.info("TrainSVM: structure of the data frame")
+    str(dfData) 
+        
+    flog.info("TrainSVM: head of the data frame")
+    print(head(dfData))
+    
+    flog.info("TrainSVM: summary of the data frame")
+    print(summary(dfData))
     
     #one-hot encoding
     #definition of the size of space
@@ -48,7 +59,7 @@ run <- function(dfData, dfParameters){
     levels(dfData$month) <- c("01", "02", "03", "04", "05", "06", "07", "08", "09", "10", "11", "12")
     
     
-    DVobject <- dummyVars(~ dayOfWeek + hour + month + Temperature + WorkingDay + Load, data = dfData)
+    DVobject <- dummyVars(~ dayOfWeek + hour + Temperature + WorkingDay + Load, data = dfData)
     featuresResponse.DF <- as.data.table(predict(DVobject, newdata = dfData))
     featuresResponse.DF$Date <- dfData$DateTime
     
@@ -62,8 +73,8 @@ run <- function(dfData, dfParameters){
     type <- "eps-regression" #regression
     u <- -4 # -3,-2,-1,0,1,2,3
     gam <- 10^{u} 
-    #w <- 4.5 #1.5,-1,0.5,2,3,4
-    w <- 1
+    w <- 4.5 #1.5,-1,0.5,2,3,4
+    #w <- 1
     cost <- 10^{w}
     trainingData <- featuresResponse.DF[, featureResponseColumns, with = FALSE]
     # support vector machine
@@ -76,5 +87,6 @@ run <- function(dfData, dfParameters){
 
     flog.info("TrainSVM: saving the result")
     saveRDS(svmFit, file = filePath)
+    flog.info("TrainSVM: leaving...")
     return(1)
 }

@@ -11,7 +11,7 @@ library(data.table)
 #library(TTR)
 # Machine Learning
 library(caret)
-library(e1071)
+library(randomForest)
 # Logger
 library(futile.logger)
 
@@ -31,33 +31,32 @@ prepareDataForForecast <- function(dfData, dfParameters){
         summarise(value))
 
     
-    flog.info("forecast: preparing vector of predictors")
+    flog.info("forecastRF: preparing vector of predictors")
     #print(dfData)
     
+    dfPredictors <- as.data.frame(seq(from = as.POSIXct(forecastBeg, format = "%Y-%m-%dT%H:%M"), to = as.POSIXct(forecastEnd, format = "%Y-%m-%dT%H:%M") - 1, by = resolution))
+    
+    #print(nrow(dfPredictors))
     #print(nrow(dfData))
-    
-    #dfPredictors <- as.data.frame(seq(from = as.POSIXct(forecastBeg, format = "%Y-%m-%dT%H:%M"), to = as.POSIXct(forecastEnd, format = "%Y-%m-%dT%H:%M"), by = resolution))
-    dfPredictors <- as.data.frame(x = seq(from = as.POSIXct(forecastBeg, format = "%Y-%m-%dT%H:%M"), length.out = nrow(dfData), by = resolution))
-    ?seq
-    print(nrow(dfData))
-    print(dfPredictors)
-    
+    #print(dfPredictors[1:nrow(dfData), ])
+    #dfPredictors <- dfPredictors[1:nrow(dfData), ]
+    #print(dfPredictors)
     colnames(dfPredictors) <- c("DateTime")
     dfPredictors$Temperature <- dfData$Temperature
     dfPredictors$WorkingDay <- as.factor(dfData$WorkingDay)
-    flog.info("forecast: leaving prepareDataForForecast")
+    flog.info("forecastRF: leaving prepareDataForForecast")
     return(dfPredictors)
 }
 
 run <- function(dfData, dfParameters){
-    flog.info("forecast: entering forecast...")
+    flog.info("forecastRF: entering forecast...")
     filePath <- as.character(dfParameters %>% filter(name == "pathModelIn") %>% summarise(value))
-    flog.info("forecast: entering prepareDataForForecast")
+    flog.info("forecastRF: entering prepareDataForForecast")
     dfData <- prepareDataForForecast(dfData, dfParameters)
-    flog.info("forecast: left prepareDataForForecast")
+    flog.info("forecastRF: left prepareDataForForecast")
 
     #calendar preciction creation
-    flog.info("forecast: one-hot encoding")
+    flog.info("forecastRF: one-hot encoding")
     dfData$dayOfWeek <- as.factor(dayOfWeek(timeDate(dfData$DateTime)))
     dfData$hour <- as.factor(format(dfData$DateTime, "%H"))
     dfData$month <- as.factor(format(dfData$DateTime, "%m"))
@@ -69,15 +68,17 @@ run <- function(dfData, dfParameters){
     levels(dfData$hour) <- c("00", "01", "02", "03", "04", "05", "06", "07", "08", "09", "10", "11", "12", "13", "14", "15", "16", "17", "18", "19", "20", "21", "22", "23")
     levels(dfData$month) <- c("01", "02", "03", "04", "05", "06", "07", "08", "09", "10", "11", "12")
     
-    DVobject <- dummyVars(~ dayOfWeek + hour + Temperature + WorkingDay, data = dfData)
+    DVobject <- dummyVars(~ dayOfWeek + hour + month + Temperature + WorkingDay, data = dfData)
     featuresResponse.DF <- as.data.table(predict(DVobject, newdata = dfData))
     
-    flog.info(paste("forecast: reading in the model: ", filePath,  sep = ""))
+    flog.info(paste("forecastRF: reading in the model: ", filePath,  sep = ""))
     model <- readRDS(filePath)
 
-    flog.info("forecast: predicting...")
+    flog.info("forecastRF: predicting...")
     Prediction <- predict(model, featuresResponse.DF)
+    flog.info("Data frame with predicted values:")
     print(data.frame(Prediction))
+    flog.info("forecastRF: leaving...")
     return(data.frame(Prediction))
 }
 

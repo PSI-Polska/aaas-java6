@@ -1,0 +1,21 @@
+version: '3.2'
+services:
+  engine:
+    image: edm_aaas_image:0.4
+    volumes:
+     - /c/Users/rbachorz/R/aaas/projects/engine-r/src/R/standard/userScripts:/var/userScripts/
+     - /c/Users/rbachorz/R/models:/var/trainedModels/
+    ports:
+     - 6311:6311
+#    networks:
+#     - monitoring
+
+#  grafana:
+#    image: kamon/grafana_graphite
+#    ports:
+#      - 80:80
+#      - 81:81
+#      - 2003:2003
+#      - 8125:8125/udp
+#      - 8126:8126
+
