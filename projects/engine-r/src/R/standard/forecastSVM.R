@@ -8,7 +8,6 @@
 library(timeDate)
 library(dplyr)
 library(data.table)
-#library(TTR)
 # Machine Learning
 library(caret)
 library(e1071)
@@ -32,15 +31,11 @@ prepareDataForForecast <- function(dfData, dfParameters){
 
     
     flog.info("forecast: preparing vector of predictors")
-    #print(dfData)
-    
-    #print(nrow(dfData))
-    
-    #dfPredictors <- as.data.frame(seq(from = as.POSIXct(forecastBeg, format = "%Y-%m-%dT%H:%M"), to = as.POSIXct(forecastEnd, format = "%Y-%m-%dT%H:%M"), by = resolution))
+
     dfPredictors <- as.data.frame(x = seq(from = as.POSIXct(forecastBeg, format = "%Y-%m-%dT%H:%M"), length.out = nrow(dfData), by = resolution))
-    ?seq
-    print(nrow(dfData))
-    print(dfPredictors)
+
+#    print(nrow(dfData))
+#    print(dfPredictors)
     
     colnames(dfPredictors) <- c("DateTime")
     dfPredictors$Temperature <- dfData$Temperature
@@ -50,6 +45,7 @@ prepareDataForForecast <- function(dfData, dfParameters){
 }
 
 run <- function(dfData, dfParameters){
+    set.seed(123)
     flog.info("forecast: entering forecast...")
     filePath <- as.character(dfParameters %>% filter(name == "pathModelIn") %>% summarise(value))
     flog.info("forecast: entering prepareDataForForecast")
@@ -69,7 +65,7 @@ run <- function(dfData, dfParameters){
     levels(dfData$hour) <- c("00", "01", "02", "03", "04", "05", "06", "07", "08", "09", "10", "11", "12", "13", "14", "15", "16", "17", "18", "19", "20", "21", "22", "23")
     levels(dfData$month) <- c("01", "02", "03", "04", "05", "06", "07", "08", "09", "10", "11", "12")
     
-    DVobject <- dummyVars(~ dayOfWeek + hour + Temperature + WorkingDay, data = dfData)
+    DVobject <- dummyVars(~ dayOfWeek + hour + Temperature, data = dfData)
     featuresResponse.DF <- as.data.table(predict(DVobject, newdata = dfData))
     
     flog.info(paste("forecast: reading in the model: ", filePath,  sep = ""))
