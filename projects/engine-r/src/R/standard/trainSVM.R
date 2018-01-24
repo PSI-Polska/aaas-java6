@@ -15,6 +15,7 @@ library(data.table)
 run <- function(dfData, dfParameters){
     flog.threshold(INFO)
   
+    set.seed(123)
     flog.info("TrainSVM: reading parameters")
     filePath <- as.character(dfParameters %>%
         filter(name == "pathModelOut") %>%
@@ -35,6 +36,10 @@ run <- function(dfData, dfParameters){
     dfData <- cbind(dfData, DateTime)
     dfData <- dfData %>% filter(! is.na(Load) & ! is.na(DateTime))
 
+    
+    print(dfData[1:5, "Load"])
+    print(dfData[(nrow(dfData) - 5):nrow(dfData), "Load"])
+    
     #calendar preciction creation
     dfData$dayOfWeek <- as.factor(dayOfWeek(timeDate(dfData$DateTime)))
     dfData$hour <- as.factor(format(dfData$DateTime, "%H"))
@@ -43,13 +48,13 @@ run <- function(dfData, dfParameters){
     dfData$WorkingDay <- as.factor(dfData$WorkingDay)
     
     flog.info("TrainSVM: structure of the data frame")
-    str(dfData) 
+    #str(dfData) 
         
     flog.info("TrainSVM: head of the data frame")
-    print(head(dfData))
+    #print(head(dfData))
     
     flog.info("TrainSVM: summary of the data frame")
-    print(summary(dfData))
+    #print(summary(dfData))
     
     #one-hot encoding
     #definition of the size of space
@@ -58,8 +63,7 @@ run <- function(dfData, dfParameters){
     levels(dfData$hour) <- c("00", "01", "02", "03", "04", "05", "06", "07", "08", "09", "10", "11", "12", "13", "14", "15", "16", "17", "18", "19", "20", "21", "22", "23")
     levels(dfData$month) <- c("01", "02", "03", "04", "05", "06", "07", "08", "09", "10", "11", "12")
     
-    
-    DVobject <- dummyVars(~ dayOfWeek + hour + Temperature + WorkingDay + Load, data = dfData)
+    DVobject <- dummyVars(~ dayOfWeek + hour + Temperature + Load, data = dfData)
     featuresResponse.DF <- as.data.table(predict(DVobject, newdata = dfData))
     featuresResponse.DF$Date <- dfData$DateTime
     
