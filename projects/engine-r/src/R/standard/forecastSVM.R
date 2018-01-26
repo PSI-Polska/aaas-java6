@@ -30,7 +30,7 @@ prepareDataForForecast <- function(dfData, dfParameters){
         summarise(value))
 
     
-    flog.info("forecast: preparing vector of predictors")
+    flog.info("forecastSVM: preparing vector of predictors")
 
     dfPredictors <- as.data.frame(x = seq(from = as.POSIXct(forecastBeg, format = "%Y-%m-%dT%H:%M"), length.out = nrow(dfData), by = resolution))
 
@@ -40,20 +40,20 @@ prepareDataForForecast <- function(dfData, dfParameters){
     colnames(dfPredictors) <- c("DateTime")
     dfPredictors$Temperature <- dfData$Temperature
     dfPredictors$WorkingDay <- as.factor(dfData$WorkingDay)
-    flog.info("forecast: leaving prepareDataForForecast")
+    flog.info("forecastSVM: leaving prepareDataForForecast")
     return(dfPredictors)
 }
 
 run <- function(dfData, dfParameters){
     set.seed(123)
-    flog.info("forecast: entering forecast...")
+    flog.info("forecastSVM: entering forecast...")
     filePath <- as.character(dfParameters %>% filter(name == "pathModelIn") %>% summarise(value))
-    flog.info("forecast: entering prepareDataForForecast")
+    flog.info("forecastSVM: entering prepareDataForForecast")
     dfData <- prepareDataForForecast(dfData, dfParameters)
-    flog.info("forecast: left prepareDataForForecast")
+    flog.info("forecastSVM: left prepareDataForForecast")
 
     #calendar preciction creation
-    flog.info("forecast: one-hot encoding")
+    flog.info("forecastSVM: one-hot encoding")
     dfData$dayOfWeek <- as.factor(dayOfWeek(timeDate(dfData$DateTime)))
     dfData$hour <- as.factor(format(dfData$DateTime, "%H"))
     dfData$month <- as.factor(format(dfData$DateTime, "%m"))
@@ -68,12 +68,13 @@ run <- function(dfData, dfParameters){
     DVobject <- dummyVars(~ dayOfWeek + hour + Temperature, data = dfData)
     featuresResponse.DF <- as.data.table(predict(DVobject, newdata = dfData))
     
-    flog.info(paste("forecast: reading in the model: ", filePath,  sep = ""))
+    flog.info(paste("forecastSVM: reading in the model: ", filePath,  sep = ""))
     model <- readRDS(filePath)
 
-    flog.info("forecast: predicting...")
+    flog.info("forecastSVM: predicting...")
     Prediction <- predict(model, featuresResponse.DF)
-    print(data.frame(Prediction))
+    #print(data.frame(Prediction))
+    flog.info("forecastSVM: leaving prediction...")
     return(data.frame(Prediction))
 }
 

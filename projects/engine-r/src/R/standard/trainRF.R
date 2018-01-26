@@ -48,7 +48,7 @@ run <- function(dfData, dfParameters){
   levels(dfData$month) <- c("01", "02", "03", "04", "05", "06", "07", "08", "09", "10", "11", "12")
   
   
-  DVobject <- dummyVars(~ dayOfWeek + hour + month + Temperature + WorkingDay + Load, data = dfData)
+  DVobject <- dummyVars(~ dayOfWeek + hour + Temperature + Load, data = dfData)
   featuresResponse.DF <- as.data.table(predict(DVobject, newdata = dfData))
   featuresResponse.DF$Date <- dfData$DateTime
   
@@ -64,6 +64,6 @@ run <- function(dfData, dfParameters){
   
   flog.info("TrainRF: saving the result")
   saveRDS(model, file = filePath)
-  flog.info("TrainRF: leaving...")
+  flog.info("TrainRF: leaving prediction...")
   return(1)
 }

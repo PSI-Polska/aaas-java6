@@ -34,7 +34,7 @@ prepareDataForForecast <- function(dfData, dfParameters){
     flog.info("forecastRF: preparing vector of predictors")
     #print(dfData)
     
-    dfPredictors <- as.data.frame(seq(from = as.POSIXct(forecastBeg, format = "%Y-%m-%dT%H:%M"), to = as.POSIXct(forecastEnd, format = "%Y-%m-%dT%H:%M") - 1, by = resolution))
+    dfPredictors <- as.data.frame(x = seq(from = as.POSIXct(forecastBeg, format = "%Y-%m-%dT%H:%M"), length.out = nrow(dfData), by = resolution))
     
     #print(nrow(dfPredictors))
     #print(nrow(dfData))
@@ -68,7 +68,7 @@ run <- function(dfData, dfParameters){
     levels(dfData$hour) <- c("00", "01", "02", "03", "04", "05", "06", "07", "08", "09", "10", "11", "12", "13", "14", "15", "16", "17", "18", "19", "20", "21", "22", "23")
     levels(dfData$month) <- c("01", "02", "03", "04", "05", "06", "07", "08", "09", "10", "11", "12")
     
-    DVobject <- dummyVars(~ dayOfWeek + hour + month + Temperature + WorkingDay, data = dfData)
+    DVobject <- dummyVars(~ dayOfWeek + hour + Temperature, data = dfData)
     featuresResponse.DF <- as.data.table(predict(DVobject, newdata = dfData))
     
     flog.info(paste("forecastRF: reading in the model: ", filePath,  sep = ""))
@@ -76,8 +76,8 @@ run <- function(dfData, dfParameters){
 
     flog.info("forecastRF: predicting...")
     Prediction <- predict(model, featuresResponse.DF)
-    flog.info("Data frame with predicted values:")
-    print(data.frame(Prediction))
+    #flog.info("Data frame with predicted values:")
+    #print(data.frame(Prediction))
     flog.info("forecastRF: leaving...")
     return(data.frame(Prediction))
 }
