@@ -10,13 +10,13 @@ wdir="C:\\Users\\rbachorz\\R\\aaas\\projects\\engine-r\\src\\R\\standard"
 setwd(wdir)
 
 source("prepareData.R")
+dataFile = "Load_Temp_TimeSeries_PPL_Date_WorkingDay_Load_Temperature_2017.csv"
 
-dfData <- readData("Load_Temp_TimeSeries_PPL_Date_WorkingDay_Load_Temperature_cutEntireDays.csv")
-
+dfData <- readData(dataFile)
 
 dfData$dayOfWeek <- as.factor(dayOfWeek(timeDate(dfData$Date)))
-dfData$hour <- as.factor(format(dfData$DateTime, "%H"))
-dfData$month <- as.factor(format(dfData$DateTime, "%m"))
+dfData$hour <- as.factor(format(dfData$Date, "%H"))
+dfData$month <- as.factor(format(dfData$Date, "%m"))
 
 levels(dfData$dayOfWeek)
 
@@ -31,7 +31,7 @@ colnames(dfParameters) <- c("name", "value")
 # trainBeg - beginning of train period
 # trainEnd - end of train period
 # resolution - time resoluition when creating the sequence
-dfParameters[1,] <- c("pathModelOut", paste(wdir, "\\svmModel.rds", sep = ""))
+dfParameters[1,] <- c("pathModelOut", paste(wdir, "\\rfModel.rds", sep = ""))
 dfParameters[2,] <- c("trainBeg", as.character(format(min(dfData$Date), "%Y-%m-%dT%H:%M")))
 dfParameters[3,] <- c("trainEnd", as.character(format(max(dfData$Date), "%Y-%m-%dT%H:%M")))
 dfParameters[4,] <- c("resolution", "hour")
@@ -44,8 +44,8 @@ trainingResult <- run(dfData = dfData, dfParameters = dfParameters)
 ##########
 # forecasting
 # train the model
-forecastBeg <- as.POSIXct("2015-05-01 00:00", tz = "GMT")
-forecastEnd <- as.POSIXct("2015-05-31 00:00", tz = "GMT")
+forecastBeg <- as.POSIXct("2017-05-01 00:00", tz = "GMT")
+forecastEnd <- as.POSIXct("2017-05-31 00:00", tz = "GMT")
 
 # prepare the data frame with parameterization 
 dfParameters <- data.frame(name = as.character(), value = as.character(), stringsAsFactors = FALSE)
@@ -56,7 +56,7 @@ dfParameters[2,] <- c("forecastEnd", as.character(format(forecastEnd, "%Y-%m-%dT
 dfParameters[3,] <- c("resolution", "hour")
 dfParameters[4,] <- c("pathModelIn", paste(wdir, "\\svmModel.rds", sep = ""))
 
-dfData <- readData(paste(wdir, "\\Load_Temp_TimeSeries_PPL_Date_WorkingDay_Load_Temperature.csv", sep = ""))
+dfData <- readData(dataFile)
 dfPredictors <- dfData %>% filter(Date > forecastBeg, Date <= forecastEnd) %>% select(Temperature, WorkingDay)
 
 source("forecastSVM.R")
