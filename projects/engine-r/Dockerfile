@@ -18,6 +18,8 @@ RUN apt-get update \
 COPY src/R/*.R /var/userScripts/
 COPY src/R/standard/*.R /var/userScripts/
 
+COPY src/docker/*.rds /var/trainedModels/
+
 COPY src/docker/start.sh /usr/local/src/scripts/start.sh
 
 COPY src/R/installPackages.R /usr/local/src/scripts/installPackages.R
