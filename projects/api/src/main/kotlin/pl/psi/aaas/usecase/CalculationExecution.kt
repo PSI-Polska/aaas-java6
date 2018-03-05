@@ -1,46 +1,31 @@
 package pl.psi.aaas.usecase
 
-import java.time.ZonedDateTime
-
-/**
- * Time series Symbol.
- */
-typealias Symbol = String
 /**
  * Parameters of calculation.
  */
 typealias Parameters = Map<String, String>
 
 /**
- * DTO to move calculation definition information.
- *
- * @property timeSeriesIdsIn Time Series IN identifiers
- * @property timeSeriesIdsOut Time Series OUT identifiers
- * @property calculationScriptPath not empty path to calculation R script
+ * The most basic calculation definition.
  */
-// TODO this definition is meant only for Time Series. Split it or rename it!
-// TODO open?
-data class CalculationDefinition(val timeSeriesIdsIn: Map<Symbol, Long> = emptyMap(),
-                                 val timeSeriesIdsOut: Map<Symbol, Long> = emptyMap(),
-                                 val begin: ZonedDateTime,
-                                 val end: ZonedDateTime,
-                                 val calculationScriptPath: String,
-                                 val additionalParameters: Parameters = emptyMap())
-// TODO add dataSource?
+interface CalculationDefinition {
+    val calculationScriptPath: String
+    val additionalParameters: Parameters
 // TODO add engineDefinition?
+}
 // TODO add useCase?
 
 /**
  * CalculationExecution interface describes calculation use cases.
  */
-interface CalculationExecution {
+interface CalculationExecution<in T : CalculationDefinition> {
     /**
      * Call the calculation.
      *
      * @throws CalculationException
      */
     @Throws(CalculationException::class)
-    fun call(calcDef: CalculationDefinition)
+    fun call(calcDef: T)
 }
 
 /**

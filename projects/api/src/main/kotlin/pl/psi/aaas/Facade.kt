@@ -5,8 +5,8 @@ import pl.psi.aaas.usecase.CalculationDefinition
 /**
  *
  */
-interface Facade {
-    fun callScript(calcDef: CalculationDefinition)
+interface Facade<in T : CalculationDefinition> {
+    fun callScript(calcDef: T)
 }
 
 // TODO CDI Facade? Weld facade?

@@ -1,6 +1,9 @@
 package pl.psi.aaas.usecase.timeseries
 
-import pl.psi.aaas.usecase.*
+import pl.psi.aaas.usecase.CalculationException
+import pl.psi.aaas.usecase.CalculationExecution
+import pl.psi.aaas.usecase.Engine
+import pl.psi.aaas.usecase.ScriptSynchronizer
 
 /**
  * CalculationExecution implementation based on TimeSeries.
@@ -9,19 +12,20 @@ import pl.psi.aaas.usecase.*
  */
 class TimeSeriesBasedCalculationExecution(val synchronizer: ScriptSynchronizer,
                                           val tsRepository: TimeSeriesRepository,
-                                          val engine: Engine) : CalculationExecution {
+                                          val engine: Engine<TimeSeriesWithValuesCalculationDefinition, MappedTS>)
+    : CalculationExecution<TimeSeriesCalculationDefinition> {
 
-    override fun call(calcDef: CalculationDefinition) {
+    override fun call(calcDef: TimeSeriesCalculationDefinition) {
         if (synchronizer.isUnderSynchronization()) synchronizer.waitEnd()
 
         val inTs = calcDef.timeSeriesIdsIn.map { it.key to tsRepository.read(it.value, calcDef.begin, calcDef.end) }
 
-        val mappedResult = engine.call(calcDef, inTs)
+        val mappedResult = engine.call(TSCalcDefWithValuesDTO(calcDef, inTs))
 
         mappedResult.map { symbolToTsId(calcDef, it) to it.second }
-                .forEach { tsRepository.save(it.first, calcDef.begin, it.second) } // TODO maybe in dates should be saparated from out dates?
+                .forEach { tsRepository.save(it.first, calcDef.begin, it.second) }
     }
 
-    private fun symbolToTsId(calcDef: CalculationDefinition, it: Pair<Symbol, TS>) =
+    private fun symbolToTsId(calcDef: TimeSeriesCalculationDefinition, it: Pair<Symbol, TS>) =
             calcDef.timeSeriesIdsOut[it.first] ?: throw CalculationException("""Unable to match result time series ${it.first} with definition ${calcDef.timeSeriesIdsOut.keys}.""")
 }

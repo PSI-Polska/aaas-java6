@@ -2,8 +2,10 @@ package pl.psi.aaas.usecase
 
 import com.nhaarman.mockito_kotlin.*
 import io.kotlintest.specs.StringSpec
+import pl.psi.aaas.usecase.timeseries.MappedTS
 import pl.psi.aaas.usecase.timeseries.TimeSeriesBasedCalculationExecution
 import pl.psi.aaas.usecase.timeseries.TimeSeriesRepository
+import pl.psi.aaas.usecase.timeseries.TimeSeriesWithValuesCalculationDefinition
 
 class CalculationExecutionTest : StringSpec() {
     init {
@@ -16,8 +18,8 @@ class CalculationExecutionTest : StringSpec() {
             on { read(eq(2L), any(), any()) } doReturn TS2
             on { read(eq(3L), any(), any()) } doReturn TS3
         }
-        val mockEngine = mock<Engine> {
-            on { call(any(), any()) } doReturn listOf(TS1ResM, TS2ResM)
+        val mockEngine = mock<Engine<TimeSeriesWithValuesCalculationDefinition, MappedTS>> {
+            on { call(any()) } doReturn listOf(TS1ResM, TS2ResM)
         }
 
         "Validation" {
@@ -42,7 +44,7 @@ class CalculationExecutionTest : StringSpec() {
 
             out.call(ValidDefinition)
 
-            verify(tsRepo, times(ValidDefinition.timeSeriesIdsIn.size)).read(any(), any(), any())
+            verify(tsRepo, times(ValidDefinitionWithTS.timeSeriesIdsIn.size)).read(any(), any(), any())
         }
 
         "ScriptExecutioner fails when TS reading fails" {
@@ -55,7 +57,7 @@ class CalculationExecutionTest : StringSpec() {
 
             out.call(ValidDefinition)
 
-            verify(mockEngine).call(ValidDefinition, expectedMappedTS)
+            verify(mockEngine).call(ValidDefinitionWithTS)
         }
 
         "ScriptExecutioner fails when Engine fails" {
@@ -67,8 +69,8 @@ class CalculationExecutionTest : StringSpec() {
 
             out.call(ValidDefinition)
 
-            verify(tsRepo).save(101L, ValidDefinition.begin, TS1Res)
-            verify(tsRepo).save(102L, ValidDefinition.begin, TS2Res)
+            verify(tsRepo).save(101L, ValidDefinitionWithTS.begin, TS1Res)
+            verify(tsRepo).save(102L, ValidDefinitionWithTS.begin, TS2Res)
         }
 
         "ScriptExecutioner fails when TS saving fails" {

@@ -10,6 +10,7 @@ interface ScriptSynchronizer {
      * Returns true if synchronization is ongoing.
      */
     fun isUnderSynchronization(): Boolean
+
     /**
      * Waits for synchronization to end.
      */
