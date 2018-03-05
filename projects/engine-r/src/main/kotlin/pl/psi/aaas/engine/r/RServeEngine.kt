@@ -7,35 +7,49 @@ import org.rosuda.REngine.Rserve.RserveException
 import org.slf4j.LoggerFactory
 import pl.psi.aaas.engine.r.RServeEngine.Companion.baseUserScriptPath
 import pl.psi.aaas.engine.r.RServeEngine.Companion.log
-import pl.psi.aaas.usecase.*
+import pl.psi.aaas.usecase.CalculationDefinition
+import pl.psi.aaas.usecase.CalculationException
+import pl.psi.aaas.usecase.Engine
+import pl.psi.aaas.usecase.timeseries.MappedTS
+import pl.psi.aaas.usecase.timeseries.Symbol
+import pl.psi.aaas.usecase.timeseries.TimeSeriesCalculationDefinition
+import pl.psi.aaas.usecase.timeseries.TimeSeriesWithValuesCalculationDefinition
 
 // TODO this engine implementation is basedon TimeSeries.Split it or rename it.
-class RServeEngine(private val connectionProvider: RConnectionProvider) : Engine {
+abstract class RServeEngine<out R>(private val connectionProvider: RConnectionProvider) : Engine<TimeSeriesWithValuesCalculationDefinition, R> {
     companion object {
         internal val log = LoggerFactory.getLogger(RServeEngine::class.java)
         internal val baseUserScriptPath = "/var/userScripts/"
     }
 
-    override fun call(calcDef: CalculationDefinition, tsValues: MappedTS): MappedTS =
+    open fun beforeExecute(conn: RConnection, calcDef: TimeSeriesWithValuesCalculationDefinition) {
+    }
+
+    abstract fun afterExecute(conn: RConnection, result: REXP, calcDef: TimeSeriesWithValuesCalculationDefinition): R
+
+    override fun call(calcDef: TimeSeriesWithValuesCalculationDefinition): R =
             try {
                 val conn = connectionProvider.getConnection()
                 log.debug("Evaluating " + calcDef)
 
                 calcDef.sourceScript(conn)
-                tsValues.sendValues(conn)
                 calcDef.prepareParameters(conn)
-                val resultDf = execute(conn).processResults(calcDef)
-                resultDf.logRList()
-                resultDf.mapDataFrameToTS(calcDef)
+
+                log.debug("Calling script")
+                val result = conn.eval("dfOut <- run(dfIn, additionalParameters)")
+
+                afterExecute(conn, result, calcDef)
             } catch (ex: RserveException) {
                 ex.printStackTrace()
                 throw CalculationException(ex.message ?: "There was an error during calculation.")
             }
+}
 
-    private fun execute(conn: RConnection): REXP {
-        log.debug("Calling script")
-        return conn.eval("dfOut <- run(dfIn, additionalParameters)")
-    }
+internal fun CalculationDefinition.sourceScript(conn: RConnection) {
+    val path = """$baseUserScriptPath$calculationScriptPath.R"""
+    log.debug("""Sourcing: $path""")
+    conn.voidEval("""writeLines("##\nStarted execution of: $path\n##")""")
+    conn.voidEval("""source("$path")""")
 }
 
 internal fun CalculationDefinition.prepareParameters(conn: RConnection) {
@@ -49,14 +63,6 @@ internal fun CalculationDefinition.prepareParameters(conn: RConnection) {
     }
 }
 
-internal fun CalculationDefinition.sourceScript(conn: RConnection) {
-    val path = """$baseUserScriptPath$calculationScriptPath.R"""
-    log.debug("""Sourcing: $path""")
-    conn.voidEval("""writeLines("##\nStarted execution of: $path\n##")""")
-    conn.voidEval("""source("$path")""")
-}
-
-
 internal fun MappedTS.sendValues(conn: RConnection) {
     val allVectors = joinToString { it.first }
     log.debug("""Sending values $allVectors""")
@@ -69,7 +75,7 @@ internal fun RList.logRList() {
     log.debug("""Result DF columns: $dfColumns""")
 }
 
-internal fun RList.mapDataFrameToTS(calcDef: CalculationDefinition): MappedTS {
+internal fun RList.mapDataFrameToTS(calcDef: TimeSeriesCalculationDefinition): MappedTS {
     val (results, missingResults) = calcDef.partitionResults(this)
 
     if (missingResults.isNotEmpty()) {
@@ -92,7 +98,7 @@ internal fun REXP.processResults(calcDef: CalculationDefinition): RList =
             }
         }
 
-internal fun CalculationDefinition.partitionResults(dataFrame: RList): Pair<List<Pair<Symbol, REXP>>, List<Pair<Symbol, REXP?>>> {
+internal fun TimeSeriesCalculationDefinition.partitionResults(dataFrame: RList): Pair<List<Pair<Symbol, REXP>>, List<Pair<Symbol, REXP?>>> {
     val (results, missingResults) = timeSeriesIdsOut
             .map { it.key to dataFrame[it.key] as REXP? }
             .partition { it.second != null }
