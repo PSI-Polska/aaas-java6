@@ -1,7 +1,7 @@
 version: '3.2'
 services:
   engine:
-    image: registry.gitlab.com/edmpsi/engine/r:0.2
+    image: registry.gitlab.com/edmpsi/engine/r:0.6
     # volumes:
      #- :/var/userScripts/
      #- :/var/trainedModels/
