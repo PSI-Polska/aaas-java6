@@ -68,6 +68,7 @@
                         <option>all-open:annotation=javax.ws.rs.Path</option>
                         <option>all-open:annotation=javax.ejb.Stateless</option>
                         <option>all-open:annotation=javax.ejb.Singleton</option>
+                        <option>all-open:annotation=javax.ws.rs.ext.Provider</option>
                     </pluginOptions>
                 </configuration>
 

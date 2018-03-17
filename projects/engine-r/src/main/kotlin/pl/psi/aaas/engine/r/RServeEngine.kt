@@ -33,6 +33,7 @@ abstract class RServeEngine<out R>(private val connectionProvider: RConnectionPr
                 log.debug("Evaluating " + calcDef)
 
                 calcDef.sourceScript(conn)
+                calcDef.tsValues.sendValues(conn)
                 calcDef.prepareParameters(conn)
 
                 log.debug("Calling script")
