@@ -1,7 +1,8 @@
 package pl.psi.aaas
 
-import pl.psi.aaas.usecase.timeseries.TSCalcDefWithValuesDTO
+import pl.psi.aaas.usecase.timeseries.TSCalcDefDTO
 import pl.psi.aaas.usecase.timeseries.TimeSeriesCalculationDefinition
+import java.time.ZonedDateTime
 import javax.inject.Inject
 import javax.ws.rs.GET
 import javax.ws.rs.Path
@@ -14,7 +15,11 @@ class RestEndpoint @Inject constructor(private val facade: Facade<TimeSeriesCalc
         facade.callScript(getDefinition())
     }
 
-    fun getDefinition(): TSCalcDefWithValuesDTO {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-    }
+    fun getDefinition(): TSCalcDefDTO =
+            TSCalcDefDTO(timeSeriesIdsIn = mapOf("A" to 1L, "B" to 2L),
+                    timeSeriesIdsOut = mapOf("C" to 3L),
+                    begin = ZonedDateTime.now(),
+                    end = ZonedDateTime.now().plusDays(1),
+                    calculationScriptPath = "add",
+                    additionalParameters = emptyMap())
 }
