@@ -6,7 +6,7 @@ import javax.inject.Inject
 import javax.ws.rs.GET
 import javax.ws.rs.Path
 
-@Path("/synchronize")
+@Path("/update")
 class RestSynchronizer @Inject constructor(val connection: RConnectionProvider) : ScriptSynchronizer {
     private var isUnderSynchronization = false
 
