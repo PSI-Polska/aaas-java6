@@ -1,6 +1,6 @@
 #!/bin/bash
 
-#git clone $REPOSITORY_ADDRESS
+git clone $REPOSITORY_ADDRESS
 #OR
 #git pull $2
 
