@@ -148,8 +148,12 @@
     </developers>
 
     <scm>
-        <developerConnection>scm:svn:https://infra-bln-3-svn.psi.de/svn/aaas/</developerConnection>
+        <connection>https://gitlab.com/edmpsi/aaas.git</connection>
+        <developerConnection>scm:git:git@gitlab.com:edmpsi/aaas.gitt</developerConnection>
+        <url>https://gitlab.com/edmpsi/aaas</url>
+        <tag>HEAD</tag>
     </scm>
+
 
     <repositories>
         <repository>
