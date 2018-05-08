@@ -10,15 +10,16 @@ import pl.psi.aaas.usecase.CalculationExecution
  * TimeSeries values are read from [TimeSeriesRepository] before the call and the results are saved back with repository after the call.
  */
 class TSCalculationExecution(val tsRepository: TSRepository,
-                             val engine: Engine<TSCalcDefWithValues, MappedTS, MappedTS>)
+                             val engine: Engine<TSCalcDefWithValues, TSDataFrame, TSDataFrame>)
     : CalculationExecution<TSCalculationDefinition, Unit> {
     // TODO 05.05.2018 kskitek: bring synchronizer back
 
     override fun call(calcDef: TSCalculationDefinition) {
         val inTs = calcDef.timeSeriesIdsIn.map { it.key to tsRepository.read(prepQuery(it.value, calcDef)) }.toMap()
 
-        val mappedResult = engine.call(TSCalcDefWithValues(calcDef, inTs))
+        val resultDF = engine.call(TSCalcDefWithValues(calcDef, TSDataFrame(inTs)))
 
+        val mappedResult = resultDF?.toMappedTS() ?: emptyMap()
         mappedResult.map { symbolToTsId(calcDef, it) to it.value }
                 .forEach { tsRepository.save(prepQuery(it.first, calcDef), it.second) }
     }

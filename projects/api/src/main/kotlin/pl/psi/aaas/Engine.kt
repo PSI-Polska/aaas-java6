@@ -19,6 +19,18 @@ interface Engine<in T : CalculationDefinitonWithValues<V>, V, out R> {
     fun call(calcDef: T): R?
 }
 
+interface EngineValuesSender<in V, in D : CalculationDefinition> {
+
+    @Throws(CalculationException::class)
+    fun send(values: V, definition: D)
+}
+
+interface EngineValuesReceiver<out R, in D : CalculationDefinition> {
+    @Throws(CalculationException::class)
+    fun receive(result: Any?, definition: D): R?
+    // TODO 05.05.2018 kskitek: can we have something better than 'Any?'?
+}
+
 /**
  * Implementations translate In/Out types of [ValuesRepository] into [Engine]'s native representation.
  *
@@ -27,14 +39,6 @@ interface Engine<in T : CalculationDefinitonWithValues<V>, V, out R> {
  * @param S session shares by [Engine] and EngineValuesTransceiver
  */
 // TODO 07.05.2018 kskitek: maybe you don't need V and R while there is D
-interface EngineValuesTranceiver<in V, out R, in D : CalculationDefinition, out S> {
+interface EngineValuesTranceiver<in V, out R, in D : CalculationDefinition, out S> : EngineValuesSender<V, D>, EngineValuesReceiver<R, D> {
     val session: S
-
-    // TODO do I need calcDef as well?
-    @Throws(CalculationException::class)
-    fun send(values: V, definition: D)
-
-    @Throws(CalculationException::class)
-    fun receive(result: Any?, definition: D): R?
-    // TODO 05.05.2018 kskitek: can we have something better than 'Any?'?
 }

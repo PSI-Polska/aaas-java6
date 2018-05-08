@@ -49,9 +49,9 @@ data class TSCalcDefWithValues(override val timeSeriesIdsIn: Map<Symbol, Long>,
                                override val end: ZonedDateTime,
                                override val calculationScript: String,
                                override val additionalParameters: Parameters,
-                               override val values: MappedTS)
-    : TSCalculationDefinition, CalculationDefinitonWithValues<MappedTS> {
+                               override val values: TSDataFrame)
+    : TSCalculationDefinition, CalculationDefinitonWithValues<TSDataFrame> {
 
-    constructor(def: TSCalculationDefinition, values: MappedTS)
+    constructor(def: TSCalculationDefinition, values: TSDataFrame)
             : this(def.timeSeriesIdsIn, def.timeSeriesIdsOut, def.begin, def.end, def.calculationScript, def.additionalParameters, values)
 }
