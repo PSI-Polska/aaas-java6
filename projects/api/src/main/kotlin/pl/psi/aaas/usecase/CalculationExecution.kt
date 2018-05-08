@@ -9,23 +9,32 @@ typealias Parameters = Map<String, String>
  * The most basic calculation definition.
  */
 interface CalculationDefinition {
-    val calculationScriptPath: String
+    val calculationScript: String
     val additionalParameters: Parameters
-// TODO add engineDefinition?
+// TODO add engineDefinition? engineQuery?
 }
-// TODO add useCase?
+
+/**
+ * Calculation definiton passed with values.
+ * Can be used when:
+ * - no [pl.psi.aaas.ValuesRepository] is used to read values
+ * - [pl.psi.aaas.Engine] implementations have to get definition already with the values
+ */
+interface CalculationDefinitonWithValues<out V> : CalculationDefinition {
+    val values: V
+}
 
 /**
  * CalculationExecution interface describes calculation use cases.
  */
-interface CalculationExecution<in T : CalculationDefinition> {
+interface CalculationExecution<in T : CalculationDefinition, out V> {
     /**
      * Call the calculation.
      *
      * @throws CalculationException
      */
     @Throws(CalculationException::class)
-    fun call(calcDef: T)
+    fun call(calcDef: T): V
 }
 
 /**

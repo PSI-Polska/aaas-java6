@@ -2,8 +2,9 @@ package pl.psi.aaas.usecase
 
 import com.nhaarman.mockito_kotlin.*
 import io.kotlintest.specs.StringSpec
+import pl.psi.aaas.Engine
 import pl.psi.aaas.usecase.timeseries.MappedTS
-import pl.psi.aaas.usecase.timeseries.TimeSeriesBasedCalculationExecution
+import pl.psi.aaas.usecase.timeseries.VectorCalculationExecution
 import pl.psi.aaas.usecase.timeseries.TimeSeriesRepository
 import pl.psi.aaas.usecase.timeseries.TimeSeriesWithValuesCalculationDefinition
 
@@ -28,7 +29,7 @@ class CalculationExecutionTest : StringSpec() {
 
         "ScriptExecutioner checks with Synchronizer if it can run" {
 
-            val out = TimeSeriesBasedCalculationExecution(noSynchronizationSynchronizer, tsRepo, mockEngine)
+            val out = VectorCalculationExecution(noSynchronizationSynchronizer, tsRepo, mockEngine)
 
             out.call(ValidDefinition)
 
@@ -40,7 +41,7 @@ class CalculationExecutionTest : StringSpec() {
         }.config(enabled = false)
 
         "ScriptsExecutioner reads all time series defined in TsIn" {
-            val out = TimeSeriesBasedCalculationExecution(noSynchronizationSynchronizer, tsRepo, mockEngine)
+            val out = VectorCalculationExecution(noSynchronizationSynchronizer, tsRepo, mockEngine)
 
             out.call(ValidDefinition)
 
@@ -52,7 +53,7 @@ class CalculationExecutionTest : StringSpec() {
         }.config(enabled = false)
 
         "ScriptExecutioner schedules calculation with mapped time series" {
-            val out = TimeSeriesBasedCalculationExecution(noSynchronizationSynchronizer, tsRepo, mockEngine)
+            val out = VectorCalculationExecution(noSynchronizationSynchronizer, tsRepo, mockEngine)
             val expectedMappedTS = listOf("A" to TS1, "B" to TS2, "C" to TS3)
 
             out.call(ValidDefinition)
@@ -65,7 +66,7 @@ class CalculationExecutionTest : StringSpec() {
         }.config(enabled = false)
 
         "ScriptExecutioner maps and saves returned from Engine data" {
-            val out = TimeSeriesBasedCalculationExecution(noSynchronizationSynchronizer, tsRepo, mockEngine)
+            val out = VectorCalculationExecution(noSynchronizationSynchronizer, tsRepo, mockEngine)
 
             out.call(ValidDefinition)
 

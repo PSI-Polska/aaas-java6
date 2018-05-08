@@ -1,10 +1,10 @@
 package pl.psi.aaas.usecase
 
-import pl.psi.aaas.usecase.timeseries.TSCalcDefDTO
+import pl.psi.aaas.usecase.timeseries.TSCalcDef
 import pl.psi.aaas.usecase.timeseries.TSCalcDefWithValuesDTO
 import java.time.ZonedDateTime
 
-val ValidDefinition = TSCalcDefDTO(
+val ValidDefinition = TSCalcDef(
         mapOf("A" to 1L, "B" to 2L, "C" to 3L),
         mapOf("Y" to 101L, "Z" to 102L),
         ZonedDateTime.now(),

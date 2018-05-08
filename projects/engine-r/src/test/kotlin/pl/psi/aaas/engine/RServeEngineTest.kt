@@ -3,7 +3,7 @@ package pl.psi.aaas.engine
 import com.nhaarman.mockito_kotlin.verify
 import io.kotlintest.specs.StringSpec
 import pl.psi.aaas.engine.r.timeseries.TimeSeriesRServeEngine
-import pl.psi.aaas.usecase.Engine
+import pl.psi.aaas.Engine
 import pl.psi.aaas.usecase.timeseries.MappedTS
 import pl.psi.aaas.usecase.timeseries.TSCalcDefWithValuesDTO
 import pl.psi.aaas.usecase.timeseries.TimeSeriesWithValuesCalculationDefinition
@@ -34,7 +34,7 @@ class RServeEngineTest : StringSpec() {
         "Engine passes script path" {
             out.call(ValidDefinition)
 
-            verify(conn).voidEval("""source("${ValidDefinition.calculationScriptPath}")""")
+            verify(conn).voidEval("""source("${ValidDefinition.calculationScript}")""")
         }.config(enabled = false)
 
         "Engine sends all values" {

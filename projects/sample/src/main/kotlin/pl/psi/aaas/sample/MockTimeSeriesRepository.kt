@@ -2,21 +2,23 @@ package pl.psi.aaas.sample
 
 import org.slf4j.LoggerFactory
 import pl.psi.aaas.usecase.timeseries.TS
-import pl.psi.aaas.usecase.timeseries.TimeSeriesRepository
-import pl.psi.aaas.usecase.timeseries.TsId
-import java.time.ZonedDateTime
+import pl.psi.aaas.usecase.timeseries.TSQuery
+import pl.psi.aaas.usecase.timeseries.TSRepository
+import java.time.Duration
 
-internal class MockTimeSeriesRepository : TimeSeriesRepository {
+internal class MockTimeSeriesRepository : TSRepository {
+
     private val log = LoggerFactory.getLogger(MockTimeSeriesRepository::class.java)
 
-    private val ts = (1 until 24 * 356).toList().map { it.toDouble() }.toDoubleArray()
+    override fun read(query: TSQuery): TS {
+        val hours = Duration.between(query.begin, query.end).toHours()
+        return (0 until hours).map { query.begin.plusHours(it) to it.toDouble() }.toTypedArray()
+    }
 
-    override fun read(tsId: TsId, begin: ZonedDateTime, end: ZonedDateTime): TS = ts
-
-    override fun save(tsId: TsId, begin: ZonedDateTime, tsValues: TS) {
+    override fun save(query: TSQuery, values: TS) {
         log.info("SAVING")
-        log.info("\ttsId = $tsId")
-        log.info("\tsize = ${tsValues.size}")
+        log.info("\ttsId = ${query.tsId}")
+        log.info("\tsize = ${values.size}")
     }
 
 }
