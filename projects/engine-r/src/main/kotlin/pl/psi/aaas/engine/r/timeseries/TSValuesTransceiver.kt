@@ -9,53 +9,46 @@ import pl.psi.aaas.engine.r.RServeEngine
 import pl.psi.aaas.engine.r.RValuesTransceiver
 import pl.psi.aaas.usecase.CalculationException
 import pl.psi.aaas.usecase.Column
+import pl.psi.aaas.usecase.timeseries.MappedTS
 import pl.psi.aaas.usecase.timeseries.Symbol
 import pl.psi.aaas.usecase.timeseries.TSCalculationDefinition
-import pl.psi.aaas.usecase.timeseries.TSDataFrame
-import pl.psi.aaas.usecase.timeseries.toDoubleArray
 
-class TSValuesTransceiver(override val session: RConnection) : RValuesTransceiver<TSDataFrame, TSDataFrame, TSCalculationDefinition> {
+class TSValuesTransceiver(override val session: RConnection) : RValuesTransceiver<MappedTS, MappedTS, TSCalculationDefinition> {
     companion object {
         internal val log = LoggerFactory.getLogger(RServeEngine::class.java)
     }
 
-    override fun send(values: TSDataFrame, definition: TSCalculationDefinition) {
-        val vectorNames = values.getColumns()
+    override fun send(values: MappedTS, definition: TSCalculationDefinition) {
+        val vectorNames = values.keys
         val vectorCSV = vectorNames.joinToString()
         log.debug("Sending values $vectorCSV")
 
-        val allButDT = values.getFiltered { !it.equals(TSDataFrame.COL_DT) }
-        allButDT.getColumns()
-                .forEach {
-                    val doubleArray = allButDT.get(it)?.toDoubleArray(REXPDouble.NA) ?: DoubleArray(0)
-                    session.assign(it, doubleArray)
-                }
+        values.allButDT().forEach {
+            val values = it.value.map { it.second ?: REXPDouble.NA }.toDoubleArray()
+            session.assign(it.key, values)
+        }
         session.voidEval("""dfIn <- data.frame($vectorCSV)""")
     }
 
-    override fun receive(result: Any?, definition: TSCalculationDefinition): TSDataFrame? =
+    override fun receive(result: Any?, definition: TSCalculationDefinition): MappedTS? =
             when (result) {
-                null     -> RList().toTSDataFrame(definition)
-                is RList -> result.toTSDataFrame(definition)
+                null     -> RList().toMappedTS(definition)
+                is RList -> result.toMappedTS(definition)
                 else     -> throw CalculationException("${result.javaClass} is not type of RList.")
             }
 }
 
-private fun RList.toTSDataFrame(def: TSCalculationDefinition): TSDataFrame? {
+private fun RList.toMappedTS(def: TSCalculationDefinition): MappedTS? {
     val (results, missingResults) = def.partitionResults(this)
 
     if (missingResults.isNotEmpty()) {
         val missingSymbols = missingResults.joinToString { it.first }
         throw CalculationException("Script did not return expected results: $missingSymbols")
     } else {
-        val names = ArrayList<String>(results.size)
-        val values = ArrayList<Column<Double?>>(results.size)
-
-        results.forEach {
-            names.add(it.first)
-            values.add(it.second.asDoubles().toTypedArray() as Column<Double?>)
+        results.map{
+            it.first to it.second.asDoubles()
         }
-        return TSDataFrame(names.toTypedArray(), values.toTypedArray())
+        return MappedTS(names.toTypedArray(), values.toTypedArray())
         // TODO 07.05.2018 kskitek: this will not allow to handle heterogeneous DataFrames
 //        return results.map { it.first to it.second.asDoubles() }
     }
