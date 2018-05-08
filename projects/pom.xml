@@ -32,6 +32,8 @@
 
     <dependencyManagement>
         <dependencies>
+            <!-- project deps -->
+
             <!-- project compilation/infrastructure dependencies -->
             <dependency>
                 <groupId>org.jetbrains.kotlin</groupId>
