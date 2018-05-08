@@ -2,6 +2,7 @@ package pl.psi.aaas.usecase.timeseries
 
 import pl.psi.aaas.Query
 import pl.psi.aaas.ValuesRepository
+import pl.psi.aaas.usecase.CalculationException
 import java.time.ZonedDateTime
 
 typealias TsId = Long
@@ -10,12 +11,13 @@ typealias TS = Array<Pair<ZonedDateTime, Double?>>
 /**
  * Mapped time series values with Symbol.
  */
-typealias MappedTS = Map<Symbol, TS>
-//class MappedTS : HashMap<Symbol, TS>() {
-//    private val DT_NAME = "DateTime"
-//
-//    fun getDateTime(): TS = this[DT_NAME] ?: throw CalculationException("Vector '$DT_NAME' was not found")
-//}
+//typealias MappedTS = Map<Symbol, TS>
+class MappedTS : HashMap<Symbol, TS>() {
+    private val DT_NAME = "DateTime"
+
+    fun getDateTime(): TS = this[DT_NAME] ?: throw CalculationException("Vector '$DT_NAME' was not found")
+    fun allButDT(): MappedTS = filterKeys { it != DT_NAME } as MappedTS
+}
 
 /**
  * Time Series [Query] DTO.
