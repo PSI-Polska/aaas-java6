@@ -43,7 +43,7 @@ class RServeEngine<in D : CalculationDefinitonWithValues<V>, V, out R>(private v
 }
 
 object RValuesTransceiverFactory {
-    inline fun <V, R, D : CalculationDefinition> create(conn: RConnection): RValuesTransceiver<V, R, D> {
+    fun <V, R, D : CalculationDefinition> create(conn: RConnection): RValuesTransceiver<V, R, D> {
 //        inline fun <reified V, reified R, reified D : CalculationDefinition> create(conn: RConnection): RValuesTransceiver<V, R, D> {
         // TODO 05.05.2018 kskitek: handle different V and R types
 //        if (V::class.nestedClasses )
