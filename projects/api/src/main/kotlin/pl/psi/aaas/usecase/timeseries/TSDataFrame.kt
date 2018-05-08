@@ -1,9 +1,12 @@
 package pl.psi.aaas.usecase.timeseries
 
-import pl.psi.aaas.usecase.CalculationException
 import pl.psi.aaas.usecase.Column
 import pl.psi.aaas.usecase.DataFrame
+import java.time.Instant
+import java.time.ZoneOffset
 import java.time.ZonedDateTime
+
+// TODO maybe it is good to use only one DataFrame or MappedTS?
 
 class TSDataFrame(columns: Array<String>, matrix: Array<Column<Double?>>) : DataFrame<Double?>(columns, matrix) {
 
@@ -60,8 +63,13 @@ class TSDataFrame(columns: Array<String>, matrix: Array<Column<Double?>>) : Data
         }
     }
 
-    fun toMappedTS(): MappedTS = throw CalculationException("Not implemented yet!")
+    fun oMappedTS(): MappedTS =
+            getColumns().map { it to get(it)!! }.toMap()
 
+    fun getDateTime(): Column<ZonedDateTime> =
+            get(COL_DT)!!.map { it?.toLong() ?: 0 }
+                    .map { Instant.ofEpochSecond(it) }
+                    .map { ZonedDateTime.ofInstant(it, ZoneOffset.UTC) }.toTypedArray()
 }
 
 fun Column<Double?>.toDoubleArray(nullReplacement: Double): DoubleArray =
