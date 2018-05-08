@@ -2,6 +2,7 @@ package pl.psi.aaas.engine.r.timeseries
 
 import org.rosuda.REngine.REXP
 import org.rosuda.REngine.REXPDouble
+import org.rosuda.REngine.REXPGenericVector
 import org.rosuda.REngine.RList
 import org.rosuda.REngine.Rserve.RConnection
 import org.slf4j.LoggerFactory
@@ -24,10 +25,10 @@ class TSValuesTransceiver(override val session: RConnection) : RValuesTransceive
         val vectorCSV = vectorNames.joinToString()
         log.debug("Sending values $vectorCSV")
 
-        val allButDT = values.getFiltered { !it.equals(TSDataFrame.COL_DT) }
-        allButDT.getColumns()
+//        val allButDT = values.getFiltered { !it.equals(TSDataFrame.COL_DT) }
+        values.getColumns()
                 .forEach {
-                    val doubleArray = allButDT.get(it)?.toDoubleArray(REXPDouble.NA) ?: DoubleArray(0)
+                    val doubleArray = values[it]?.toDoubleArray(REXPDouble.NA) ?: DoubleArray(0)
                     session.assign(it, doubleArray)
                 }
         session.voidEval("""dfIn <- data.frame($vectorCSV)""")
@@ -35,9 +36,10 @@ class TSValuesTransceiver(override val session: RConnection) : RValuesTransceive
 
     override fun receive(result: Any?, definition: TSCalculationDefinition): TSDataFrame? =
             when (result) {
-                null     -> RList().toTSDataFrame(definition)
+                null -> RList().toTSDataFrame(definition)
                 is RList -> result.toTSDataFrame(definition)
-                else     -> throw CalculationException("${result.javaClass} is not type of RList.")
+                is REXPGenericVector -> receive(result.asList(), definition)
+                else -> throw CalculationException("${result.javaClass} is not type of RList.")
             }
 }
 

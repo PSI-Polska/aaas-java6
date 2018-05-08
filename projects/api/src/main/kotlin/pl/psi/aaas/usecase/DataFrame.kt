@@ -17,7 +17,7 @@ open class DataFrame<T>(private val columns: Map<String, Int>, private val matri
             else
                 null
 
-    fun get(colName: String): Column<T>? =
+    operator fun get(colName: String): Column<T>? =
             if (columns.contains(colName))
                 get(columns[colName]!!)
             else
