@@ -2,11 +2,11 @@ package pl.psi.aaas.usecase.timeseries
 
 import pl.psi.aaas.Query
 import pl.psi.aaas.ValuesRepository
-import java.time.Period
+import java.time.Duration
 import java.time.ZonedDateTime
 
 typealias TsId = Long
-typealias TSResolution = Period
+typealias TSResolution = Duration
 typealias TS = Triple<ZonedDateTime, TSResolution, Array<Double?>>
 
 /**

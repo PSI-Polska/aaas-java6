@@ -6,5 +6,5 @@ import javax.ejb.Stateless
 
 @Stateless
 class LocalRConnectionProvider(
-        override var configuration: REngineConfiguration = REngineConfiguration("localhost", 6311)
+        override var configuration: REngineConfiguration = REngineConfiguration("engine", 6311)
 ) : RConnectionProvider
