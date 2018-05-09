@@ -17,12 +17,14 @@ object RValuesTransceiverFactory {
     fun <D : CalculationDefinition> get(param: Parameter<*>, conn: RConnection): RValuesTransceiver<Parameter<*>, *, D> =
             if (param.primitive)
                 when (param.clazz) {
-                    String::class.java        -> RNativeTransceiver<Parameter<String>, Parameter<String>, D>({ REXPString(it.value) }, conn)
-                    Long::class.java          -> RNativeTransceiver<Parameter<Long>, Parameter<Long>, D>({ REXPDouble(it.value.toDouble()) }, conn)
-                    Double::class.java        -> RNativeTransceiver<Parameter<Double>, Parameter<Double>, D>({ REXPDouble(it.value) }, conn)
-                    Boolean::class.java       -> RNativeTransceiver<Parameter<Boolean>, Parameter<Boolean>, D>({ REXPLogical(it.value) }, conn)
-                    ZonedDateTime::class.java -> DateTimeTransceiver<D>(conn) as RValuesTransceiver<*, *, *>
-                    else                      -> throw CalculationException("Not implemented parameter type ${param.clazz}")
+                    String::class.java            -> RNativeTransceiver<Parameter<String>, Parameter<String>, D>({ REXPString(it.value) }, conn)
+                    Long::class.java              -> RNativeTransceiver<Parameter<Long>, Parameter<Long>, D>({ REXPDouble(it.value.toDouble()) }, conn)
+                    Double::class.java            -> RNativeTransceiver<Parameter<Double>, Parameter<Double>, D>({ REXPDouble(it.value) }, conn)
+                    Boolean::class.java           -> RNativeTransceiver<Parameter<Boolean>, Parameter<Boolean>, D>({ REXPLogical(it.value) }, conn)
+                // TODO two Booleans is bullshit.. how to handle it?!
+                    java.lang.Boolean::class.java -> RNativeTransceiver<Parameter<Boolean>, Parameter<Boolean>, D>({ REXPLogical(it.value) }, conn)
+                    ZonedDateTime::class.java     -> DateTimeTransceiver<D>(conn) as RValuesTransceiver<*, *, *>
+                    else                          -> throw CalculationException("Not implemented parameter type ${param.clazz}")
                 } as RValuesTransceiver<Parameter<*>, *, D>
             else
                 when (param.elemClazz!!) {
