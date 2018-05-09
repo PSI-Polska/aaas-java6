@@ -3,14 +3,14 @@ package pl.psi.aaas.usecase
 import pl.psi.aaas.usecase.parameters.Parameter
 
 typealias Symbol = String
-
+typealias Parameters = Map<Symbol, Parameter<*>>
 
 /**
  * The most basic calculation definition.
  */
 interface CalculationDefinition {
     val calculationScript: String
-    val parameters: Collection<Parameter<*>>
+    val parameters: Parameters
 // TODO add engineDefinition? engineQuery?
 }
 

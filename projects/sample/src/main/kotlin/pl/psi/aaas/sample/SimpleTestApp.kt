@@ -5,9 +5,7 @@ import pl.psi.aaas.Facade
 import pl.psi.aaas.engine.r.RConnectionProvider
 import pl.psi.aaas.engine.r.REngineConfiguration
 import pl.psi.aaas.engine.r.RServeEngine
-import pl.psi.aaas.usecase.parameters.DateTimeParam
 import pl.psi.aaas.usecase.parameters.Parameter
-import pl.psi.aaas.usecase.parameters.StringParam
 import pl.psi.aaas.usecase.timeseries.*
 import java.time.ZonedDateTime
 
@@ -23,9 +21,15 @@ object SimpleTestApp {
         val outIds = mapOf("C" to 3L)
         val begin = ZonedDateTime.now()
         val end = begin.plusDays(1)
-        val parameters = listOf<Parameter<*>>(
-                StringParam("S", "asdf")
-                , DateTimeParam("D", ZonedDateTime.now())
+//        {"a", "b", "c"}.
+        val arr = arrayOf("a", "b", "c")
+        val parameters = mapOf(
+                "a" to Parameter("str")
+                , "B" to Parameter(ZonedDateTime.now())
+                , "C" to Parameter(arr, Array<String>::class.java, String::class.java)
+//                , DateTimeParam("D", ZonedDateTime.now())
+//                , Parameter.of(arr, String::class.java)
+//                , ArrayParam("Arr", arr, String::class.java)
         )
 
         return TSCalcDef(inIds, outIds, begin, end, "add", parameters)

@@ -1,33 +1,73 @@
 package pl.psi.aaas.engine.r.transceiver
 
+import org.rosuda.REngine.REXP
 import org.rosuda.REngine.REXPDouble
 import org.rosuda.REngine.Rserve.RConnection
 import pl.psi.aaas.engine.r.RValuesTransceiver
 import pl.psi.aaas.usecase.CalculationDefinition
-import pl.psi.aaas.usecase.parameters.DateTimeParam
-import pl.psi.aaas.usecase.parameters.StringParam
+import pl.psi.aaas.usecase.parameters.Parameter
+import java.time.ZonedDateTime
 
-class StringTransceiver<in D : CalculationDefinition>(override val session: RConnection) : RValuesTransceiver<StringParam, StringParam, D> {
-    override fun send(value: StringParam, definition: D) {
-        session.assign(value.name, value.value)
-        session.voidEval("str(S)")
+class RNativeTransceiver<in V : Parameter<*>, R, in D : CalculationDefinition>(
+        private val outTransformer: (v: V) -> REXP, override val session: RConnection)
+    : RValuesTransceiver<V, R, D> {
+
+    override fun send(value: V, definition: D) {
+        session.assign("v", outTransformer(value))
+        session.voidEval("print(v)")
+        session.voidEval("str(v)")
     }
 
-    override fun receive(result: Any?, definition: D): StringParam? {
+    override fun receive(result: Any?, definition: D): R? {
         TODO("not implemented")
     }
 }
 
-class DateTimeTransceiver<in D : CalculationDefinition>(override val session: RConnection) : RValuesTransceiver<DateTimeParam, DateTimeParam, D> {
-    override fun send(value: DateTimeParam, definition: D) {
+//private fun stringTransformer(): (StringParam) -> REXP = { REXPString(it.value) }
+//private fun longTransformer(): (LongParam) -> REXP = { REXPDouble(it.value.toDouble()) }
+//
+//class StringTransceiver<in D : CalculationDefinition>(override val session: RConnection)
+//    : RNativeTransceiver<StringParam, StringParam, D>(StringTransceiver.outTranformer) {
+//    companion object {
+//        val outTranformer: (StringParam) -> REXP = { REXPString(it.value) }
+//    }
+//}
+//
+//class LongTransceiver<in D : CalculationDefinition>(override val session: RConnection)
+//    : RNativeTransceiver<LongParam, LongParam, D>({ REXPDouble(it.value.toDouble()) })
+//
+//class DoubleTransceiver<in D : CalculationDefinition>(override val session: RConnection)
+//    : RNativeTransceiver<DoubleParam, DoubleParam, D>({ REXPDouble(it.value) })
+//
+//class BooleanTransceiver<D : CalculationDefinition>(override val session: RConnection)
+//    : RNativeTransceiver<BooleanParam, BooleanParam, D>({ REXPLogical(it.value) })
+//
+class DateTimeTransceiver<in D : CalculationDefinition>(override val session: RConnection) : RValuesTransceiver<Parameter<ZonedDateTime>, Parameter<ZonedDateTime>, D> {
+    override fun send(value: Parameter<ZonedDateTime>, definition: D) {
         val epochSecond = value.value.toEpochSecond()
-        session.assign(value.name, REXPDouble(epochSecond.toDouble()))
-        session.voidEval("${value.name} <- structure(${value.name}, class=c('POSIXt','POSIXct'))")
+//        session.assign(value.name, REXPDouble(epochSecond.toDouble()))
+//        session.voidEval("${value.name} <- structure(${value.name}, class=c('POSIXt','POSIXct'))")
 //        attr(d1, "tzone") <- "UTC" TODO
-        session.voidEval(value.name)
+//        session.voidEval(value.name)
+        session.assign("dt", REXPDouble(epochSecond.toDouble()))
+        session.voidEval("dt <- structure(dt, class=c('POSIXt','POSIXct'))")
+        session.voidEval("print(dt)")
     }
 
-    override fun receive(result: Any?, definition: D): DateTimeParam? {
+    override fun receive(result: Any?, definition: D): Parameter<ZonedDateTime>? {
         TODO("not implemented")
     }
+}
+
+class ArrayTransceiver<in D : CalculationDefinition>(override val session: RConnection)
+    : RValuesTransceiver<Parameter<Array<*>>, Parameter<Array<*>>, D> {
+
+    override fun send(value: Parameter<Array<*>>, definition: D) {
+//        session.assign("arrS", REX)
+    }
+
+    override fun receive(result: Any?, definition: D): Parameter<Array<*>>? {
+        TODO("not implemented")
+    }
+
 }
