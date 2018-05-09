@@ -78,14 +78,14 @@ class ArrayDateTimeTransceiver<in D : CalculationDefinition>(override val sessio
     }
 }
 
-class ArrayTransceiver<in D : CalculationDefinition>(override val session: RConnection)
-    : RValuesTransceiver<Parameter<Array<*>>, Parameter<Array<*>>, D> {
+class ArrayTransceiver<T: Any?, in D : CalculationDefinition>(override val session: RConnection)
+    : RValuesTransceiver<Parameter<Array<T>>, Parameter<Array<T>>, D> {
 
-    override fun send(value: Parameter<Array<*>>, definition: D) {
+    override fun send(value: Parameter<Array<T>>, definition: D) {
 //        session.assign("arrS", REX)
     }
 
-    override fun receive(result: Any?, definition: D): Parameter<Array<*>>? {
+    override fun receive(result: Any?, definition: D): Parameter<Array<T>>? {
         TODO("not implemented")
     }
 
