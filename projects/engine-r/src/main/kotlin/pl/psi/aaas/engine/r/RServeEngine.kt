@@ -6,15 +6,10 @@ import org.slf4j.LoggerFactory
 import pl.psi.aaas.Engine
 import pl.psi.aaas.engine.r.RServeEngine.Companion.baseUserScriptPath
 import pl.psi.aaas.engine.r.RServeEngine.Companion.log
-import pl.psi.aaas.engine.r.timeseries.TSValuesTransceiver
-import pl.psi.aaas.engine.r.transceiver.DateTimeTransceiver
-import pl.psi.aaas.engine.r.transceiver.StringTransceiver
+import pl.psi.aaas.engine.r.transceiver.RValuesTransceiverFactory
 import pl.psi.aaas.usecase.CalculationDefinition
 import pl.psi.aaas.usecase.CalculationDefinitonWithValues
 import pl.psi.aaas.usecase.CalculationException
-import pl.psi.aaas.usecase.parameters.DateTimeParam
-import pl.psi.aaas.usecase.parameters.Parameter
-import pl.psi.aaas.usecase.parameters.StringParam
 import pl.psi.aaas.usecase.timeseries.TSDataFrame
 
 /**
@@ -39,8 +34,8 @@ class RServeEngine<in D : CalculationDefinitonWithValues<V>, V, out R>(private v
                 tsTransceiver.send(calcDef.values as TSDataFrame, calcDef)
                 // TODO we can remove the above line - use only parameters?
                 calcDef.parameters.forEach {
-                    val t = RValuesTransceiverFactory.get<D>(it, conn)
-                    t.send(it, calcDef)
+                    val t = RValuesTransceiverFactory.get<D>(it.value, conn)
+                    t.send(it.value, calcDef)
                 }
 //                calcDef.prepareParameters(conn) TODO
 
@@ -52,24 +47,6 @@ class RServeEngine<in D : CalculationDefinitonWithValues<V>, V, out R>(private v
                 ex.printStackTrace()
                 throw CalculationException(ex.message ?: "There was an error during calculation.")
             }
-}
-
-object RValuesTransceiverFactory {
-    fun <D : CalculationDefinition> get(parameter: Parameter<*>, conn: RConnection): RValuesTransceiver<Parameter<*>, *, D> =
-            when (parameter) {
-                is StringParam   -> StringTransceiver<D>(conn)
-                is DateTimeParam -> DateTimeTransceiver<D>(conn)
-                else             -> throw CalculationException("Not implemented parameter type ${parameter.javaClass}")
-            } as RValuesTransceiver<Parameter<*>, *, D>
-
-    // TODO this should be removed when TSDataFrame is Parameter<??>
-    fun <D : CalculationDefinition> get(conn: RConnection): RValuesTransceiver<TSDataFrame, TSDataFrame, D> {
-//        inline fun <reified V, reified R, reified D : CalculationDefinition> create(conn: RConnection): RValuesTransceiver<V, R, D> {
-        // TODO 05.05.2018 kskitek: handle different V and R types
-//        if (V::class.nestedClasses )
-        return TSValuesTransceiver(conn) as RValuesTransceiver<TSDataFrame, TSDataFrame, D>
-    }
-
 }
 
 private fun CalculationDefinition.sourceScript(conn: RConnection) {
