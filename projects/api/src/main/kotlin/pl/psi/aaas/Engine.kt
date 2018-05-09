@@ -22,7 +22,7 @@ interface Engine<in T : CalculationDefinitonWithValues<V>, V, out R> {
 interface EngineValuesSender<in V, in D : CalculationDefinition> {
 
     @Throws(CalculationException::class)
-    fun send(values: V, definition: D)
+    fun send(value: V, definition: D)
 }
 
 interface EngineValuesReceiver<out R, in D : CalculationDefinition> {

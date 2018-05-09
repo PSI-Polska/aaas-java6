@@ -5,6 +5,9 @@ import pl.psi.aaas.Facade
 import pl.psi.aaas.engine.r.RConnectionProvider
 import pl.psi.aaas.engine.r.REngineConfiguration
 import pl.psi.aaas.engine.r.RServeEngine
+import pl.psi.aaas.usecase.parameters.DateTimeParam
+import pl.psi.aaas.usecase.parameters.Parameter
+import pl.psi.aaas.usecase.parameters.StringParam
 import pl.psi.aaas.usecase.timeseries.*
 import java.time.ZonedDateTime
 
@@ -20,12 +23,16 @@ object SimpleTestApp {
         val outIds = mapOf("C" to 3L)
         val begin = ZonedDateTime.now()
         val end = begin.plusDays(1)
+        val parameters = listOf<Parameter<*>>(
+                StringParam("S", "asdf")
+                , DateTimeParam("D", ZonedDateTime.now())
+        )
 
-        return TSCalcDef(inIds, outIds, begin, end, "add")
+        return TSCalcDef(inIds, outIds, begin, end, "add", parameters)
     }
 }
 
-val localConfiguration = REngineConfiguration("localhost", 6311)
+val localConfiguration = REngineConfiguration("192.168.99.100", 6311)
 
 class LocalRConnectionProvider(override var configuration: REngineConfiguration = localConfiguration) : RConnectionProvider
 

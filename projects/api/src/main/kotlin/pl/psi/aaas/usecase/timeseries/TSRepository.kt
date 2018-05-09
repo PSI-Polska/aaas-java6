@@ -2,6 +2,7 @@ package pl.psi.aaas.usecase.timeseries
 
 import pl.psi.aaas.Query
 import pl.psi.aaas.ValuesRepository
+import pl.psi.aaas.usecase.Symbol
 import java.time.Duration
 import java.time.ZonedDateTime
 

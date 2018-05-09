@@ -3,6 +3,7 @@ package pl.psi.aaas.usecase.timeseries
 import pl.psi.aaas.Engine
 import pl.psi.aaas.usecase.CalculationException
 import pl.psi.aaas.usecase.CalculationExecution
+import pl.psi.aaas.usecase.Symbol
 import java.time.Duration
 
 

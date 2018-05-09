@@ -10,7 +10,7 @@ import pl.psi.aaas.engine.r.RServeEngine
 import pl.psi.aaas.engine.r.RValuesTransceiver
 import pl.psi.aaas.usecase.CalculationException
 import pl.psi.aaas.usecase.Column
-import pl.psi.aaas.usecase.timeseries.Symbol
+import pl.psi.aaas.usecase.Symbol
 import pl.psi.aaas.usecase.timeseries.TSCalculationDefinition
 import pl.psi.aaas.usecase.timeseries.TSDataFrame
 import pl.psi.aaas.usecase.timeseries.toDoubleArray
