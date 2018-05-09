@@ -27,6 +27,7 @@ object SimpleTestApp {
                 "a" to Parameter("str")
                 , "B" to Parameter(ZonedDateTime.now())
                 , "C" to Parameter(arr, Array<String>::class.java, String::class.java)
+                , "B1" to Parameter(true)
 //                , DateTimeParam("D", ZonedDateTime.now())
 //                , Parameter.of(arr, String::class.java)
 //                , ArrayParam("Arr", arr, String::class.java)
