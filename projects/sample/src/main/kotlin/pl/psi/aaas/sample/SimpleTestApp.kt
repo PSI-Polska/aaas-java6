@@ -23,10 +23,12 @@ object SimpleTestApp {
         val end = begin.plusDays(1)
 //        {"a", "b", "c"}.
         val arr = arrayOf("a", "b", "c")
+        val dtArr = arrayOf(ZonedDateTime.now().minusHours(2), ZonedDateTime.now().minusHours(1), ZonedDateTime.now())
         val parameters = mapOf(
-                "a" to Parameter("str")
-                , "B" to Parameter(ZonedDateTime.now())
-                , "C" to Parameter(arr, Array<String>::class.java, String::class.java)
+                "a" to Parameter.of("str")
+                , "B" to Parameter.of(ZonedDateTime.now())
+                , "C" to Parameter.of(arr, Array<String>::class.java, String::class.java)
+                , "D" to Parameter.of(dtArr, Array<ZonedDateTime>::class.java, ZonedDateTime::class.java)
 //                , DateTimeParam("D", ZonedDateTime.now())
 //                , Parameter.of(arr, String::class.java)
 //                , ArrayParam("Arr", arr, String::class.java)
@@ -36,7 +38,7 @@ object SimpleTestApp {
     }
 }
 
-val localConfiguration = REngineConfiguration("192.168.99.100", 6311)
+val localConfiguration = REngineConfiguration("localhost", 6311)
 
 class LocalRConnectionProvider(override var configuration: REngineConfiguration = localConfiguration) : RConnectionProvider
 

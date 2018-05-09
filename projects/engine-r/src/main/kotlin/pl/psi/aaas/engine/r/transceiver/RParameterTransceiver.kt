@@ -59,6 +59,25 @@ class DateTimeTransceiver<in D : CalculationDefinition>(override val session: RC
     }
 }
 
+class ArrayDateTimeTransceiver<in D : CalculationDefinition>(override val session: RConnection) : RValuesTransceiver<Parameter<Array<ZonedDateTime>>, Parameter<Array<ZonedDateTime>>, D> {
+    override fun send(value: Parameter<Array<ZonedDateTime>>, definition: D) {
+        val epochSecond = value.value.map { it.toEpochSecond() }
+                .map { it.toDouble() }.toDoubleArray()
+//        session.assign(value.name, REXPDouble(epochSecond.toDouble()))
+//        session.voidEval("${value.name} <- structure(${value.name}, class=c('POSIXt','POSIXct'))")
+//        attr(d1, "tzone") <- "UTC" TODO
+//        session.voidEval(value.name)
+        session.assign("dt", REXPDouble(epochSecond))
+        session.voidEval("dt <- structure(dt, class=c('POSIXt','POSIXct'))")
+        session.voidEval("print(dt)")
+        session.voidEval("str(dt)")
+    }
+
+    override fun receive(result: Any?, definition: D): Parameter<Array<ZonedDateTime>>? {
+        TODO("not implemented")
+    }
+}
+
 class ArrayTransceiver<in D : CalculationDefinition>(override val session: RConnection)
     : RValuesTransceiver<Parameter<Array<*>>, Parameter<Array<*>>, D> {
 

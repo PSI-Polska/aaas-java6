@@ -8,14 +8,14 @@ class Parameter<T : Any> private constructor(var value: T, val clazz: Class<T>, 
         val supportedClasses: List<Class<*>> = listOf(String::class.java, ZonedDateTime::class.java)
 
         @JvmStatic
-        operator fun <T : Any> invoke(value: T): Parameter<T> =
+        fun <T : Any> of(value: T): Parameter<T> =
                 with(value.javaClass) {
                     isSupported(this)
                     Parameter(value, this)
                 }
 
         @JvmStatic
-        operator fun <T : Any> invoke(value: Array<T>, arrayClazz: Class<Array<T>>, elemClazz: Class<T>): Parameter<Array<T>> =
+        fun <T : Any> of(value: Array<T>, arrayClazz: Class<Array<T>>, elemClazz: Class<T>): Parameter<Array<T>> =
                 when (isSupported(elemClazz)) {
                     true -> Parameter(value, arrayClazz, elemClazz, false)
                     else -> throw IllegalArgumentException("Unsupported type: ${elemClazz.canonicalName}")
