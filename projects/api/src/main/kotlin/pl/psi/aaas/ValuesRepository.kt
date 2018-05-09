@@ -31,7 +31,7 @@ interface ValuesWriter<in Q : Query, in V> {
  * @param Vr read values type parameter
  * @param Vw save values type parameter
  */
-interface ValuesRepository<in Q: Query, out Vr, in Vw> : ValuesReader<Q, Vr>, ValuesWriter<Q, Vw>
+interface ValuesRepository<in Q : Query, out Vr, in Vw> : ValuesReader<Q, Vr>, ValuesWriter<Q, Vw>
 
 /**
  * Query interface used by [ValuesRepository].
@@ -55,8 +55,8 @@ class RepositoryAccessException(override val message: String, override val cause
  * @param Vr read values type parameter
  * @param Vw save values type parameter
  */
-class ReaderWriterRepositoryAdapter<in Q : Query, out Vr, in Vw>(private val reader: ValuesReader<Q, Vr>,
-                                                                 private val writer: ValuesWriter<Q, Vw>) : ValuesRepository<Q, Vr, Vw> {
+class RW<in Q : Query, out Vr, in Vw>(private val reader: ValuesReader<Q, Vr>,
+                                      private val writer: ValuesWriter<Q, Vw>) : ValuesRepository<Q, Vr, Vw> {
     override fun read(query: Q): Vr = reader.read(query)
 
     override fun save(query: Q, values: Vw) = writer.save(query, values)

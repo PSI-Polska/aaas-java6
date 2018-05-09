@@ -57,19 +57,16 @@ class TSDataFrame(columns: Array<String>, matrix: Array<Column<Double?>>) : Data
             while (currLen < size) {
                 retCol[currLen] = currDate.toEpochSecond().toDouble()
                 currLen++
-                currDate.plus(period)
+                currDate = currDate.plus(period)
             }
             return retCol
         }
     }
 
-    fun oMappedTS(): MappedTS =
-            getColumns().map { it to get(it)!! }.toMap()
-
-    fun getDateTime(): Column<ZonedDateTime> =
-            get(COL_DT)!!.map { it?.toLong() ?: 0 }
-                    .map { Instant.ofEpochSecond(it) }
-                    .map { ZonedDateTime.ofInstant(it, ZoneOffset.UTC) }.toTypedArray()
+    fun getDateTime(): Column<ZonedDateTime>? =
+            get(COL_DT)?.map { it?.toLong() ?: 0 }
+                    ?.map { Instant.ofEpochSecond(it) }
+                    ?.map { ZonedDateTime.ofInstant(it, ZoneOffset.UTC) }?.toTypedArray()
 }
 
 fun Column<Double?>.toDoubleArray(nullReplacement: Double): DoubleArray =

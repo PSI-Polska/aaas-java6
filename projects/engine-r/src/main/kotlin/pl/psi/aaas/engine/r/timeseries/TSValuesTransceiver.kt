@@ -25,7 +25,6 @@ class TSValuesTransceiver(override val session: RConnection) : RValuesTransceive
         val vectorCSV = vectorNames.joinToString()
         log.debug("Sending values $vectorCSV")
 
-//        val allButDT = values.getFiltered { !it.equals(TSDataFrame.COL_DT) }
         values.getColumns()
                 .forEach {
                     val doubleArray = values[it]?.toDoubleArray(REXPDouble.NA) ?: DoubleArray(0)
@@ -59,7 +58,6 @@ private fun RList.toTSDataFrame(def: TSCalculationDefinition): TSDataFrame? {
         }
         return TSDataFrame(names.toTypedArray(), values.toTypedArray())
         // TODO 07.05.2018 kskitek: this will not allow to handle heterogeneous DataFrames
-//        return results.map { it.first to it.second.asDoubles() }
     }
 }
 

@@ -7,18 +7,13 @@ import java.time.ZonedDateTime
 
 typealias TsId = Long
 typealias TSResolution = Duration
-typealias TS = Triple<ZonedDateTime, TSResolution, Array<Double?>>
+typealias TS = Array<Double?>
+typealias TSWithResolution = Triple<ZonedDateTime, TSResolution, TS>
 
 /**
  * Mapped time series values with Symbol.
  */
-typealias MappedTS = Map<Symbol, TS>
-//class MappedTS : HashMap<Symbol, TS>() {
-//    private val DT_NAME = "DateTime"
-//
-//    fun getDateTime(): TS = this[DT_NAME] ?: throw CalculationException("Vector '$DT_NAME' was not found")
-//    fun allButDT(): MappedTS = filterKeys { it != DT_NAME } as MappedTS
-//}
+typealias MappedTS = Map<Symbol, TSWithResolution>
 
 /**
  * Time Series [Query] DTO.

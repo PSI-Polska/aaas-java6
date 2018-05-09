@@ -51,6 +51,9 @@ open class DataFrame<T>(private val columns: Map<String, Int>, private val matri
                 val filtered = columns.filterKeys(predicate)
                 DataFrame(filtered, matrix)
             }
+
+    fun toMap(): Map<String, Column<T>> =
+            columns.keys.map { it to get(it)!! }.toMap()
 }
 
 typealias Column<T> = Array<T>
