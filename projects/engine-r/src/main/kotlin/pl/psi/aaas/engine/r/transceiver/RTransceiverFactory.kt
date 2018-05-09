@@ -17,17 +17,17 @@ object RValuesTransceiverFactory {
     fun <D : CalculationDefinition> get(param: Parameter<*>, conn: RConnection): RValuesTransceiver<Parameter<*>, *, D> =
             if (param.primitive)
                 when (param.clazz) {
-                    String::class.java        -> RNativeTransceiver<Parameter<String>, Parameter<String>, D>({ REXPString(it.value) }, conn)
-                    Long::class.java          -> RNativeTransceiver<Parameter<Long>, Parameter<Long>, D>({ REXPDouble(it.value.toDouble()) }, conn)
-                    Double::class.java        -> RNativeTransceiver<Parameter<Double>, Parameter<Double>, D>({ REXPDouble(it.value) }, conn)
-                    Boolean::class.java       -> RNativeTransceiver<Parameter<Boolean>, Parameter<Boolean>, D>({ REXPLogical(it.value) }, conn)
+                    String::class.java -> RNativeTransceiver<Parameter<String>, Parameter<String>, D>({ REXPString(it.value) }, conn)
+                    Long::class.java -> RNativeTransceiver<Parameter<Long>, Parameter<Long>, D>({ REXPDouble(it.value.toDouble()) }, conn)
+                    Double::class.java -> RNativeTransceiver<Parameter<Double>, Parameter<Double>, D>({ REXPDouble(it.value) }, conn)
+                    Boolean::class.java -> RNativeTransceiver<Parameter<Boolean>, Parameter<Boolean>, D>({ REXPLogical(it.value) }, conn)
                     ZonedDateTime::class.java -> DateTimeTransceiver<D>(conn) as RValuesTransceiver<*, *, *>
-                    else                      -> throw CalculationException("Not implemented parameter type ${param.clazz}")
+                    else -> throw CalculationException("Not implemented parameter type ${param.clazz}")
                 } as RValuesTransceiver<Parameter<*>, *, D>
             else
                 when (param.elemClazz!!) {
-                    String::class.java  -> RNativeTransceiver<Parameter<Array<String?>>, Parameter<Array<String?>>, D>({ REXPString(it.value) }, conn) as RValuesTransceiver<Parameter<*>, *, D>
-                    Double::class.java  -> RNativeTransceiver<Parameter<Array<Double?>>, Parameter<Array<Double?>>, D>(
+                    String::class.java -> RNativeTransceiver<Parameter<Array<String?>>, Parameter<Array<String?>>, D>({ REXPString(it.value) }, conn) as RValuesTransceiver<Parameter<*>, *, D>
+                    Double::class.java -> RNativeTransceiver<Parameter<Array<Double?>>, Parameter<Array<Double?>>, D>(
                             { REXPDouble(it.value.map { it ?: REXPDouble.NA }.toDoubleArray()) }
                             , conn) as RValuesTransceiver<Parameter<*>, *, D>
                 // TODO 09.05.2018 kskitek: this is MONSTER!!
@@ -36,14 +36,15 @@ object RValuesTransceiverFactory {
                                 REXPLogical(it.value
                                         .map {
                                             when (it) {
-                                                null  -> REXPLogical.NA
-                                                true  -> REXPLogical.TRUE
+                                                null -> REXPLogical.NA
+                                                true -> REXPLogical.TRUE
                                                 false -> REXPLogical.FALSE
                                             }
                                         }.toByteArray())
                             }
                             , conn)
-                    else                -> throw CalculationException("Not implemented array parameter type ${param.elemClazz}")
+                    ZonedDateTime::class.java -> ArrayDateTimeTransceiver<D>(conn) as RValuesTransceiver<Parameter<*>, *, D>
+                    else -> throw CalculationException("Not implemented array parameter type ${param.elemClazz}")
                 } as RValuesTransceiver<Parameter<*>, *, D>
 //    ArrayTransceiver<D>(conn) as RValuesTransceiver<Parameter<*>, *, D>
 
