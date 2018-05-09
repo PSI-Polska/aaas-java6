@@ -2,27 +2,32 @@ package pl.psi.aaas.usecase.parameters
 
 import java.time.ZonedDateTime
 
-class Parameter<T : Any> private constructor(var value: T, val clazz: Class<T>, val elemClazz: Class<*>? = null, val primitive: Boolean = true) {
+sealed class Parameter<T : Any> private constructor(open var value: T, open val clazz: Class<T>) {
     companion object {
         @JvmStatic
         val supportedClasses: List<Class<*>> = listOf(String::class.java, ZonedDateTime::class.java)
 
         @JvmStatic
-        fun <T : Any> of(value: T): Parameter<T> =
+        fun <T : Any> of(value: T): Primitive<T> =
                 with(value.javaClass) {
                     isSupported(this)
-                    Parameter(value, this)
+                    Primitive(value, this)
                 }
 
         @JvmStatic
-        fun <T : Any> of(value: Array<T>, arrayClazz: Class<Array<T>>, elemClazz: Class<T>): Parameter<Array<T>> =
+        fun <T : Any> of(value: Array<T?>, vectorClazz: Class<Array<T?>>, elemClazz: Class<T>): Vector<T> =
                 when (isSupported(elemClazz)) {
-                    true -> Parameter(value, arrayClazz, elemClazz, false)
+                    true -> Vector(value, vectorClazz, elemClazz)
                     else -> throw IllegalArgumentException("Unsupported type: ${elemClazz.canonicalName}")
                 }
 
+        @JvmStatic
+        fun <T : Any> ofNN(value: Array<T>, vectorClazz: Class<Array<T>>, elemClazz: Class<T>): Vector<T> =
+                of(value as Array<T?>, vectorClazz as Class<Array<T?>>, elemClazz)
+
+
 //        @JvmStatic
-//        operator fun <T : Collection<V>, reified V> invoke(value: T, collectionClazz: Class<T>, elemClazz: Class<V>): Parameter<Array<V>> =
+//        operator fun <T : Collection<V>, reified V> invoke(value: T, collectionClazz: Class<T>, elemClazz: Class<V>): Parameter<Vector<V>> =
 //                when (isSupported(elemClazz)) {
 //                    true -> Parameter(value.toTypedArray(), collectionClazz)
 //                    else -> throw IllegalArgumentException("Unsupported type: ${elemClazz.canonicalName}")
@@ -33,18 +38,11 @@ class Parameter<T : Any> private constructor(var value: T, val clazz: Class<T>, 
     }
 }
 
-//private data class StringParam(override val name: String, override var value: String) : Parameter<String>(name, value, String::class.java)
-//
-//private data class LongParam(override val name: String, override var value: Long) : Parameter<Long>(name, value, Long::class.java)
-//
-//data class DoubleParam(override val name: String, override var value: Double) : Parameter<Double>(name, value, Double::class.java)
-//
-//data class DateTimeParam(override val name: String, override var value: ZonedDateTime) : Parameter<ZonedDateTime>(name, value, ZonedDateTime::class.java)
-//
-//data class BooleanParam(override val name: String, override var value: Boolean) : Parameter<Boolean>(name, value, Boolean::class.java)
-//
-//data class ArrayParam<T>(override val name: String, override var value: Array<Any?>, val arrayClazz: Class<*>)
-//    : Parameter<Array<Any?>>(name, value, Array<Any?>::class.java)
-//
-//fun c() {
-//    val java = Array<Any?>::class.java
+data class Primitive<T : Any>(override var value: T, override val clazz: Class<T>)
+    : Parameter<T>(value, clazz)
+
+data class Vector<T : Any>(override var value: Array<T?>, override val clazz: Class<Array<T?>>, val elemClazz: Class<*>)
+    : Parameter<Array<T?>>(value, clazz)
+
+//data class Matrix() TODO
+

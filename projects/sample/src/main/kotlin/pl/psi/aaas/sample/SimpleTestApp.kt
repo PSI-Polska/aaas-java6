@@ -27,8 +27,8 @@ object SimpleTestApp {
         val parameters = mapOf(
                 "a" to Parameter.of("str")
                 , "B" to Parameter.of(ZonedDateTime.now())
-                , "C" to Parameter.of(arr, Array<String>::class.java, String::class.java)
-                , "D" to Parameter.of(dtArr, Array<ZonedDateTime>::class.java, ZonedDateTime::class.java)
+                , "C" to Parameter.ofNN(arr, Array<String>::class.java, String::class.java)
+                , "D" to Parameter.ofNN(dtArr, Array<ZonedDateTime>::class.java, ZonedDateTime::class.java)
 //                , DateTimeParam("D", ZonedDateTime.now())
 //                , Parameter.of(arr, String::class.java)
 //                , ArrayParam("Arr", arr, String::class.java)
