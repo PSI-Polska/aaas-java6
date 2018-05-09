@@ -1,16 +1,16 @@
 package pl.psi.aaas.usecase
 
-/**
- * Parameters of calculation.
- */
-typealias Parameters = Map<String, String>
+import pl.psi.aaas.usecase.parameters.Parameter
+
+typealias Symbol = String
+
 
 /**
  * The most basic calculation definition.
  */
 interface CalculationDefinition {
     val calculationScript: String
-    val additionalParameters: Parameters
+    val parameters: Collection<Parameter<*>>
 // TODO add engineDefinition? engineQuery?
 }
 

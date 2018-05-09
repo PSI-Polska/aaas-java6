@@ -7,9 +7,15 @@ import pl.psi.aaas.Engine
 import pl.psi.aaas.engine.r.RServeEngine.Companion.baseUserScriptPath
 import pl.psi.aaas.engine.r.RServeEngine.Companion.log
 import pl.psi.aaas.engine.r.timeseries.TSValuesTransceiver
+import pl.psi.aaas.engine.r.transceiver.DateTimeTransceiver
+import pl.psi.aaas.engine.r.transceiver.StringTransceiver
 import pl.psi.aaas.usecase.CalculationDefinition
 import pl.psi.aaas.usecase.CalculationDefinitonWithValues
 import pl.psi.aaas.usecase.CalculationException
+import pl.psi.aaas.usecase.parameters.DateTimeParam
+import pl.psi.aaas.usecase.parameters.Parameter
+import pl.psi.aaas.usecase.parameters.StringParam
+import pl.psi.aaas.usecase.timeseries.TSDataFrame
 
 /**
  * TODO
@@ -25,17 +31,23 @@ class RServeEngine<in D : CalculationDefinitonWithValues<V>, V, out R>(private v
     override fun call(calcDef: D): R? =
             try {
                 val conn = connectionProvider.getConnection()
-                val transceiver = RValuesTransceiverFactory.create<V, R, D>(conn)
+                val tsTransceiver = RValuesTransceiverFactory.get<D>(conn)
                 log.debug("Evaluating $calcDef")
 
                 calcDef.sourceScript(conn)
-                transceiver.send(calcDef.values, calcDef)
-                calcDef.prepareParameters(conn)
+
+                tsTransceiver.send(calcDef.values as TSDataFrame, calcDef)
+                // TODO we can remove the above line - use only parameters?
+                calcDef.parameters.forEach {
+                    val t = RValuesTransceiverFactory.get<D>(it, conn)
+                    t.send(it, calcDef)
+                }
+//                calcDef.prepareParameters(conn) TODO
 
                 log.debug("Calling script")
-                val result = conn.eval("dfOut <- run(dfIn, additionalParameters)")
+                val result = conn.eval("dfOut <- run(dfIn, parameters)")
 
-                transceiver.receive(result, calcDef)
+                tsTransceiver.receive(result, calcDef) as R?
             } catch (ex: RserveException) {
                 ex.printStackTrace()
                 throw CalculationException(ex.message ?: "There was an error during calculation.")
@@ -43,11 +55,19 @@ class RServeEngine<in D : CalculationDefinitonWithValues<V>, V, out R>(private v
 }
 
 object RValuesTransceiverFactory {
-    fun <V, R, D : CalculationDefinition> create(conn: RConnection): RValuesTransceiver<V, R, D> {
+    fun <D : CalculationDefinition> get(parameter: Parameter<*>, conn: RConnection): RValuesTransceiver<Parameter<*>, *, D> =
+            when (parameter) {
+                is StringParam   -> StringTransceiver<D>(conn)
+                is DateTimeParam -> DateTimeTransceiver<D>(conn)
+                else             -> throw CalculationException("Not implemented parameter type ${parameter.javaClass}")
+            } as RValuesTransceiver<Parameter<*>, *, D>
+
+    // TODO this should be removed when TSDataFrame is Parameter<??>
+    fun <D : CalculationDefinition> get(conn: RConnection): RValuesTransceiver<TSDataFrame, TSDataFrame, D> {
 //        inline fun <reified V, reified R, reified D : CalculationDefinition> create(conn: RConnection): RValuesTransceiver<V, R, D> {
         // TODO 05.05.2018 kskitek: handle different V and R types
 //        if (V::class.nestedClasses )
-        return TSValuesTransceiver(conn) as RValuesTransceiver<V, R, D>
+        return TSValuesTransceiver(conn) as RValuesTransceiver<TSDataFrame, TSDataFrame, D>
     }
 
 }
@@ -59,13 +79,3 @@ private fun CalculationDefinition.sourceScript(conn: RConnection) {
     conn.voidEval("""source("$path")""")
 }
 
-private fun CalculationDefinition.prepareParameters(conn: RConnection) {
-    conn.voidEval("additionalParameters <- data.frame(name = as.character(), value = as.character(), stringsAsFactors = FALSE)")
-    conn.voidEval("""colnames(additionalParameters) <- c("name", "value")""")
-
-    var rowIdx = 1
-    for ((key, value) in additionalParameters) {
-        conn.voidEval("""additionalParameters[$rowIdx,] <- c("$key", "$value")""")
-        rowIdx++
-    }
-}

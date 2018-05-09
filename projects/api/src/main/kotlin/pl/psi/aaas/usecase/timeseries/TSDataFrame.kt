@@ -2,12 +2,14 @@ package pl.psi.aaas.usecase.timeseries
 
 import pl.psi.aaas.usecase.Column
 import pl.psi.aaas.usecase.DataFrame
+import pl.psi.aaas.usecase.Symbol
 import java.time.Instant
 import java.time.ZoneOffset
 import java.time.ZonedDateTime
 
 // TODO maybe it is good to use only one DataFrame or MappedTS?
 
+// TODO TSDataFrame and generaly DataFrame should be a pl.psi.aaas.parameters.Parameter<??>
 class TSDataFrame(columns: Array<String>, matrix: Array<Column<Double?>>) : DataFrame<Double?>(columns, matrix) {
 
     companion object {

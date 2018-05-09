@@ -21,5 +21,5 @@ class RestEndpoint @Inject constructor(private val facade: Facade<TSCalculationD
                     begin = ZonedDateTime.now(),
                     end = ZonedDateTime.now().plusDays(1),
                     calculationScript = "add",
-                    additionalParameters = emptyMap())
+                    parameters = emptyMap())
 }

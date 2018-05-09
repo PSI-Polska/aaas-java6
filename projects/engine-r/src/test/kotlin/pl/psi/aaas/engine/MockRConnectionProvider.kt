@@ -14,7 +14,7 @@ val EmptyConfiguration = REngineConfiguration("", 1)
 class MockRConnectionProvider(override var configuration: REngineConfiguration = EmptyConfiguration) : RConnectionProvider {
     private val conn = mock<RConnection>
     {
-        on { eval("dfOut <- run(dfIn, additionalParameters)") } doReturn REXPList(getResult())
+        on { eval("dfOut <- run(dfIn, parameters)") } doReturn REXPList(getResult())
     }
 
     override fun getConnection(): RConnection = conn
