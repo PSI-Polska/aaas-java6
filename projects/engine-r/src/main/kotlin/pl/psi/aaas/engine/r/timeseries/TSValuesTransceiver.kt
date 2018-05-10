@@ -20,7 +20,7 @@ class TSValuesTransceiver(override val session: RConnection) : RValuesTransceive
         internal val log = LoggerFactory.getLogger(RServeEngine::class.java)
     }
 
-    override fun send(values: TSDataFrame, definition: TSCalculationDefinition) {
+    override fun send(name: String, values: TSDataFrame, definition: TSCalculationDefinition) {
         val vectorNames = values.getColumns()
         val vectorCSV = vectorNames.joinToString()
         log.debug("Sending values $vectorCSV")
@@ -30,15 +30,15 @@ class TSValuesTransceiver(override val session: RConnection) : RValuesTransceive
                     val doubleArray = values[it]?.toDoubleArray(REXPDouble.NA) ?: DoubleArray(0)
                     session.assign(it, doubleArray)
                 }
-        session.voidEval("""dfIn <- data.frame($vectorCSV)""")
+        session.voidEval("""$name <- data.frame($vectorCSV)""")
     }
 
-    override fun receive(result: Any?, definition: TSCalculationDefinition): TSDataFrame? =
+    override fun receive(name: String, result: Any?, definition: TSCalculationDefinition): TSDataFrame? =
             when (result) {
-                null -> RList().toTSDataFrame(definition)
-                is RList -> result.toTSDataFrame(definition)
-                is REXPGenericVector -> receive(result.asList(), definition)
-                else -> throw CalculationException("${result.javaClass} is not type ofPrimitive RList.")
+                null                 -> RList().toTSDataFrame(definition)
+                is RList             -> result.toTSDataFrame(definition)
+                is REXPGenericVector -> receive(name, result.asList(), definition)
+                else                 -> throw CalculationException("${result.javaClass} is not type ofPrimitive RList.")
             }
 }
 

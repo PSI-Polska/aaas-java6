@@ -27,11 +27,13 @@ object SimpleTestApp {
         val dtArr = arrayOf(ZonedDateTime.now().minusHours(2), ZonedDateTime.now().minusHours(1), ZonedDateTime.now())
         val c = Parameter.ofNN(arr, Array<String>::class.java, String::class.java)
         val d = Parameter.ofNN(dtArr, Array<ZonedDateTime>::class.java, ZonedDateTime::class.java)
+        val e = Parameter.ofNN(arrayOf(1,2,3L), Array<Long>::class.java,Long::class.java)
         val parameters = mapOf(
                 "a" to Parameter.ofPrimitive("str")
                 , "B" to Parameter.ofPrimitive(ZonedDateTime.now())
                 , "C" to c
                 , "D" to d
+                , "E" to e
                 , "df" to Parameter.of(arrayOf("A" to c, "B" to d) as Array<Column>)
 //                , DateTimeParam("D", ZonedDateTime.now())
 //                , Parameter.ofPrimitive(arr, String::class.java)

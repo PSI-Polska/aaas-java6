@@ -14,13 +14,13 @@ class RNativeTransceiver<in V : Parameter<*>, R, in D : CalculationDefinition>(
         private val outTransformer: (v: V) -> REXP, override val session: RConnection)
     : RValuesTransceiver<V, R, D> {
 
-    override fun send(value: V, definition: D) {
-        session.assign("v", outTransformer(value))
-        session.voidEval("print(v)")
-        session.voidEval("str(v)")
+    override fun send(name: String, value: V, definition: D) {
+        session.assign(name, outTransformer(value))
+        session.voidEval("print($name)")
+        session.voidEval("str($name)")
     }
 
-    override fun receive(result: Any?, definition: D): R? {
+    override fun receive(name: String, result: Any?, definition: D): R? {
         TODO("not implemented")
     }
 }
@@ -47,18 +47,15 @@ class RNativeTransceiver<in V : Parameter<*>, R, in D : CalculationDefinition>(
 class DateTimeTransceiver<in D : CalculationDefinition>(override val session: RConnection)
     : RValuesTransceiver<Parameter<ZonedDateTime>, Parameter<ZonedDateTime>, D> {
 
-    override fun send(value: Parameter<ZonedDateTime>, definition: D) {
+    override fun send(name: String, value: Parameter<ZonedDateTime>, definition: D) {
         val epochSecond = value.value.toEpochSecond()
-//        session.assign(value.name, REXPDouble(epochSecond.toDouble()))
-//        session.voidEval("${value.name} <- structure(${value.name}, class=c('POSIXt','POSIXct'))")
-//        attr(d1, "tzone") <- "UTC" TODO
-//        session.voidEval(value.name)
-        session.assign("dt", REXPDouble(epochSecond.toDouble()))
-        session.voidEval("dt <- structure(dt, class=c('POSIXt','POSIXct'))")
-        session.voidEval("print(dt)")
+        session.assign(name, REXPDouble(epochSecond.toDouble()))
+        session.voidEval("$name <- structure($name, class=c('POSIXt','POSIXct'))")
+        session.voidEval("""attr($name, "tzone") <- "UTC"""")
+        session.voidEval("print($name)")
     }
 
-    override fun receive(result: Any?, definition: D): Parameter<ZonedDateTime>? {
+    override fun receive(name: String, result: Any?, definition: D): Parameter<ZonedDateTime>? {
         TODO("not implemented")
     }
 }
@@ -66,36 +63,22 @@ class DateTimeTransceiver<in D : CalculationDefinition>(override val session: RC
 class ArrayDateTimeTransceiver<in D : CalculationDefinition>(override val session: RConnection)
     : RValuesTransceiver<Parameter<Array<ZonedDateTime>>, Parameter<Array<ZonedDateTime>>, D> {
 
-    override fun send(value: Parameter<Array<ZonedDateTime>>, definition: D) {
+    override fun send(name: String, value: Parameter<Array<ZonedDateTime>>, definition: D) {
         val epochSecond = value.value.map { it.toEpochSecond() }
                 .map { it.toDouble() }.toDoubleArray()
-//        session.assign(value.name, REXPDouble(epochSecond.toDouble()))
-//        session.voidEval("${value.name} <- structure(${value.name}, class=c('POSIXt','POSIXct'))")
-//        attr(d1, "tzone") <- "UTC" TODO
-//        session.voidEval(value.name)
-        session.assign("dt", REXPDouble(epochSecond))
-        session.voidEval("dt <- structure(dt, class=c('POSIXt','POSIXct'))")
-        session.voidEval("print(dt)")
-        session.voidEval("str(dt)")
+
+        session.assign(name, REXPDouble(epochSecond))
+        session.voidEval("$name <- structure($name, class=c('POSIXt','POSIXct'))")
+        session.voidEval("""attr($name, "tzone") <- "UTC"""")
+        session.voidEval("print($name)")
+        session.voidEval("str($name)")
     }
 
-    override fun receive(result: Any?, definition: D): Parameter<Array<ZonedDateTime>>? {
+    override fun receive(name: String, result: Any?, definition: D): Parameter<Array<ZonedDateTime>>? {
         TODO("not implemented")
     }
 }
 
-class ArrayTransceiver<T: Any?, in D : CalculationDefinition>(override val session: RConnection)
-    : RValuesTransceiver<Parameter<Array<T>>, Parameter<Array<T>>, D> {
-
-    override fun send(value: Parameter<Array<T>>, definition: D) {
-//        session.assign("arrS", REX)
-    }
-
-    override fun receive(result: Any?, definition: D): Parameter<Array<T>>? {
-        TODO("not implemented")
-    }
-
-}
 
 class DataFrameTransceiver<in D : CalculationDefinition>(override val session: RConnection)
     : RValuesTransceiver<DataFrame, DataFrame, D> {
@@ -104,18 +87,18 @@ class DataFrameTransceiver<in D : CalculationDefinition>(override val session: R
             df.value.map { it.second }
                     .map { it to RValuesTransceiverFactory.get<D>(it, session) }.toTypedArray()
 
-    override fun send(value: DataFrame, definition: D) {
+    override fun send(name: String, value: DataFrame, definition: D) {
         val columns = value.value.map { it.first }.joinToString { """ "$it" """ }
 
         session.voidEval("df <- data.frame()")
-        findAllTransceivers(value).forEach { it.second.send(it.first, definition) }
+        findAllTransceivers(value).forEach { it.second.send(name, it.first, definition) }
         session.voidEval("df <- cbind($columns)")
         session.voidEval("names(df) <- c($columns)")
 
         session.voidEval("str(df)")
     }
 
-    override fun receive(result: Any?, definition: D): DataFrame? {
+    override fun receive(name: String, result: Any?, definition: D): DataFrame? {
         TODO("not implemented")
     }
 
