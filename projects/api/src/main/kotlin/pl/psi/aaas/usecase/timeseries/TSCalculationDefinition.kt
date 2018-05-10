@@ -1,10 +1,10 @@
 package pl.psi.aaas.usecase.timeseries
 
+import org.joda.time.DateTime
 import pl.psi.aaas.usecase.CalculationDefinition
 import pl.psi.aaas.usecase.CalculationDefinitonWithValues
 import pl.psi.aaas.usecase.Parameters
 import pl.psi.aaas.usecase.Symbol
-import java.time.ZonedDateTime
 
 
 /**
@@ -18,8 +18,8 @@ import java.time.ZonedDateTime
 interface TSCalculationDefinition : CalculationDefinition {
     val timeSeriesIdsIn: Map<Symbol, Long>
     val timeSeriesIdsOut: Map<Symbol, Long>
-    val begin: ZonedDateTime
-    val end: ZonedDateTime
+    val begin: DateTime
+    val end: DateTime
 }
 // TODO add dataSource based interface?
 
@@ -35,15 +35,15 @@ interface TSCalculationDefinition : CalculationDefinition {
  */
 data class TSCalcDef(override val timeSeriesIdsIn: Map<Symbol, Long> = emptyMap(),
                      override val timeSeriesIdsOut: Map<Symbol, Long> = emptyMap(),
-                     override val begin: ZonedDateTime,
-                     override val end: ZonedDateTime,
+                     override val begin: DateTime,
+                     override val end: DateTime,
                      override val calculationScript: String,
                      override val parameters: Parameters = emptyMap()) : TSCalculationDefinition
 
 data class TSCalcDefWithValues(override val timeSeriesIdsIn: Map<Symbol, Long>,
                                override val timeSeriesIdsOut: Map<Symbol, Long>,
-                               override val begin: ZonedDateTime,
-                               override val end: ZonedDateTime,
+                               override val begin: DateTime,
+                               override val end: DateTime,
                                override val calculationScript: String,
                                override val parameters: Parameters,
                                override val values: TSDataFrame)

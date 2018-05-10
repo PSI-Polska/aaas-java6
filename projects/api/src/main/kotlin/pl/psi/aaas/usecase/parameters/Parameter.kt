@@ -1,12 +1,12 @@
 package pl.psi.aaas.usecase.parameters
 
+import org.joda.time.DateTime
 import pl.psi.aaas.usecase.Symbol
-import java.time.ZonedDateTime
 
 sealed class Parameter<T : Any> private constructor(open var value: T, open val clazz: Class<T>) {
     companion object {
         @JvmStatic
-        val supportedClasses: List<Class<*>> = listOf(String::class.java, Long::class.java, Double::class.java, Boolean::class.java, ZonedDateTime::class.java)
+        val supportedClasses: List<Class<*>> = listOf(String::class.java, Long::class.java, Double::class.java, Boolean::class.java, DateTime::class.java)
 
         @JvmStatic
         fun <T : Any> ofPrimitive(value: T): Primitive<T> =
