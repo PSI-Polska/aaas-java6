@@ -22,12 +22,12 @@ interface Engine<in T : CalculationDefinitonWithValues<V>, V, out R> {
 interface EngineValuesSender<in V, in D : CalculationDefinition> {
 
     @Throws(CalculationException::class)
-    fun send(value: V, definition: D)
+    fun send(name: String, value: V, definition: D)
 }
 
 interface EngineValuesReceiver<out R, in D : CalculationDefinition> {
     @Throws(CalculationException::class)
-    fun receive(result: Any?, definition: D): R?
+    fun receive(name: String, result: Any?, definition: D): R?
     // TODO 05.05.2018 kskitek: can we have something better than 'Any?'?
 }
 

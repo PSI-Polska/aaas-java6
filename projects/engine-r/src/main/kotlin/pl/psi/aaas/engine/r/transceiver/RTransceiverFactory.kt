@@ -23,8 +23,6 @@ object RValuesTransceiverFactory {
                 is Vector<*> -> vectorTransceiver(param, conn)
                 is DataFrame -> DataFrameTransceiver<D>(conn) as RValuesTransceiver<Parameter<*>, *, D>
             }
-//    ArrayTransceiver<D>(conn) as RValuesTransceiver<Parameter<*>, *, D>
-
 
     // TODO this should be removed when TSDataFrame is Parameter<??>
     fun <D : CalculationDefinition> get(conn: RConnection): RValuesTransceiver<TSDataFrame, TSDataFrame, D> {
@@ -36,13 +34,16 @@ object RValuesTransceiverFactory {
 
 private fun <D : CalculationDefinition> vectorTransceiver(param: Vector<*>, conn: RConnection): RValuesTransceiver<Parameter<*>, *, D> = //EngineValuesSender TODO
         when (param.elemClazz) {
-        String::class.java -> RNativeTransceiver<Vector<String>, Vector<String>, D>({ REXPString(it.value) }, conn)
+            String::class.java    -> RNativeTransceiver<Vector<String>, Vector<String>, D>({ REXPString(it.value) }, conn)
                 as RValuesTransceiver<Parameter<*>, *, D>
-        Double::class.java -> RNativeTransceiver<Vector<Double>, Vector<Double>, D>(
+            Long::class.java      -> RNativeTransceiver<Vector<Long>, Vector<Long>, D>(
+                    { REXPDouble(it.value.map { it?.toDouble() ?: REXPDouble.NA }.toDoubleArray()) }
+                    , conn) as RValuesTransceiver<Parameter<*>, *, D>
+            Double::class.java    -> RNativeTransceiver<Vector<Double>, Vector<Double>, D>(
                 { REXPDouble(it.value.map { it ?: REXPDouble.NA }.toDoubleArray()) }
                 , conn) as RValuesTransceiver<Parameter<*>, *, D>
     // TODO 09.05.2018 kskitek: this is MONSTER!!
-        Boolean::class.java -> RNativeTransceiver<Vector<Boolean>, Vector<Boolean>, D>(
+            Boolean::class.java   -> RNativeTransceiver<Vector<Boolean>, Vector<Boolean>, D>(
                 {
                     REXPLogical(it.value
                             .map {

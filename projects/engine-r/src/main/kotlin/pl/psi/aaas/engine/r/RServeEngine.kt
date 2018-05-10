@@ -31,18 +31,18 @@ class RServeEngine<in D : CalculationDefinitonWithValues<V>, V, out R>(private v
 
                 calcDef.sourceScript(conn)
 
-                tsTransceiver.send(calcDef.values as TSDataFrame, calcDef)
+                tsTransceiver.send("dfIn", calcDef.values as TSDataFrame, calcDef)
                 // TODO we can remove the above line - use only parameters?
                 calcDef.parameters.forEach {
                     val t = RValuesTransceiverFactory.get<D>(it.value, conn)
-                    t.send(it.value, calcDef)
+                    t.send(it.key, it.value, calcDef)
                 }
 //                calcDef.prepareParameters(conn) TODO
 
                 log.debug("Calling script")
                 val result = conn.eval("dfOut <- run(dfIn, parameters)")
 
-                tsTransceiver.receive(result, calcDef) as R?
+                tsTransceiver.receive("dfOut", result, calcDef) as R?
             } catch (ex: RserveException) {
                 ex.printStackTrace()
                 throw CalculationException(ex.message ?: "There was an error during calculation.")
