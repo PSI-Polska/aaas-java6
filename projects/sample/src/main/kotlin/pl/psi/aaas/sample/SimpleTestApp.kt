@@ -22,7 +22,7 @@ object SimpleTestApp {
         val outIds = mapOf("C" to 3L)
         val begin = ZonedDateTime.now()
         val end = begin.plusDays(1)
-//        {"a", "b", "c"}.
+
         val arr = arrayOf("a", "b", "c")
         val dtArr = arrayOf(ZonedDateTime.now().minusHours(2), ZonedDateTime.now().minusHours(1), ZonedDateTime.now())
         val c = Parameter.ofNN(arr, Array<String>::class.java, String::class.java)
@@ -35,9 +35,6 @@ object SimpleTestApp {
                 , "D" to d
                 , "E" to e
                 , "df" to Parameter.of(arrayOf("A" to c, "B" to d) as Array<Column>)
-//                , DateTimeParam("D", ZonedDateTime.now())
-//                , Parameter.ofPrimitive(arr, String::class.java)
-//                , ArrayParam("Arr", arr, String::class.java)
         )
 
         return TSCalcDef(inIds, outIds, begin, end, "add", parameters)
