@@ -8,18 +8,20 @@ import pl.psi.aaas.engine.r.RValuesTransceiver
 import pl.psi.aaas.engine.r.timeseries.TSValuesTransceiver
 import pl.psi.aaas.usecase.CalculationDefinition
 import pl.psi.aaas.usecase.CalculationException
+import pl.psi.aaas.usecase.parameters.DataFrame
 import pl.psi.aaas.usecase.parameters.Parameter
 import pl.psi.aaas.usecase.parameters.Primitive
 import pl.psi.aaas.usecase.parameters.Vector
 import pl.psi.aaas.usecase.timeseries.TSDataFrame
 import java.time.ZonedDateTime
 
-// TODO 09.05.2018 kskitek: this factory has to be generic in terms of Engine impl; provided separately; registration of impls with SPI
+// TODO 09.05.2018 kskitek: this factory has to be generic in terms ofPrimitive Engine impl; provided separately; registration ofPrimitive impls with SPI
 object RValuesTransceiverFactory {
     fun <D : CalculationDefinition> get(param: Parameter<*>, conn: RConnection): RValuesTransceiver<Parameter<*>, *, D> =
             when (param) {
                 is Primitive -> primitiveTransceiver(param, conn)
                 is Vector<*> -> vectorTransceiver(param, conn)
+                is DataFrame -> DataFrameTransceiver<D>(conn) as RValuesTransceiver<Parameter<*>, *, D>
             }
 //    ArrayTransceiver<D>(conn) as RValuesTransceiver<Parameter<*>, *, D>
 
@@ -32,8 +34,8 @@ object RValuesTransceiverFactory {
 
 }
 
-private fun <D : CalculationDefinition> vectorTransceiver(param: Vector<*>, conn: RConnection): RValuesTransceiver<Parameter<*>, *, D> { //EngineValuesSender TODO
-    return when (param.elemClazz) {
+private fun <D : CalculationDefinition> vectorTransceiver(param: Vector<*>, conn: RConnection): RValuesTransceiver<Parameter<*>, *, D> = //EngineValuesSender TODO
+        when (param.elemClazz) {
         String::class.java -> RNativeTransceiver<Vector<String>, Vector<String>, D>({ REXPString(it.value) }, conn)
                 as RValuesTransceiver<Parameter<*>, *, D>
         Double::class.java -> RNativeTransceiver<Vector<Double>, Vector<Double>, D>(
@@ -55,7 +57,6 @@ private fun <D : CalculationDefinition> vectorTransceiver(param: Vector<*>, conn
         ZonedDateTime::class.java -> ArrayDateTimeTransceiver<D>(conn) as RValuesTransceiver<Parameter<*>, *, D>
         else -> throw CalculationException("Not implemented array parameter type ${param.elemClazz}")
     } as RValuesTransceiver<Parameter<*>, *, D>
-}
 
 private fun <D : CalculationDefinition> primitiveTransceiver(param: Primitive<*>, conn: RConnection): RValuesTransceiver<Parameter<*>, *, D> =
         when (param.clazz) {

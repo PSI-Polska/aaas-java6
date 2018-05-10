@@ -5,6 +5,7 @@ import pl.psi.aaas.Facade
 import pl.psi.aaas.engine.r.RConnectionProvider
 import pl.psi.aaas.engine.r.REngineConfiguration
 import pl.psi.aaas.engine.r.RServeEngine
+import pl.psi.aaas.usecase.parameters.Column
 import pl.psi.aaas.usecase.parameters.Parameter
 import pl.psi.aaas.usecase.timeseries.*
 import java.time.ZonedDateTime
@@ -24,13 +25,16 @@ object SimpleTestApp {
 //        {"a", "b", "c"}.
         val arr = arrayOf("a", "b", "c")
         val dtArr = arrayOf(ZonedDateTime.now().minusHours(2), ZonedDateTime.now().minusHours(1), ZonedDateTime.now())
+        val c = Parameter.ofNN(arr, Array<String>::class.java, String::class.java)
+        val d = Parameter.ofNN(dtArr, Array<ZonedDateTime>::class.java, ZonedDateTime::class.java)
         val parameters = mapOf(
-                "a" to Parameter.of("str")
-                , "B" to Parameter.of(ZonedDateTime.now())
-                , "C" to Parameter.ofNN(arr, Array<String>::class.java, String::class.java)
-                , "D" to Parameter.ofNN(dtArr, Array<ZonedDateTime>::class.java, ZonedDateTime::class.java)
+                "a" to Parameter.ofPrimitive("str")
+                , "B" to Parameter.ofPrimitive(ZonedDateTime.now())
+                , "C" to c
+                , "D" to d
+                , "df" to Parameter.of(arrayOf("A" to c, "B" to d) as Array<Column>)
 //                , DateTimeParam("D", ZonedDateTime.now())
-//                , Parameter.of(arr, String::class.java)
+//                , Parameter.ofPrimitive(arr, String::class.java)
 //                , ArrayParam("Arr", arr, String::class.java)
         )
 
@@ -38,7 +42,7 @@ object SimpleTestApp {
     }
 }
 
-val localConfiguration = REngineConfiguration("localhost", 6311)
+val localConfiguration = REngineConfiguration("192.168.99.100", 6311)
 
 class LocalRConnectionProvider(override var configuration: REngineConfiguration = localConfiguration) : RConnectionProvider
 
