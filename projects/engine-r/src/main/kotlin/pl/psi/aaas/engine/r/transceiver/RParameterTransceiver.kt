@@ -5,7 +5,9 @@ import org.rosuda.REngine.REXPDouble
 import org.rosuda.REngine.Rserve.RConnection
 import pl.psi.aaas.engine.r.RValuesTransceiver
 import pl.psi.aaas.usecase.CalculationDefinition
+import pl.psi.aaas.usecase.parameters.DataFrame
 import pl.psi.aaas.usecase.parameters.Parameter
+import pl.psi.aaas.usecase.parameters.Vector
 import java.time.ZonedDateTime
 
 class RNativeTransceiver<in V : Parameter<*>, R, in D : CalculationDefinition>(
@@ -42,7 +44,9 @@ class RNativeTransceiver<in V : Parameter<*>, R, in D : CalculationDefinition>(
 //class BooleanTransceiver<D : CalculationDefinition>(override val session: RConnection)
 //    : RNativeTransceiver<BooleanParam, BooleanParam, D>({ REXPLogical(it.value) })
 //
-class DateTimeTransceiver<in D : CalculationDefinition>(override val session: RConnection) : RValuesTransceiver<Parameter<ZonedDateTime>, Parameter<ZonedDateTime>, D> {
+class DateTimeTransceiver<in D : CalculationDefinition>(override val session: RConnection)
+    : RValuesTransceiver<Parameter<ZonedDateTime>, Parameter<ZonedDateTime>, D> {
+
     override fun send(value: Parameter<ZonedDateTime>, definition: D) {
         val epochSecond = value.value.toEpochSecond()
 //        session.assign(value.name, REXPDouble(epochSecond.toDouble()))
@@ -59,7 +63,9 @@ class DateTimeTransceiver<in D : CalculationDefinition>(override val session: RC
     }
 }
 
-class ArrayDateTimeTransceiver<in D : CalculationDefinition>(override val session: RConnection) : RValuesTransceiver<Parameter<Array<ZonedDateTime>>, Parameter<Array<ZonedDateTime>>, D> {
+class ArrayDateTimeTransceiver<in D : CalculationDefinition>(override val session: RConnection)
+    : RValuesTransceiver<Parameter<Array<ZonedDateTime>>, Parameter<Array<ZonedDateTime>>, D> {
+
     override fun send(value: Parameter<Array<ZonedDateTime>>, definition: D) {
         val epochSecond = value.value.map { it.toEpochSecond() }
                 .map { it.toDouble() }.toDoubleArray()
@@ -86,6 +92,30 @@ class ArrayTransceiver<T: Any?, in D : CalculationDefinition>(override val sessi
     }
 
     override fun receive(result: Any?, definition: D): Parameter<Array<T>>? {
+        TODO("not implemented")
+    }
+
+}
+
+class DataFrameTransceiver<in D : CalculationDefinition>(override val session: RConnection)
+    : RValuesTransceiver<DataFrame, DataFrame, D> {
+
+    private fun findAllTransceivers(df: DataFrame): Array<Pair<Vector<*>, RValuesTransceiver<Vector<*>, *, D>>> =
+            df.value.map { it.second }
+                    .map { it to RValuesTransceiverFactory.get<D>(it, session) }.toTypedArray()
+
+    override fun send(value: DataFrame, definition: D) {
+        val columns = value.value.map { it.first }.joinToString { """ "$it" """ }
+
+        session.voidEval("df <- data.frame()")
+        findAllTransceivers(value).forEach { it.second.send(it.first, definition) }
+        session.voidEval("df <- cbind($columns)")
+        session.voidEval("names(df) <- c($columns)")
+
+        session.voidEval("str(df)")
+    }
+
+    override fun receive(result: Any?, definition: D): DataFrame? {
         TODO("not implemented")
     }
 

@@ -2,11 +2,11 @@ package pl.psi.aaas.usecase
 
 
 /**
- * Very crude implementation of DataFrame.
+ * Very crude implementation ofPrimitive DataFrame.
  * When moving to Java8 think about moving to external implementation like ch.netzwerg.paleo.DataFrame.
  */
 open class DataFrame<T>(private val columns: Map<String, Int>, private val matrix: Array<Column<T>>) {
-    // TODO 07.05.2018 kskitek: handle different size of Columns in constructor and size()
+    // TODO 07.05.2018 kskitek: handle different size ofPrimitive Columns in constructor and size()
     // should the Column classes be available at runtime?
     // Maybe make the matrix Array<Column<*>> so we can have heterogeneous DataFrames?
     constructor(columns: Array<String>, matrix: Array<Column<T>>) : this(arrayToMap(columns), matrix)
@@ -44,7 +44,7 @@ open class DataFrame<T>(private val columns: Map<String, Int>, private val matri
 
 
     /**
-     * Returns a view of the DataFrame with predicate applied to columns.
+     * Returns a view ofPrimitive the DataFrame with predicate applied to columns.
      */
     fun getFiltered(predicate: (colName: String) -> Boolean): DataFrame<T> =
             let {

@@ -52,7 +52,7 @@ class RServeEngine<in D : CalculationDefinitonWithValues<V>, V, out R>(private v
 private fun CalculationDefinition.sourceScript(conn: RConnection) {
     val path = """$baseUserScriptPath$calculationScript.R"""
     log.debug("""Sourcing: $path""")
-    conn.voidEval("""writeLines("##\nStarted execution of: $path\n##")""")
+    conn.voidEval("""writeLines("##\nStarted execution ofPrimitive: $path\n##")""")
     conn.voidEval("""source("$path")""")
 }
 

@@ -38,7 +38,7 @@ class TSValuesTransceiver(override val session: RConnection) : RValuesTransceive
                 null -> RList().toTSDataFrame(definition)
                 is RList -> result.toTSDataFrame(definition)
                 is REXPGenericVector -> receive(result.asList(), definition)
-                else -> throw CalculationException("${result.javaClass} is not type of RList.")
+                else -> throw CalculationException("${result.javaClass} is not type ofPrimitive RList.")
             }
 }
 

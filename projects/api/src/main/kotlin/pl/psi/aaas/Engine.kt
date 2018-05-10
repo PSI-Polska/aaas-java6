@@ -32,7 +32,7 @@ interface EngineValuesReceiver<out R, in D : CalculationDefinition> {
 }
 
 /**
- * Implementations translate In/Out types of [ValuesRepository] into [Engine]'s native representation.
+ * Implementations translate In/Out types ofPrimitive [ValuesRepository] into [Engine]'s native representation.
  *
  * @param V read and save values type parameter
  * @param R read and save values type parameter
@@ -41,4 +41,5 @@ interface EngineValuesReceiver<out R, in D : CalculationDefinition> {
 // TODO 07.05.2018 kskitek: maybe you don't need V and R while there is D
 interface EngineValuesTranceiver<in V, out R, in D : CalculationDefinition, out S> : EngineValuesSender<V, D>, EngineValuesReceiver<R, D> {
     val session: S
+    // TODO 10.05.2018 kskitek: this will not be thread safe
 }

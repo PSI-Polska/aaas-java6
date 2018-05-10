@@ -12,8 +12,8 @@ import java.time.ZonedDateTime
  *
  * @property timeSeriesIdsIn Time Series IN identifiers
  * @property timeSeriesIdsOut Time Series OUT identifiers
- * @property begin begin date of Time Series
- * @property end end date of Time Series
+ * @property begin begin date ofPrimitive Time Series
+ * @property end end date ofPrimitive Time Series
  */
 interface TSCalculationDefinition : CalculationDefinition {
     val timeSeriesIdsIn: Map<Symbol, Long>
@@ -28,8 +28,8 @@ interface TSCalculationDefinition : CalculationDefinition {
  *
  * @property timeSeriesIdsIn Time Series IN identifiers
  * @property timeSeriesIdsOut Time Series OUT identifiers
- * @property begin begin date of Time Series
- * @property end end date of Time Series
+ * @property begin begin date ofPrimitive Time Series
+ * @property end end date ofPrimitive Time Series
  * @property calculationScript TODO
  * @property parameters TODO
  */
