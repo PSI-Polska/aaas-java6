@@ -10,6 +10,7 @@ import pl.psi.aaas.engine.r.transceiver.RValuesTransceiverFactory
 import pl.psi.aaas.usecase.CalculationDefinition
 import pl.psi.aaas.usecase.CalculationDefinitonWithValues
 import pl.psi.aaas.usecase.CalculationException
+import pl.psi.aaas.usecase.Parameters
 import pl.psi.aaas.usecase.timeseries.TSDataFrame
 
 /**
@@ -37,7 +38,8 @@ class RServeEngine<in D : CalculationDefinitonWithValues<V>, V, out R>(private v
                     val t = RValuesTransceiverFactory.get<D>(it.value, conn)
                     t.send(it.key, it.value, calcDef)
                 }
-//                calcDef.prepareParameters(conn) TODO
+
+                debugR(calcDef.parameters, conn)
 
                 log.debug("Calling script")
                 val result = conn.eval("dfOut <- run(dfIn, parameters)")
@@ -47,6 +49,13 @@ class RServeEngine<in D : CalculationDefinitonWithValues<V>, V, out R>(private v
                 ex.printStackTrace()
                 throw CalculationException(ex.message ?: "There was an error during calculation.")
             }
+
+    private fun debugR(parameters: Parameters, conn: RConnection) =
+            parameters.map { it.key }
+                    .forEach {
+                        conn.voidEval("print(\"## $it\")")
+                        conn.voidEval("str($it)")
+                    }
 }
 
 private fun CalculationDefinition.sourceScript(conn: RConnection) {

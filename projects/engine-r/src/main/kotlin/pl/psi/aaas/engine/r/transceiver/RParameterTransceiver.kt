@@ -14,11 +14,8 @@ class RNativeTransceiver<in V : Parameter<*>, R, in D : CalculationDefinition>(
         private val outTransformer: (v: V) -> REXP, override val session: RConnection)
     : RValuesTransceiver<V, R, D> {
 
-    override fun send(name: String, value: V, definition: D) {
+    override fun send(name: String, value: V, definition: D) =
         session.assign(name, outTransformer(value))
-        session.voidEval("print($name)")
-        session.voidEval("str($name)")
-    }
 
     override fun receive(name: String, result: Any?, definition: D): R? {
         TODO("not implemented")
@@ -52,7 +49,6 @@ class DateTimeTransceiver<in D : CalculationDefinition>(override val session: RC
         session.assign(name, REXPDouble(epochSecond.toDouble()))
         session.voidEval("$name <- structure($name, class=c('POSIXt','POSIXct'))")
         session.voidEval("""attr($name, "tzone") <- "UTC"""")
-        session.voidEval("print($name)")
     }
 
     override fun receive(name: String, result: Any?, definition: D): Parameter<ZonedDateTime>? {
@@ -70,8 +66,6 @@ class ArrayDateTimeTransceiver<in D : CalculationDefinition>(override val sessio
         session.assign(name, REXPDouble(epochSecond))
         session.voidEval("$name <- structure($name, class=c('POSIXt','POSIXct'))")
         session.voidEval("""attr($name, "tzone") <- "UTC"""")
-        session.voidEval("print($name)")
-        session.voidEval("str($name)")
     }
 
     override fun receive(name: String, result: Any?, definition: D): Parameter<Array<ZonedDateTime>>? {
@@ -88,15 +82,24 @@ class DataFrameTransceiver<in D : CalculationDefinition>(override val session: R
                     .map { it to RValuesTransceiverFactory.get<D>(it, session) }.toTypedArray()
 
     override fun send(name: String, value: DataFrame, definition: D) {
-        val columns = value.value.map { it.first }.joinToString { """ "$it" """ }
+        val columnNamesCSV = value.value.map { it.first }.joinToString { """ "$it" """ }
 
-        session.voidEval("df <- data.frame()")
-        findAllTransceivers(value).forEach { it.second.send(name, it.first, definition) }
-        session.voidEval("df <- cbind($columns)")
-        session.voidEval("names(df) <- c($columns)")
+        val randColNames = generateNames(name, value.value.size)
+        val randColNamesCSV = randColNames.joinToString()
 
-        session.voidEval("str(df)")
+        findAllTransceivers(value)
+                .zip(randColNames)
+                .forEach {
+                    val (param, randName) = it
+                    val (columnValue, transceiver) = param
+                    transceiver.send(randName, columnValue, definition)
+                }
+        session.voidEval("$name <- data.frame($randColNamesCSV)")
+        session.voidEval("names($name) <- c($columnNamesCSV)")
     }
+
+    private fun generateNames(name: String, size: Int) =
+            (0 until size).map { "${name}Col$it" }
 
     override fun receive(name: String, result: Any?, definition: D): DataFrame? {
         TODO("not implemented")
