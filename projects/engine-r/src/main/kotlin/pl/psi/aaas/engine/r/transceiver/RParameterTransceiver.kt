@@ -1,5 +1,6 @@
 package pl.psi.aaas.engine.r.transceiver
 
+import org.joda.time.DateTime
 import org.rosuda.REngine.REXP
 import org.rosuda.REngine.REXPDouble
 import org.rosuda.REngine.Rserve.RConnection
@@ -8,14 +9,13 @@ import pl.psi.aaas.usecase.CalculationDefinition
 import pl.psi.aaas.usecase.parameters.DataFrame
 import pl.psi.aaas.usecase.parameters.Parameter
 import pl.psi.aaas.usecase.parameters.Vector
-import java.time.ZonedDateTime
 
 class RNativeTransceiver<in V : Parameter<*>, R, in D : CalculationDefinition>(
         private val outTransformer: (v: V) -> REXP, override val session: RConnection)
     : RValuesTransceiver<V, R, D> {
 
     override fun send(name: String, value: V, definition: D) =
-        session.assign(name, outTransformer(value))
+            session.assign(name, outTransformer(value))
 
     override fun receive(name: String, result: Any?, definition: D): R? {
         TODO("not implemented")
@@ -42,33 +42,32 @@ class RNativeTransceiver<in V : Parameter<*>, R, in D : CalculationDefinition>(
 //    : RNativeTransceiver<BooleanParam, BooleanParam, D>({ REXPLogical(it.value) })
 //
 class DateTimeTransceiver<in D : CalculationDefinition>(override val session: RConnection)
-    : RValuesTransceiver<Parameter<ZonedDateTime>, Parameter<ZonedDateTime>, D> {
+    : RValuesTransceiver<Parameter<DateTime>, Parameter<DateTime>, D> {
 
-    override fun send(name: String, value: Parameter<ZonedDateTime>, definition: D) {
-        val epochSecond = value.value.toEpochSecond()
-        session.assign(name, REXPDouble(epochSecond.toDouble()))
+    override fun send(name: String, value: Parameter<DateTime>, definition: D) {
+        val epochSecond = value.value.millis / 1000.0
+        session.assign(name, REXPDouble(epochSecond))
         session.voidEval("$name <- structure($name, class=c('POSIXt','POSIXct'))")
         session.voidEval("""attr($name, "tzone") <- "UTC"""")
     }
 
-    override fun receive(name: String, result: Any?, definition: D): Parameter<ZonedDateTime>? {
+    override fun receive(name: String, result: Any?, definition: D): Parameter<DateTime>? {
         TODO("not implemented")
     }
 }
 
 class ArrayDateTimeTransceiver<in D : CalculationDefinition>(override val session: RConnection)
-    : RValuesTransceiver<Parameter<Array<ZonedDateTime>>, Parameter<Array<ZonedDateTime>>, D> {
+    : RValuesTransceiver<Parameter<Array<DateTime>>, Parameter<Array<DateTime>>, D> {
 
-    override fun send(name: String, value: Parameter<Array<ZonedDateTime>>, definition: D) {
-        val epochSecond = value.value.map { it.toEpochSecond() }
-                .map { it.toDouble() }.toDoubleArray()
+    override fun send(name: String, value: Parameter<Array<DateTime>>, definition: D) {
+        val epochSecond = value.value.map { it.millis / 1000.0 }.toDoubleArray()
 
         session.assign(name, REXPDouble(epochSecond))
         session.voidEval("$name <- structure($name, class=c('POSIXt','POSIXct'))")
         session.voidEval("""attr($name, "tzone") <- "UTC"""")
     }
 
-    override fun receive(name: String, result: Any?, definition: D): Parameter<Array<ZonedDateTime>>? {
+    override fun receive(name: String, result: Any?, definition: D): Parameter<Array<DateTime>>? {
         TODO("not implemented")
     }
 }

@@ -1,11 +1,10 @@
 package pl.psi.aaas.usecase.timeseries
 
+import org.joda.time.DateTime
+import org.joda.time.DateTimeZone
 import pl.psi.aaas.usecase.Column
 import pl.psi.aaas.usecase.DataFrame
 import pl.psi.aaas.usecase.Symbol
-import java.time.Instant
-import java.time.ZoneOffset
-import java.time.ZonedDateTime
 
 // TODO maybe it is good to use only one DataFrame or MappedTS?
 
@@ -52,12 +51,12 @@ class TSDataFrame(columns: Array<String>, matrix: Array<Column<Double?>>) : Data
                 throw IllegalArgumentException("TSDataFrame requires all value arrays to be equal size. Got: ${valuesSizes.joinToString()}")
         }
 
-        private fun createDTVector(beginDateTime: ZonedDateTime, period: TSResolution, size: Int): Column<Double?> {
+        private fun createDTVector(beginDateTime: DateTime, period: TSResolution, size: Int): Column<Double?> {
             val retCol = Column<Double?>(size, { null })
             var currLen = 0
             var currDate = beginDateTime
             while (currLen < size) {
-                retCol[currLen] = currDate.toEpochSecond().toDouble()
+                retCol[currLen] = currDate.millis / 1000.0
                 currLen++
                 currDate = currDate.plus(period)
             }
@@ -65,10 +64,9 @@ class TSDataFrame(columns: Array<String>, matrix: Array<Column<Double?>>) : Data
         }
     }
 
-    fun getDateTime(): Column<ZonedDateTime>? =
+    fun getDateTime(): Column<DateTime>? =
             get(COL_DT)?.map { it?.toLong() ?: 0 }
-                    ?.map { Instant.ofEpochSecond(it) }
-                    ?.map { ZonedDateTime.ofInstant(it, ZoneOffset.UTC) }?.toTypedArray()
+                    ?.map { DateTime(it * 1000, DateTimeZone.UTC) }?.toTypedArray()
 }
 
 fun Column<Double?>.toDoubleArray(nullReplacement: Double): DoubleArray =

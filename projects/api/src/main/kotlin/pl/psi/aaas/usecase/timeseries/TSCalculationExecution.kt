@@ -1,10 +1,10 @@
 package pl.psi.aaas.usecase.timeseries
 
+import org.joda.time.Duration
 import pl.psi.aaas.Engine
 import pl.psi.aaas.usecase.CalculationException
 import pl.psi.aaas.usecase.CalculationExecution
 import pl.psi.aaas.usecase.Symbol
-import java.time.Duration
 
 
 /**
@@ -17,7 +17,7 @@ class TSCalculationExecution(val tsRepository: TSRepository,
     // TODO 05.05.2018 kskitek: bring synchronizer back
 
     override fun call(calcDef: TSCalculationDefinition) {
-        val resolution = Duration.ofHours(1)
+        val resolution = Duration.standardHours(1)
         val inTs = calcDef.timeSeriesIdsIn.map { it.key to tsRepository.read(prepQuery(it.value, calcDef)) }
                 .map { it.first to Triple(calcDef.begin, resolution, it.second) }.toMap()
 
