@@ -23,18 +23,25 @@ object SimpleTestApp {
         val begin = ZonedDateTime.now()
         val end = begin.plusDays(1)
 
-        val arr = arrayOf("a", "b", "c")
+        val strArr = arrayOf("a", "b", "c")
         val dtArr = arrayOf(ZonedDateTime.now().minusHours(2), ZonedDateTime.now().minusHours(1), ZonedDateTime.now())
-        val c = Parameter.ofNN(arr, Array<String>::class.java, String::class.java)
-        val d = Parameter.ofNN(dtArr, Array<ZonedDateTime>::class.java, ZonedDateTime::class.java)
-        val e = Parameter.ofNN(arrayOf(1,2,3L), Array<Long>::class.java,Long::class.java)
+        val strVec = Parameter.ofArrayNotNull(strArr, String::class.java)
+        val dtVec = Parameter.ofArrayNotNull(dtArr, ZonedDateTime::class.java)
+        val longVec = Parameter.ofArrayNotNull(arrayOf(1, 2, 3L), Long::class.java)
+        val doubleVec = Parameter.ofArrayNotNull(arrayOf(0.1, 0.2, 1.0))
+        val boolVec = Parameter.ofArrayNotNull(arrayOf(true, false, true))
+        val boolNullVec = Parameter.ofArray(arrayOf(true, false, null), Boolean::class.java)
+        val dfColumns = arrayOf(Column("dt", dtVec), Column("longs", longVec), Column("doubles", doubleVec))
+
         val parameters = mapOf(
-                "a" to Parameter.ofPrimitive("str")
-                , "B" to Parameter.ofPrimitive(ZonedDateTime.now())
-                , "C" to c
-                , "D" to d
-                , "E" to e
-                , "df" to Parameter.of(arrayOf("A" to c, "B" to d) as Array<Column>)
+                "str" to Parameter.ofPrimitive("str_value")
+                , "dt" to Parameter.ofPrimitive(ZonedDateTime.now())
+                , "strV" to strVec
+                , "dtV" to dtVec
+                , "longV" to longVec
+                , "boolV" to boolVec
+                , "boolNullV" to boolNullVec
+                , "df" to Parameter.ofDataFrame(dfColumns)
         )
 
         return TSCalcDef(inIds, outIds, begin, end, "add", parameters)

@@ -15,7 +15,7 @@ class RNativeTransceiver<in V : Parameter<*>, R, in D : CalculationDefinition>(
     : RValuesTransceiver<V, R, D> {
 
     override fun send(name: String, value: V, definition: D) =
-        session.assign(name, outTransformer(value))
+            session.assign(name, outTransformer(value))
 
     override fun receive(name: String, result: Any?, definition: D): R? {
         TODO("not implemented")
@@ -78,11 +78,11 @@ class DataFrameTransceiver<in D : CalculationDefinition>(override val session: R
     : RValuesTransceiver<DataFrame, DataFrame, D> {
 
     private fun findAllTransceivers(df: DataFrame): Array<Pair<Vector<*>, RValuesTransceiver<Vector<*>, *, D>>> =
-            df.value.map { it.second }
+            df.value.map { it.vector }
                     .map { it to RValuesTransceiverFactory.get<D>(it, session) }.toTypedArray()
 
     override fun send(name: String, value: DataFrame, definition: D) {
-        val columnNamesCSV = value.value.map { it.first }.joinToString { """ "$it" """ }
+        val columnNamesCSV = value.value.map { it.symbol }.joinToString { """ "$it" """ }
 
         val randColNames = generateNames(name, value.value.size)
         val randColNamesCSV = randColNames.joinToString()

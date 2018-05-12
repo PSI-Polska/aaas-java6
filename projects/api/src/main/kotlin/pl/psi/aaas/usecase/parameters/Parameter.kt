@@ -11,35 +11,41 @@ sealed class Parameter<T : Any> private constructor(open var value: T, open val 
         @JvmStatic
         fun <T : Any> ofPrimitive(value: T): Primitive<T> =
                 with(value.javaClass) {
-                    isSupported(this)
-                    Primitive(value, this)
+                    when (isSupported(this)) {
+                        true -> Primitive(value, this)
+                        else -> throw IllegalArgumentException("Unsupported type: ${this}")
+                    }
                 }
 
         @JvmStatic
-        fun <T : Any> of(value: Array<T?>, vectorClazz: Class<Array<T?>>, elemClazz: Class<T>): Vector<T> =
+        fun <T : Any> ofArray(value: Array<T?>, elemClazz: Class<T>): Vector<T> =
                 when (isSupported(elemClazz)) {
-                    true -> Vector(value, vectorClazz, elemClazz)
+                    true -> Vector(value, value.javaClass, elemClazz)
                     else -> throw IllegalArgumentException("Unsupported type: ${elemClazz.canonicalName}")
                 }
 
         @JvmStatic
-        fun <T : Any> ofNN(value: Array<T>, vectorClazz: Class<Array<T>>, elemClazz: Class<T>): Vector<T> =
-                of(value as Array<T?>, vectorClazz as Class<Array<T?>>, elemClazz)
+        fun <T : Any> ofArrayNotNull(value: Array<T>, elemClazz: Class<T>): Vector<T> =
+                ofArray(value as Array<T?>, elemClazz)
 
         @JvmStatic
-        fun of(value: Array<Column>): DataFrame =
-                with(value.map { it.second.elemClazz }.filterNot { isSupported(it) }) {
-                    when (size) {
-                        0    -> when (value.map { it.second.value.size }.distinct().size) {
-                            1    -> DataFrame(value)
-                            else -> throw IllegalArgumentException("")
-                        }
-                        else -> {
-                            val notSupportedClasses = joinToString()
-                            throw IllegalArgumentException("Unsupported types: $notSupportedClasses")
-                        }
-                    }
+        fun <T : Any> ofArrayNotNull(value: Array<T>): Vector<T> =
+                ofArrayNotNull(value, value[0].javaClass)
+
+        @JvmStatic
+        fun ofDataFrame(value: Array<Column>): DataFrame {
+            val unsupported = value.map { it.vector.elemClazz }.filterNot { isSupported(it) }
+            return when (unsupported.size) {
+                0 -> when (value.map { it.vector.value.size }.distinct().size) {
+                    1 -> DataFrame(value)
+                    else -> throw IllegalArgumentException("")
                 }
+                else -> {
+                    val notSupportedClasses = unsupported.joinToString()
+                    throw IllegalArgumentException("Unsupported types: $notSupportedClasses")
+                }
+            }
+        }
 
         @JvmStatic
         private fun isSupported(clazz: Class<*>): Boolean = supportedClasses.contains(clazz)
@@ -47,21 +53,24 @@ sealed class Parameter<T : Any> private constructor(open var value: T, open val 
 }
 
 data class Primitive<T : Any> internal constructor(override var value: T, override val clazz: Class<T>)
-    : Parameter<T>(value, clazz)
+    : Parameter<T>(value, clazz) {
+}
 
 data class Vector<T : Any> internal constructor(override var value: Array<T?>, override val clazz: Class<Array<T?>>, val elemClazz: Class<*>)
     : Parameter<Array<T?>>(value, clazz)
 
-typealias Column = Pair<Symbol, Vector<Any>>
+//typealias Column = Pair<Symbol, Vector<Any>>
+
+data class Column(val symbol: Symbol, val vector: Vector< in Any>)
 
 data class DataFrame internal constructor(override var value: Array<Column>, override val clazz: Class<Array<Column>>)
     : Parameter<Array<Column>>(value, clazz) {
 
-    constructor(value: Array<Column>) : this(value, clazz())
+    internal constructor(value: Array<Column>) : this(value, clazz())
 
     companion object {
-        fun clazz(): Class<Array<Column>> {
-            val vector = of(arrayOf<Boolean?>(), Array<Boolean?>::class.java, Boolean::class.java)
+        private fun clazz(): Class<Array<Column>> {
+            val vector = ofArray(arrayOf<Boolean?>(), Boolean::class.java)
             return arrayOf(Column("A", vector as Vector<Any>)).javaClass
         }
     }
