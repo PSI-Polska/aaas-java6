@@ -4,10 +4,14 @@ import pl.psi.aaas.usecase.Symbol
 import java.time.ZonedDateTime
 
 // TODO make this Iterable< ??? >
-sealed class Parameter<T : Any> private constructor(open var value: T, open val clazz: Class<T>) {
+sealed class Parameter<T : Any>(open var value: T, open val clazz: Class<T>) {
     companion object {
         @JvmStatic
-        val supportedClasses: List<Class<*>> = listOf(String::class.java, Long::class.java, Double::class.java, Boolean::class.java, ZonedDateTime::class.java)
+        val supportedClasses: List<Class<*>> = listOf(String::class.java,
+                java.lang.Long::class.java, Long::class.java,
+                java.lang.Double::class.java, Double::class.java,
+                java.lang.Boolean::class.java, Boolean::class.java,
+                ZonedDateTime::class.java)
 
         @JvmStatic
         fun <T : Any> ofPrimitive(value: T): Primitive<T> =
@@ -24,6 +28,10 @@ sealed class Parameter<T : Any> private constructor(open var value: T, open val 
                     true -> Vector(value, value.javaClass, elemClazz)
                     else -> throw IllegalArgumentException("Unsupported type: ${elemClazz.canonicalName}")
                 }
+
+//        @JvmStatic
+//        fun <T : Any> ofArray(value: Array<T?>, elemClazz: Class<T>): Vector<T> =
+//                ofArray()
 
         @JvmStatic
         fun <T : Any> ofArrayNotNull(value: Array<T>, elemClazz: Class<T>): Vector<T> =
@@ -80,6 +88,4 @@ data class DataFrame internal constructor(override var value: Array<Column>, ove
         }
     }
 }
-
-//data class Matrix() TODO
 
