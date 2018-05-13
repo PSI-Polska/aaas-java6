@@ -10,14 +10,14 @@ import pl.psi.aaas.usecase.CalculationDefinition
 import pl.psi.aaas.usecase.parameters.Parameter
 import java.time.ZonedDateTime
 
-internal class RPrimitiveTransceiverFactory<in V : Parameter<*>, R>(
+internal class RPrimitiveTransceiver<in V : Parameter<*>, R>(
         override val session: RConnection,
         private val outTransformer: (v: V) -> REXP,
         private val inTransformer: (r: REXP) -> R?)
     : RNativeTransceiver<V, R>(session, outTransformer, inTransformer) {
 
     companion object {
-        fun string(session: RConnection) = RPrimitiveTransceiverFactory<Parameter<String>, String>(
+        fun string(session: RConnection) = RPrimitiveTransceiver<Parameter<String>, String>(
                 session,
                 { REXPString(it.value) },
                 {
@@ -25,7 +25,7 @@ internal class RPrimitiveTransceiverFactory<in V : Parameter<*>, R>(
                     else null
                 })
 
-        fun long(session: RConnection) = RPrimitiveTransceiverFactory<Parameter<Long>, Long>(
+        fun long(session: RConnection) = RPrimitiveTransceiver<Parameter<Long>, Long>(
                 session,
                 { REXPDouble(it.value.toDouble()) },
                 {
@@ -33,7 +33,7 @@ internal class RPrimitiveTransceiverFactory<in V : Parameter<*>, R>(
                     else null
                 })
 
-        fun double(session: RConnection) = RPrimitiveTransceiverFactory<Parameter<Double>, Double>(
+        fun double(session: RConnection) = RPrimitiveTransceiver<Parameter<Double>, Double>(
                 session,
                 { REXPDouble(it.value) },
                 {
@@ -41,7 +41,7 @@ internal class RPrimitiveTransceiverFactory<in V : Parameter<*>, R>(
                     else null
                 })
 
-        fun boolean(session: RConnection) = RPrimitiveTransceiverFactory<Parameter<Boolean>, Boolean>(
+        fun boolean(session: RConnection) = RPrimitiveTransceiver<Parameter<Boolean>, Boolean>(
                 session,
                 { REXPLogical(it.value) },
                 {
@@ -79,6 +79,7 @@ internal class DateTimeTransceiver(override val session: RConnection)
     }
 
     override fun receive(name: String, result: Any?, definition: CalculationDefinition): Parameter<ZonedDateTime>? {
-        TODO("not implemented")
+//        TODO("not implemented")
+        return null
     }
 }

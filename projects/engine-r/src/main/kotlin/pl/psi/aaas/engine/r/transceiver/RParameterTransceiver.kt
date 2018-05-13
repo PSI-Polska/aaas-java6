@@ -20,7 +20,7 @@ open class RNativeTransceiver<in V : Parameter<*>, R>(
             session.assign(name, outTransformer(value))
 
     override fun receive(name: String, result: Any?, definition: CalculationDefinition): R? {
-        val result = session.get(name, null, false)
+        val result = session.get(name, null, true)
         return if (result.isNull)
             null
         else
@@ -41,7 +41,8 @@ class ArrayDateTimeTransceiver(override val session: RConnection)
     }
 
     override fun receive(name: String, result: Any?, definition: CalculationDefinition): Parameter<Array<ZonedDateTime>>? {
-        TODO("not implemented")
+//        TODO("not implemented")
+        return null
     }
 }
 

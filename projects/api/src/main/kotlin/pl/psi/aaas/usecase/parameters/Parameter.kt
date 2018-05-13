@@ -65,7 +65,7 @@ data class Primitive<T : Any> internal constructor(override var value: T, overri
     : Parameter<T>(value, clazz) {
 }
 
-data class Vector<T : Any> internal constructor(override var value: Array<T?>, override val clazz: Class<Array<T?>>, val elemClazz: Class<*>)
+data class Vector<T : Any> internal constructor(override var value: Array<T?> = emptyArray<Any>() as Array<T?>, override val clazz: Class<Array<T?>>, val elemClazz: Class<*>)
     : Parameter<Array<T?>>(value, clazz)
 
 //typealias Column = Pair<Symbol, Vector<Any>>
@@ -76,7 +76,7 @@ data class Column(val symbol: Symbol, val vector: Vector<in Any>)
 //data class Matrix<T : Any> internal constructor(override var value: Array<Array<T?>>, override val clazz: Class<Array<Array<T?>>>, val elemClazz: Class<T>)
 //    : Parameter<Array<Array<T?>>>(value, clazz)
 
-data class DataFrame internal constructor(override var value: Array<Column>, override val clazz: Class<Array<Column>>)
+data class DataFrame internal constructor(override var value: Array<Column> = emptyArray(), override val clazz: Class<Array<Column>>)
     : Parameter<Array<Column>>(value, clazz) {
 
     internal constructor(value: Array<Column>) : this(value, clazz())
