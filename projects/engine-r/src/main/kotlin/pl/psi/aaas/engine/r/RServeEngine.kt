@@ -6,6 +6,7 @@ import org.slf4j.LoggerFactory
 import pl.psi.aaas.Engine
 import pl.psi.aaas.engine.r.RServeEngine.Companion.baseUserScriptPath
 import pl.psi.aaas.engine.r.RServeEngine.Companion.log
+import pl.psi.aaas.engine.r.transceiver.RPrimitiveTransceiverFactory
 import pl.psi.aaas.engine.r.transceiver.RValuesTransceiverFactory
 import pl.psi.aaas.usecase.CalculationDefinition
 import pl.psi.aaas.usecase.CalculationDefinitonWithValues
@@ -27,7 +28,7 @@ class RServeEngine<in D : CalculationDefinitonWithValues<V>, V, out R>(private v
     override fun call(calcDef: D): R? =
             try {
                 val conn = connectionProvider.getConnection()
-                val tsTransceiver = RValuesTransceiverFactory.get<D>(conn)
+                val tsTransceiver = RValuesTransceiverFactory.get(conn)
                 log.debug("Evaluating $calcDef")
 
                 calcDef.sourceScript(conn)
@@ -35,7 +36,7 @@ class RServeEngine<in D : CalculationDefinitonWithValues<V>, V, out R>(private v
                 tsTransceiver.send("dfIn", calcDef.values as TSDataFrame, calcDef)
                 // TODO we can remove the above line - use only parameters?
                 calcDef.parameters.forEach {
-                    val t = RValuesTransceiverFactory.get<D>(it.value, conn)
+                    val t = RValuesTransceiverFactory.get(it.value, conn)
                     t.send(it.key, it.value, calcDef)
                 }
 
@@ -44,6 +45,7 @@ class RServeEngine<in D : CalculationDefinitonWithValues<V>, V, out R>(private v
                 log.debug("Calling script")
                 val result = conn.eval("dfOut <- run(dfIn, parameters)")
 
+                val receive = RPrimitiveTransceiverFactory.boolean(conn).receive("boolV", null, calcDef)
                 tsTransceiver.receive("dfOut", result, calcDef) as R?
             } catch (ex: RserveException) {
                 ex.printStackTrace()

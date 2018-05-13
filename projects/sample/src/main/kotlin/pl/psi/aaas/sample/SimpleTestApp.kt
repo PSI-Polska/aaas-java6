@@ -5,7 +5,6 @@ import pl.psi.aaas.Facade
 import pl.psi.aaas.engine.r.RConnectionProvider
 import pl.psi.aaas.engine.r.REngineConfiguration
 import pl.psi.aaas.engine.r.RServeEngine
-import pl.psi.aaas.usecase.parameters.Column
 import pl.psi.aaas.usecase.parameters.Parameter
 import pl.psi.aaas.usecase.timeseries.*
 import java.time.ZonedDateTime
@@ -29,9 +28,10 @@ object SimpleTestApp {
         val dtVec = Parameter.ofArrayNotNull(dtArr, ZonedDateTime::class.java)
         val longVec = Parameter.ofArrayNotNull(arrayOf(1, 2, 3L), Long::class.java)
         val doubleVec = Parameter.ofArrayNotNull(arrayOf(0.1, 0.2, 1.0))
+        val doubleNullVec = Parameter.ofArray(arrayOf(0.1, null, 1.0), Double::class.java)
         val boolVec = Parameter.ofArrayNotNull(arrayOf(true, false, true))
         val boolNullVec = Parameter.ofArray(arrayOf(true, false, null), Boolean::class.java)
-        val dfColumns = arrayOf(Column("dt", dtVec), Column("longs", longVec), Column("doubles", doubleVec))
+//        val dfColumns = arrayOf(Column("dt", dtVec), Column("longs", longVec), Column("doubles", doubleVec))
 
         val parameters = mapOf(
                 "str" to Parameter.ofPrimitive("str_value")
@@ -41,14 +41,14 @@ object SimpleTestApp {
                 , "longV" to longVec
                 , "boolV" to boolVec
                 , "boolNullV" to boolNullVec
-                , "df" to Parameter.ofDataFrame(dfColumns)
+//                , "df" to Parameter.ofDataFrame(dfColumns)
         )
 
         return TSCalcDef(inIds, outIds, begin, end, "add", parameters)
     }
 }
 
-val localConfiguration = REngineConfiguration("192.168.99.100", 6311)
+val localConfiguration = REngineConfiguration("localhost", 6311)
 
 class LocalRConnectionProvider(override var configuration: REngineConfiguration = localConfiguration) : RConnectionProvider
 
