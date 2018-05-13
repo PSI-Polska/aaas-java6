@@ -27,9 +27,9 @@ object SimpleTestApp {
         val strVec = Parameter.ofArrayNotNull(strArr, String::class.java)
         val dtVec = Parameter.ofArrayNotNull(dtArr, ZonedDateTime::class.java)
         val longVec = Parameter.ofArrayNotNull(arrayOf(1, 2, 3L), Long::class.java)
-        val doubleVec = Parameter.ofArrayNotNull(arrayOf(0.1, 0.2, 1.0))
+        val doubleVec = Parameter.ofArrayNotNull(arrayOf(0.1, 0.2, 1.0), Double::class.java)
         val doubleNullVec = Parameter.ofArray(arrayOf(0.1, null, 1.0), Double::class.java)
-        val boolVec = Parameter.ofArrayNotNull(arrayOf(true, false, true))
+        val boolVec = Parameter.ofArrayNotNull(arrayOf(true, false, true), Boolean::class.java)
         val boolNullVec = Parameter.ofArray(arrayOf(true, false, null), Boolean::class.java)
 //        val dfColumns = arrayOf(Column("dt", dtVec), Column("longs", longVec), Column("doubles", doubleVec))
 

@@ -3,6 +3,22 @@ package pl.psi.aaas.usecase.parameters
 import pl.psi.aaas.usecase.Symbol
 import java.time.ZonedDateTime
 
+/**
+ * Parameter class represents all values communicated with the [pl.psi.aaas.Engine] (both ways).
+ * Parameter is used by [pl.psi.aaas.EngineValuesSender] and [pl.psi.aaas.EngineValuesReceiver].
+ * Parameter has four implementations:
+ * * [Primitive]
+ * * [Vector]
+ * * [Matrix]
+ * * [DataFrame]
+ *
+ * Currently supported types are:
+ * * String
+ * * Long
+ * * Double
+ * * Boolean
+ * * ZonedDateTime
+ */
 // TODO make this Iterable< ??? >
 sealed class Parameter<T : Any>(open var value: T, open val clazz: Class<T>) {
     companion object {
@@ -13,6 +29,9 @@ sealed class Parameter<T : Any>(open var value: T, open val clazz: Class<T>) {
                 java.lang.Boolean::class.java, Boolean::class.java,
                 ZonedDateTime::class.java)
 
+        /**
+         * Returns new [Primitive] value.
+         */
         @JvmStatic
         fun <T : Any> ofPrimitive(value: T): Primitive<T> =
                 with(value.javaClass) {
@@ -22,6 +41,13 @@ sealed class Parameter<T : Any>(open var value: T, open val clazz: Class<T>) {
                     }
                 }
 
+        /**
+         * Returns a [Vector] of nullable elements.
+         *
+         * @param T array element type
+         * @param value the array
+         * @param elemClazz Class of element of an array
+         */
         @JvmStatic
         fun <T : Any> ofArray(value: Array<T?>, elemClazz: Class<T>): Vector<T> =
                 when (isSupported(elemClazz)) {
@@ -29,18 +55,20 @@ sealed class Parameter<T : Any>(open var value: T, open val clazz: Class<T>) {
                     else -> throw IllegalArgumentException("Unsupported type: ${elemClazz.canonicalName}")
                 }
 
-//        @JvmStatic
-//        fun <T : Any> ofArray(value: Array<T?>, elemClazz: Class<T>): Vector<T> =
-//                ofArray()
-
+        /**
+         * Returns a [Vector] of not null elements.
+         *
+         * @param T array element type
+         * @param value the array
+         * @param elemClazz Class of element of an array
+         */
         @JvmStatic
         fun <T : Any> ofArrayNotNull(value: Array<T>, elemClazz: Class<T>): Vector<T> =
                 ofArray(value as Array<T?>, elemClazz)
 
-        @JvmStatic
-        fun <T : Any> ofArrayNotNull(value: Array<T>): Vector<T> =
-                ofArrayNotNull(value, value[0].javaClass)
-
+        /**
+         * Returns a [DataFrame] - array of [Column]s.
+         */
         @JvmStatic
         fun ofDataFrame(value: Array<Column>): DataFrame {
             val unsupported = value.map { it.vector.elemClazz }.filterNot { isSupported(it) }
@@ -61,21 +89,41 @@ sealed class Parameter<T : Any>(open var value: T, open val clazz: Class<T>) {
     }
 }
 
+/**
+ * Primitive value that can be sent and received to the [pl.psi.aaas.Engine].
+ *
+ * Currently supported types are:
+ * * String
+ * * Long
+ * * Double
+ * * Boolean
+ * * ZonedDateTime
+ */
 data class Primitive<T : Any> internal constructor(override var value: T, override val clazz: Class<T>)
-    : Parameter<T>(value, clazz) {
-}
+    : Parameter<T>(value, clazz)
 
+/**
+ * Vector of primitive values.
+ * Supports only types supported by [Primitive].
+ */
 data class Vector<T : Any> internal constructor(override var value: Array<T?> = emptyArray<Any>() as Array<T?>, override val clazz: Class<Array<T?>>, val elemClazz: Class<*>)
     : Parameter<Array<T?>>(value, clazz)
 
-//typealias Column = Pair<Symbol, Vector<Any>>
-
+/**
+ * Column of [DataFrame] consists of:
+ * @param symbol column name
+ * @param vector rows of given column
+ */
 data class Column(val symbol: Symbol, val vector: Vector<in Any>)
 
 // TODO impl me!!
 //data class Matrix<T : Any> internal constructor(override var value: Array<Array<T?>>, override val clazz: Class<Array<Array<T?>>>, val elemClazz: Class<T>)
 //    : Parameter<Array<Array<T?>>>(value, clazz)
 
+/**
+ * Represents DataFrame - array of names, heterogeneous [Vector]s.
+ * Only types supported by [Vector] can be used.
+ */
 data class DataFrame internal constructor(override var value: Array<Column> = emptyArray(), override val clazz: Class<Array<Column>>)
     : Parameter<Array<Column>>(value, clazz) {
 
@@ -83,6 +131,7 @@ data class DataFrame internal constructor(override var value: Array<Column> = em
 
     companion object {
         private fun clazz(): Class<Array<Column>> {
+            // just a "hack" to have instance of and array of columns
             val vector = ofArray(arrayOf<Boolean?>(), Boolean::class.java)
             return arrayOf(Column("A", vector as Vector<Any>)).javaClass
         }

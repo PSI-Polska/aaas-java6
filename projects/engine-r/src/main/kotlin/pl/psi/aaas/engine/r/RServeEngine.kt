@@ -6,7 +6,6 @@ import org.slf4j.LoggerFactory
 import pl.psi.aaas.Engine
 import pl.psi.aaas.engine.r.RServeEngine.Companion.baseUserScriptPath
 import pl.psi.aaas.engine.r.RServeEngine.Companion.log
-import pl.psi.aaas.engine.r.transceiver.RPrimitiveTransceiver
 import pl.psi.aaas.engine.r.transceiver.RValuesTransceiverFactory
 import pl.psi.aaas.usecase.CalculationDefinition
 import pl.psi.aaas.usecase.CalculationDefinitonWithValues
@@ -47,7 +46,7 @@ class RServeEngine<in D : CalculationDefinitonWithValues<V>, V, out R>(private v
 
                 val retMap = calcDef.outParameters.map { it.key to RValuesTransceiverFactory.get(it.value, conn) }
                         .map { it.first to it.second.receive(it.first, null, calcDef) }.toMap()
-                println(retMap.entries.joinToString())
+                log.debug(retMap.entries.joinToString())
 
                 tsTransceiver.receive("dfOut", result, calcDef) as R?
             } catch (ex: RserveException) {
