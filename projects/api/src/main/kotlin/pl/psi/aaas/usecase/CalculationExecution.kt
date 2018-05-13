@@ -29,6 +29,7 @@ interface CalculationDefinitonWithValues<out V> : CalculationDefinition {
 /**
  * CalculationExecution interface describes calculation use cases.
  */
+@Deprecated("This class is destined for removal in 0.3. All parameters will be sent with the help of Parameter class without need to implement default use cases in the library.", replaceWith = ReplaceWith("In 0.3 There will be no CalculationExecution class."))
 interface CalculationExecution<in T : CalculationDefinition, out V> {
     /**
      * Call the calculation.

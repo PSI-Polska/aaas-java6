@@ -11,6 +11,7 @@ import java.time.Duration
  * CalculationExecution implementation based on TimeSeries.
  * TimeSeries values are read from [TimeSeriesRepository] before the call and the results are saved back with repository after the call.
  */
+@Deprecated("This class is destined for removal in 0.3. All parameters will be sent with the help of Parameter class without need to implement default use cases in the library.", replaceWith = ReplaceWith("In 0.3 There will be no CalculationExecution class."))
 class TSCalculationExecution(val tsRepository: TSRepository,
                              val engine: Engine<TSCalcDefWithValues, TSDataFrame, TSDataFrame>)
     : CalculationExecution<TSCalculationDefinition, Unit> {
