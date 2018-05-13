@@ -22,7 +22,7 @@
         <maven.compiler.source>1.8</maven.compiler.source>
         <maven.compiler.target>1.8</maven.compiler.target>
         <kotlin.compiler.incremental>true</kotlin.compiler.incremental>
-        <version.kotlin>1.2.30</version.kotlin>
+        <version.kotlin>1.2.41</version.kotlin>
         <version.kotlintest>2.0.7</version.kotlintest>
         <version.dokka>0.9.15</version.dokka>
 
