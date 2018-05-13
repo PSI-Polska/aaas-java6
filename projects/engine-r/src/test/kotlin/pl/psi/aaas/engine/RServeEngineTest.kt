@@ -43,7 +43,7 @@ class RServeEngineTest : StringSpec() {
         "Engine executes a run method" {
             out.call(ValidDefinition)
 
-            verify(conn).eval("dfOut <- run(dfIn, parameters)")
+            verify(conn).eval("dfOut <- run(dfIn, inParameters)")
         }
 
         "Engine returns MappedTS" {

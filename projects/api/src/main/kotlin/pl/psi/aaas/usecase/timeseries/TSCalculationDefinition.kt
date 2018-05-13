@@ -31,24 +31,26 @@ interface TSCalculationDefinition : CalculationDefinition {
  * @property begin begin date ofPrimitive Time Series
  * @property end end date ofPrimitive Time Series
  * @property calculationScript TODO
- * @property parameters TODO
+ * @property inParameters TODO
  */
 data class TSCalcDef(override val timeSeriesIdsIn: Map<Symbol, Long> = emptyMap(),
                      override val timeSeriesIdsOut: Map<Symbol, Long> = emptyMap(),
                      override val begin: ZonedDateTime,
                      override val end: ZonedDateTime,
                      override val calculationScript: String,
-                     override val parameters: Parameters = emptyMap()) : TSCalculationDefinition
+                     override val inParameters: Parameters = emptyMap(),
+                     override val outParameters: Parameters = emptyMap()) : TSCalculationDefinition
 
 data class TSCalcDefWithValues(override val timeSeriesIdsIn: Map<Symbol, Long>,
                                override val timeSeriesIdsOut: Map<Symbol, Long>,
                                override val begin: ZonedDateTime,
                                override val end: ZonedDateTime,
                                override val calculationScript: String,
-                               override val parameters: Parameters,
+                               override val inParameters: Parameters,
+                               override val outParameters: Parameters,
                                override val values: TSDataFrame)
     : TSCalculationDefinition, CalculationDefinitonWithValues<TSDataFrame> {
 
     constructor(def: TSCalculationDefinition, values: TSDataFrame)
-            : this(def.timeSeriesIdsIn, def.timeSeriesIdsOut, def.begin, def.end, def.calculationScript, def.parameters, values)
+            : this(def.timeSeriesIdsIn, def.timeSeriesIdsOut, def.begin, def.end, def.calculationScript, def.inParameters, def.outParameters, values)
 }

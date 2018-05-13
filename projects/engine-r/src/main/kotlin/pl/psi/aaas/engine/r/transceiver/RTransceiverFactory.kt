@@ -19,7 +19,7 @@ import java.time.ZonedDateTime
 object RValuesTransceiverFactory {
     fun get(param: Parameter<*>, conn: RConnection): RValuesTransceiver<Parameter<*>, *, CalculationDefinition> =
             when (param) {
-                is Primitive -> primitiveTransceiver(param, conn)
+                is Primitive -> primitiveTransceiver(param.clazz as Class<Any>, conn)
                 is Vector<*> -> vectorTransceiver(param, conn)
                 is DataFrame -> DataFrameTransceiver(conn) as RValuesTransceiver<Parameter<*>, *, CalculationDefinition>
             }
@@ -30,17 +30,17 @@ object RValuesTransceiverFactory {
         return TSValuesTransceiver(conn) as RValuesTransceiver<TSDataFrame, TSDataFrame, CalculationDefinition>
     }
 
-    private fun primitiveTransceiver(param: Primitive<*>, conn: RConnection): RValuesTransceiver<Parameter<*>, *, CalculationDefinition> =
-            when (param.clazz) {
-                String::class.java -> RPrimitiveTransceiverFactory.string(conn)
-                java.lang.Long::class.java -> RPrimitiveTransceiverFactory.long(conn)
-                Long::class.java -> RPrimitiveTransceiverFactory.long(conn)
-                java.lang.Double::class.java -> RPrimitiveTransceiverFactory.double(conn)
-                Double::class.java -> RPrimitiveTransceiverFactory.double(conn)
-                java.lang.Boolean::class.java -> RPrimitiveTransceiverFactory.boolean(conn)
-                Boolean::class.java -> RPrimitiveTransceiverFactory.boolean(conn)
+    private fun primitiveTransceiver(clazz: Class<Any>, conn: RConnection): RValuesTransceiver<Parameter<*>, *, CalculationDefinition> =
+            when (clazz) {
+                String::class.java -> RPrimitiveTransceiver.string(conn)
+                java.lang.Long::class.java -> RPrimitiveTransceiver.long(conn)
+                Long::class.java -> RPrimitiveTransceiver.long(conn)
+                java.lang.Double::class.java -> RPrimitiveTransceiver.double(conn)
+                Double::class.java -> RPrimitiveTransceiver.double(conn)
+                java.lang.Boolean::class.java -> RPrimitiveTransceiver.boolean(conn)
+                Boolean::class.java -> RPrimitiveTransceiver.boolean(conn)
                 ZonedDateTime::class.java -> DateTimeTransceiver(conn) as RValuesTransceiver<*, *, *>
-                else -> throw CalculationException("Not implemented parameter type ${param.clazz}")
+                else -> throw CalculationException("Not implemented parameter type $clazz")
             } as RValuesTransceiver<Parameter<*>, *, CalculationDefinition>
 }
 

@@ -36,6 +36,9 @@ object SimpleTestApp {
         val parameters = mapOf(
                 "str" to Parameter.ofPrimitive("str_value")
                 , "dt" to Parameter.ofPrimitive(ZonedDateTime.now())
+                , "d" to Parameter.ofPrimitive(0.75)
+                , "l" to Parameter.ofPrimitive(10L)
+                , "b" to Parameter.ofPrimitive(false)
                 , "strV" to strVec
                 , "dtV" to dtVec
                 , "longV" to longVec
@@ -44,7 +47,7 @@ object SimpleTestApp {
 //                , "df" to Parameter.ofDataFrame(dfColumns)
         )
 
-        return TSCalcDef(inIds, outIds, begin, end, "add", parameters)
+        return TSCalcDef(inIds, outIds, begin, end, "add", parameters, parameters)
     }
 }
 
