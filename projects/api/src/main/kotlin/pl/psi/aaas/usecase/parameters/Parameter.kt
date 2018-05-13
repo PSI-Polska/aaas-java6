@@ -3,6 +3,7 @@ package pl.psi.aaas.usecase.parameters
 import pl.psi.aaas.usecase.Symbol
 import java.time.ZonedDateTime
 
+// TODO make this Iterable< ??? >
 sealed class Parameter<T : Any> private constructor(open var value: T, open val clazz: Class<T>) {
     companion object {
         @JvmStatic
@@ -61,7 +62,11 @@ data class Vector<T : Any> internal constructor(override var value: Array<T?>, o
 
 //typealias Column = Pair<Symbol, Vector<Any>>
 
-data class Column(val symbol: Symbol, val vector: Vector< in Any>)
+data class Column(val symbol: Symbol, val vector: Vector<in Any>)
+
+// TODO impl me!!
+//data class Matrix<T : Any> internal constructor(override var value: Array<Array<T?>>, override val clazz: Class<Array<Array<T?>>>, val elemClazz: Class<T>)
+//    : Parameter<Array<Array<T?>>>(value, clazz)
 
 data class DataFrame internal constructor(override var value: Array<Column>, override val clazz: Class<Array<Column>>)
     : Parameter<Array<Column>>(value, clazz) {
