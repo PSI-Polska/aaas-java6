@@ -1,5 +1,7 @@
 package pl.psi.aaas.engine.r.transceiver
 
+import org.joda.time.DateTime
+import org.joda.time.DateTimeZone
 import org.rosuda.REngine.REXP
 import org.rosuda.REngine.REXPDouble
 import org.rosuda.REngine.REXPLogical
@@ -8,9 +10,6 @@ import org.rosuda.REngine.Rserve.RConnection
 import pl.psi.aaas.engine.r.RValuesTransceiver
 import pl.psi.aaas.usecase.CalculationDefinition
 import pl.psi.aaas.usecase.parameters.Parameter
-import java.time.Instant
-import java.time.ZoneOffset
-import java.time.ZonedDateTime
 
 internal class RPrimitiveTransceiver<in V : Parameter<*>, R>(
         override val session: RConnection,
@@ -71,21 +70,21 @@ internal class RPrimitiveTransceiver<in V : Parameter<*>, R>(
 }
 
 internal class DateTimeTransceiver(override val session: RConnection)
-    : RValuesTransceiver<Parameter<ZonedDateTime>, ZonedDateTime, CalculationDefinition> {
+    : RValuesTransceiver<Parameter<DateTime>, DateTime, CalculationDefinition> {
 
-    override fun send(name: String, value: Parameter<ZonedDateTime>, definition: CalculationDefinition) {
-        val epochSecond = value.value.toEpochSecond()
+    override fun send(name: String, value: Parameter<DateTime>, definition: CalculationDefinition) {
+        val epochSecond = value.value.millis / 1000
         session.assign(name, REXPDouble(epochSecond.toDouble()))
         session.voidEval("$name <- structure($name, class=c('POSIXt','POSIXct'))")
         session.voidEval("""attr($name, "tzone") <- "UTC"""")
     }
 
-    override fun receive(name: String, result: Any?, definition: CalculationDefinition): ZonedDateTime? {
+    override fun receive(name: String, result: Any?, definition: CalculationDefinition): DateTime? {
         val result = session.get(name, null, true)
         return if (result.isNull)
             null
         else with(result.asDouble().toLong()) {
-            ZonedDateTime.ofInstant(Instant.ofEpochSecond(this), ZoneOffset.UTC)
+            DateTime(this * 1000, DateTimeZone.UTC)
         }
     }
 }

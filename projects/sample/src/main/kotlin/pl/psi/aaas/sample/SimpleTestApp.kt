@@ -25,9 +25,9 @@ object SimpleTestApp {
         val end = begin.plusDays(1)
 
         val strArr = arrayOf("a", "b", "c")
-        val dtArr = arrayOf(ZonedDateTime.now().minusHours(2), ZonedDateTime.now().minusHours(1), ZonedDateTime.now())
+        val dtArr = arrayOf(DateTime.now().minusHours(2), DateTime.now().minusHours(1), DateTime.now())
         val strVec = Parameter.ofArrayNotNull(strArr, String::class.java)
-        val dtVec = Parameter.ofArrayNotNull(dtArr, ZonedDateTime::class.java)
+        val dtVec = Parameter.ofArrayNotNull(dtArr, DateTime::class.java)
         val longVec = Parameter.ofArrayNotNull(arrayOf(1, 2, 3L), Long::class.java)
         val doubleVec = Parameter.ofArrayNotNull(arrayOf(0.1, 0.2, 1.0), Double::class.java)
         val doubleNullVec = Parameter.ofArray(arrayOf(0.1, null, 1.0), Double::class.java)
@@ -37,7 +37,7 @@ object SimpleTestApp {
 
         val parameters = mapOf(
                 "str" to Parameter.ofPrimitive("str_value")
-                , "dt" to Parameter.ofPrimitive(ZonedDateTime.now())
+                , "dt" to Parameter.ofPrimitive(DateTime.now())
                 , "d" to Parameter.ofPrimitive(0.75)
                 , "l" to Parameter.ofPrimitive(10L)
                 , "b" to Parameter.ofPrimitive(false)
