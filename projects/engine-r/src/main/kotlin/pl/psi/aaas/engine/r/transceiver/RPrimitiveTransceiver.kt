@@ -8,6 +8,8 @@ import org.rosuda.REngine.Rserve.RConnection
 import pl.psi.aaas.engine.r.RValuesTransceiver
 import pl.psi.aaas.usecase.CalculationDefinition
 import pl.psi.aaas.usecase.parameters.Parameter
+import java.time.Instant
+import java.time.ZoneOffset
 import java.time.ZonedDateTime
 
 internal class RPrimitiveTransceiver<in V : Parameter<*>, R>(
@@ -69,7 +71,7 @@ internal class RPrimitiveTransceiver<in V : Parameter<*>, R>(
 }
 
 internal class DateTimeTransceiver(override val session: RConnection)
-    : RValuesTransceiver<Parameter<ZonedDateTime>, Parameter<ZonedDateTime>, CalculationDefinition> {
+    : RValuesTransceiver<Parameter<ZonedDateTime>, ZonedDateTime, CalculationDefinition> {
 
     override fun send(name: String, value: Parameter<ZonedDateTime>, definition: CalculationDefinition) {
         val epochSecond = value.value.toEpochSecond()
@@ -78,7 +80,12 @@ internal class DateTimeTransceiver(override val session: RConnection)
         session.voidEval("""attr($name, "tzone") <- "UTC"""")
     }
 
-    override fun receive(name: String, result: Any?, definition: CalculationDefinition): Parameter<ZonedDateTime>? {
-        TODO("not implemented")
+    override fun receive(name: String, result: Any?, definition: CalculationDefinition): ZonedDateTime? {
+        val result = session.get(name, null, true)
+        return if (result.isNull)
+            null
+        else with(result.asDouble().toLong()) {
+            ZonedDateTime.ofInstant(Instant.ofEpochSecond(this), ZoneOffset.UTC)
+        }
     }
 }

@@ -5,7 +5,9 @@ import pl.psi.aaas.Facade
 import pl.psi.aaas.engine.r.RConnectionProvider
 import pl.psi.aaas.engine.r.REngineConfiguration
 import pl.psi.aaas.engine.r.RServeEngine
+import pl.psi.aaas.usecase.parameters.Column
 import pl.psi.aaas.usecase.parameters.Parameter
+import pl.psi.aaas.usecase.parameters.Vector
 import pl.psi.aaas.usecase.timeseries.*
 import java.time.ZonedDateTime
 
@@ -31,16 +33,16 @@ object SimpleTestApp {
         val doubleNullVec = Parameter.ofArray(arrayOf(0.1, null, 1.0), Double::class.java)
         val boolVec = Parameter.ofArrayNotNull(arrayOf(true, false, true), Boolean::class.java)
         val boolNullVec = Parameter.ofArray(arrayOf(true, false, null), Boolean::class.java)
-//        val dfColumns = arrayOf(Column("dt", dtVec), Column("longs", longVec), Column("doubles", doubleVec))
+        val dfColumns = arrayOf(Column("dt", dtVec as Vector<Any>), Column("longs", longVec as Vector<Any>), Column("doubles", doubleVec as Vector<Any>))
 
         val parameters = mapOf(
                 "str" to Parameter.ofPrimitive("str_value")
-//                , "dt" to Parameter.ofPrimitive(ZonedDateTime.now())
+                , "dt" to Parameter.ofPrimitive(ZonedDateTime.now())
                 , "d" to Parameter.ofPrimitive(0.75)
                 , "l" to Parameter.ofPrimitive(10L)
                 , "b" to Parameter.ofPrimitive(false)
                 , "strV" to strVec
-//                , "dtV" to dtVec
+                , "dtV" to dtVec
                 , "longV" to longVec
                 , "doubleV" to doubleVec
                 , "doubleNullV" to doubleNullVec
