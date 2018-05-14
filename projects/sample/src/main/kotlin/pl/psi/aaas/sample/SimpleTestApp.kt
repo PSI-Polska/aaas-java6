@@ -35,13 +35,15 @@ object SimpleTestApp {
 
         val parameters = mapOf(
                 "str" to Parameter.ofPrimitive("str_value")
-                , "dt" to Parameter.ofPrimitive(ZonedDateTime.now())
+//                , "dt" to Parameter.ofPrimitive(ZonedDateTime.now())
                 , "d" to Parameter.ofPrimitive(0.75)
                 , "l" to Parameter.ofPrimitive(10L)
                 , "b" to Parameter.ofPrimitive(false)
                 , "strV" to strVec
-                , "dtV" to dtVec
+//                , "dtV" to dtVec
                 , "longV" to longVec
+                , "doubleV" to doubleVec
+                , "doubleNullV" to doubleNullVec
                 , "boolV" to boolVec
                 , "boolNullV" to boolNullVec
 //                , "df" to Parameter.ofDataFrame(dfColumns)
