@@ -27,10 +27,11 @@ sealed class Parameter<T : Any>(open var value: T, open val clazz: Class<T>) {
                 java.lang.Long::class.java, Long::class.java,
                 java.lang.Double::class.java, Double::class.java,
                 java.lang.Boolean::class.java, Boolean::class.java,
-                ZonedDateTime::class.java)
+                DateTime::class.java)
 
         /**
          * Returns new [Primitive] value.
+         * Value cannot be null.
          */
         @JvmStatic
         fun <T : Any> ofPrimitive(value: T): Primitive<T> =
@@ -43,6 +44,7 @@ sealed class Parameter<T : Any>(open var value: T, open val clazz: Class<T>) {
 
         /**
          * Returns a [Vector] of nullable elements.
+         * Array cannot be null.
          *
          * @param T array element type
          * @param value the array
@@ -57,6 +59,7 @@ sealed class Parameter<T : Any>(open var value: T, open val clazz: Class<T>) {
 
         /**
          * Returns a [Vector] of not null elements.
+         * Array cannot be null.
          *
          * @param T array element type
          * @param value the array
@@ -68,6 +71,7 @@ sealed class Parameter<T : Any>(open var value: T, open val clazz: Class<T>) {
 
         /**
          * Returns a [DataFrame] - array of [Column]s.
+         * Array cannot be null.
          */
         @JvmStatic
         fun ofDataFrame(value: Array<Column>): DataFrame {

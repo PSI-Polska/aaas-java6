@@ -1,9 +1,6 @@
 package pl.psi.aaas.engine.r.transceiver
 
 import org.joda.time.DateTime
-import org.rosuda.REngine.REXPDouble
-import org.rosuda.REngine.REXPLogical
-import org.rosuda.REngine.REXPString
 import org.rosuda.REngine.Rserve.RConnection
 import pl.psi.aaas.engine.r.RValuesTransceiver
 import pl.psi.aaas.engine.r.timeseries.TSValuesTransceiver
@@ -40,7 +37,7 @@ object RValuesTransceiverFactory {
                 Double::class.java -> RPrimitiveTransceiver.double(conn)
                 java.lang.Boolean::class.java -> RPrimitiveTransceiver.boolean(conn)
                 Boolean::class.java -> RPrimitiveTransceiver.boolean(conn)
-                ZonedDateTime::class.java -> DateTimeTransceiver(conn) as RValuesTransceiver<*, *, *>
+                DateTime::class.java -> DateTimeTransceiver(conn) as RValuesTransceiver<*, *, *>
                 else -> throw CalculationException("Not implemented parameter type $clazz")
             } as RValuesTransceiver<Parameter<*>, *, CalculationDefinition>
 }
@@ -52,7 +49,7 @@ private fun vectorTransceiver(param: Vector<*>, conn: RConnection): RValuesTrans
             Double::class.java -> RArrayTransceiver.double(conn) as RValuesTransceiver<Parameter<*>, *, CalculationDefinition>
             Boolean::class.java -> RArrayTransceiver.boolean(conn) as RValuesTransceiver<Parameter<*>, *, CalculationDefinition>
             java.lang.Boolean::class.java -> RArrayTransceiver.boolean(conn) as RValuesTransceiver<Parameter<*>, *, CalculationDefinition>
-            ZonedDateTime::class.java -> ArrayDateTimeTransceiver(conn) as RValuesTransceiver<Parameter<*>, *, CalculationDefinition>
+            DateTime::class.java -> ArrayDateTimeTransceiver(conn) as RValuesTransceiver<Parameter<*>, *, CalculationDefinition>
             else -> throw CalculationException("Not implemented array parameter type ${param.elemClazz}")
         } as RValuesTransceiver<Parameter<*>, *, CalculationDefinition>
 
