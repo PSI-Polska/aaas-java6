@@ -8,7 +8,7 @@ import pl.psi.aaas.usecase.Symbol
 
 // TODO maybe it is good to use only one DataFrame or MappedTS?
 
-// TODO TSDataFrame and generaly DataFrame should be a pl.psi.aaas.parameters.Parameter<??>
+// TODO TSDataFrame and generaly DataFrame should be a pl.psi.aaas.inParameters.Parameter<??>
 class TSDataFrame(columns: Array<String>, matrix: Array<Column<Double?>>) : DataFrame<Double?>(columns, matrix) {
 
     companion object {
