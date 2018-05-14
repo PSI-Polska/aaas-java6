@@ -1,8 +1,5 @@
 package pl.psi.aaas.engine.r.transceiver
 
-import org.rosuda.REngine.REXPDouble
-import org.rosuda.REngine.REXPLogical
-import org.rosuda.REngine.REXPString
 import org.rosuda.REngine.Rserve.RConnection
 import pl.psi.aaas.engine.r.RValuesTransceiver
 import pl.psi.aaas.engine.r.timeseries.TSValuesTransceiver
@@ -47,43 +44,11 @@ object RValuesTransceiverFactory {
 
 private fun vectorTransceiver(param: Vector<*>, conn: RConnection): RValuesTransceiver<Parameter<*>, *, CalculationDefinition> = //EngineValuesSender TODO
         when (param.elemClazz) {
-            String::class.java -> RNativeTransceiver<Vector<String>, Vector<String>>(conn, { REXPString(it.value) })
-                    as RValuesTransceiver<Parameter<*>, *, CalculationDefinition>
-            Long::class.java -> RNativeTransceiver<Vector<Long>, Vector<Long>>(
-                    conn, {
-                REXPDouble(it.value.map {
-                    it?.toDouble() ?: REXPDouble.NA
-                }.toDoubleArray())
-            }) as RValuesTransceiver<Parameter<*>, *, CalculationDefinition>
-            Double::class.java -> RNativeTransceiver<Vector<Double>, Vector<Double>>(
-                    conn, {
-                REXPDouble(it.value.map {
-                    it ?: REXPDouble.NA
-                }.toDoubleArray())
-            }) as RValuesTransceiver<Parameter<*>, *, CalculationDefinition>
-        // TODO 09.05.2018 kskitek: this is MONSTER!!
-            Boolean::class.java -> RNativeTransceiver<Vector<Boolean>, Vector<Boolean>>(
-                    conn, {
-                REXPLogical(it.value
-                        .map {
-                            when (it) {
-                                null -> REXPLogical.NA
-                                true -> REXPLogical.TRUE
-                                false -> REXPLogical.FALSE
-                            }
-                        }.toByteArray())
-            })
-            java.lang.Boolean::class.java -> RNativeTransceiver<Vector<Boolean>, Vector<Boolean>>(
-                    conn, {
-                REXPLogical(it.value
-                        .map {
-                            when (it) {
-                                null -> REXPLogical.NA
-                                true -> REXPLogical.TRUE
-                                false -> REXPLogical.FALSE
-                            }
-                        }.toByteArray())
-            })
+            String::class.java -> RArrayTransceiver.string(conn) as RValuesTransceiver<Parameter<*>, *, CalculationDefinition>
+            Long::class.java -> RArrayTransceiver.long(conn) as RValuesTransceiver<Parameter<*>, *, CalculationDefinition>
+            Double::class.java -> RArrayTransceiver.double(conn) as RValuesTransceiver<Parameter<*>, *, CalculationDefinition>
+            Boolean::class.java -> RArrayTransceiver.boolean(conn) as RValuesTransceiver<Parameter<*>, *, CalculationDefinition>
+            java.lang.Boolean::class.java -> RArrayTransceiver.boolean(conn) as RValuesTransceiver<Parameter<*>, *, CalculationDefinition>
             ZonedDateTime::class.java -> ArrayDateTimeTransceiver(conn) as RValuesTransceiver<Parameter<*>, *, CalculationDefinition>
             else -> throw CalculationException("Not implemented array parameter type ${param.elemClazz}")
         } as RValuesTransceiver<Parameter<*>, *, CalculationDefinition>
