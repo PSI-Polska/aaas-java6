@@ -16,55 +16,43 @@ import pl.psi.aaas.usecase.parameters.Vector
 import pl.psi.aaas.usecase.timeseries.TSDataFrame
 
 // TODO 09.05.2018 kskitek: this factory has to be generic in terms ofPrimitive Engine impl; provided separately; registration ofPrimitive impls with SPI
+// TODO rather than using instanceof and casting use visitor/handler as a chain of first
 object RValuesTransceiverFactory {
-    fun <D : CalculationDefinition> get(param: Parameter<*>, conn: RConnection): RValuesTransceiver<Parameter<*>, *, D> =
+    fun get(param: Parameter<*>, conn: RConnection): RValuesTransceiver<Parameter<*>, *, CalculationDefinition> =
             when (param) {
-                is Primitive -> primitiveTransceiver(param, conn)
+                is Primitive -> primitiveTransceiver(param.clazz as Class<Any>, conn)
                 is Vector<*> -> vectorTransceiver(param, conn)
-                is DataFrame -> DataFrameTransceiver<D>(conn) as RValuesTransceiver<Parameter<*>, *, D>
+                is DataFrame -> DataFrameTransceiver(conn) as RValuesTransceiver<Parameter<*>, *, CalculationDefinition>
             }
 
     // TODO this should be removed when TSDataFrame is Parameter<??>
-    fun <D : CalculationDefinition> get(conn: RConnection): RValuesTransceiver<TSDataFrame, TSDataFrame, D> {
+    fun get(conn: RConnection): RValuesTransceiver<TSDataFrame, TSDataFrame, CalculationDefinition> {
         // TODO 05.05.2018 kskitek: handle different V and R types
-        return TSValuesTransceiver(conn) as RValuesTransceiver<TSDataFrame, TSDataFrame, D>
+        return TSValuesTransceiver(conn) as RValuesTransceiver<TSDataFrame, TSDataFrame, CalculationDefinition>
     }
 
+    private fun primitiveTransceiver(clazz: Class<Any>, conn: RConnection): RValuesTransceiver<Parameter<*>, *, CalculationDefinition> =
+            when (clazz) {
+                String::class.java -> RPrimitiveTransceiver.string(conn)
+                java.lang.Long::class.java -> RPrimitiveTransceiver.long(conn)
+                Long::class.java -> RPrimitiveTransceiver.long(conn)
+                java.lang.Double::class.java -> RPrimitiveTransceiver.double(conn)
+                Double::class.java -> RPrimitiveTransceiver.double(conn)
+                java.lang.Boolean::class.java -> RPrimitiveTransceiver.boolean(conn)
+                Boolean::class.java -> RPrimitiveTransceiver.boolean(conn)
+                ZonedDateTime::class.java -> DateTimeTransceiver(conn) as RValuesTransceiver<*, *, *>
+                else -> throw CalculationException("Not implemented parameter type $clazz")
+            } as RValuesTransceiver<Parameter<*>, *, CalculationDefinition>
 }
 
-private fun <D : CalculationDefinition> vectorTransceiver(param: Vector<*>, conn: RConnection): RValuesTransceiver<Parameter<*>, *, D> = //EngineValuesSender TODO
+private fun vectorTransceiver(param: Vector<*>, conn: RConnection): RValuesTransceiver<Parameter<*>, *, CalculationDefinition> = //EngineValuesSender TODO
         when (param.elemClazz) {
-            String::class.java -> RNativeTransceiver<Vector<String>, Vector<String>, D>({ REXPString(it.value) }, conn)
-                    as RValuesTransceiver<Parameter<*>, *, D>
-            Long::class.java -> RNativeTransceiver<Vector<Long>, Vector<Long>, D>(
-                    { REXPDouble(it.value.map { it?.toDouble() ?: REXPDouble.NA }.toDoubleArray()) }
-                    , conn) as RValuesTransceiver<Parameter<*>, *, D>
-            Double::class.java -> RNativeTransceiver<Vector<Double>, Vector<Double>, D>(
-                    { REXPDouble(it.value.map { it ?: REXPDouble.NA }.toDoubleArray()) }
-                    , conn) as RValuesTransceiver<Parameter<*>, *, D>
-        // TODO 09.05.2018 kskitek: this is MONSTER!!
-            Boolean::class.java -> RNativeTransceiver<Vector<Boolean>, Vector<Boolean>, D>(
-                    {
-                        REXPLogical(it.value
-                                .map {
-                                    when (it) {
-                                        null -> REXPLogical.NA
-                                        true -> REXPLogical.TRUE
-                                        false -> REXPLogical.FALSE
-                                    }
-                                }.toByteArray())
-                    }
-                    , conn)
-            DateTime::class.java -> ArrayDateTimeTransceiver<D>(conn) as RValuesTransceiver<Parameter<*>, *, D>
+            String::class.java -> RArrayTransceiver.string(conn) as RValuesTransceiver<Parameter<*>, *, CalculationDefinition>
+            Long::class.java -> RArrayTransceiver.long(conn) as RValuesTransceiver<Parameter<*>, *, CalculationDefinition>
+            Double::class.java -> RArrayTransceiver.double(conn) as RValuesTransceiver<Parameter<*>, *, CalculationDefinition>
+            Boolean::class.java -> RArrayTransceiver.boolean(conn) as RValuesTransceiver<Parameter<*>, *, CalculationDefinition>
+            java.lang.Boolean::class.java -> RArrayTransceiver.boolean(conn) as RValuesTransceiver<Parameter<*>, *, CalculationDefinition>
+            ZonedDateTime::class.java -> ArrayDateTimeTransceiver(conn) as RValuesTransceiver<Parameter<*>, *, CalculationDefinition>
             else -> throw CalculationException("Not implemented array parameter type ${param.elemClazz}")
-        } as RValuesTransceiver<Parameter<*>, *, D>
+        } as RValuesTransceiver<Parameter<*>, *, CalculationDefinition>
 
-private fun <D : CalculationDefinition> primitiveTransceiver(param: Primitive<*>, conn: RConnection): RValuesTransceiver<Parameter<*>, *, D> =
-        when (param.clazz) {
-            String::class.java -> RNativeTransceiver<Parameter<String>, Parameter<String>, D>({ REXPString(it.value) }, conn)
-            Long::class.java -> RNativeTransceiver<Parameter<Long>, Parameter<Long>, D>({ REXPDouble(it.value.toDouble()) }, conn)
-            Double::class.java -> RNativeTransceiver<Parameter<Double>, Parameter<Double>, D>({ REXPDouble(it.value) }, conn)
-            Boolean::class.java -> RNativeTransceiver<Parameter<Boolean>, Parameter<Boolean>, D>({ REXPLogical(it.value) }, conn)
-            DateTime::class.java -> DateTimeTransceiver<D>(conn) as RValuesTransceiver<*, *, *>
-            else -> throw CalculationException("Not implemented parameter type ${param.clazz}")
-        } as RValuesTransceiver<Parameter<*>, *, D>

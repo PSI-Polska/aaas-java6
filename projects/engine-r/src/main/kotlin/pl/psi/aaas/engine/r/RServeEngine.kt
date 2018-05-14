@@ -27,22 +27,26 @@ class RServeEngine<in D : CalculationDefinitonWithValues<V>, V, out R>(private v
     override fun call(calcDef: D): R? =
             try {
                 val conn = connectionProvider.getConnection()
-                val tsTransceiver = RValuesTransceiverFactory.get<D>(conn)
+                val tsTransceiver = RValuesTransceiverFactory.get(conn)
                 log.debug("Evaluating $calcDef")
 
                 calcDef.sourceScript(conn)
 
                 tsTransceiver.send("dfIn", calcDef.values as TSDataFrame, calcDef)
-                // TODO we can remove the above line - use only parameters?
-                calcDef.parameters.forEach {
-                    val t = RValuesTransceiverFactory.get<D>(it.value, conn)
+                // TODO we can remove the above line - use only inParameters?
+                calcDef.inParameters.forEach {
+                    val t = RValuesTransceiverFactory.get(it.value, conn)
                     t.send(it.key, it.value, calcDef)
                 }
 
-                debugR(calcDef.parameters, conn)
+                debugR(calcDef.inParameters, conn)
 
                 log.debug("Calling script")
-                val result = conn.eval("dfOut <- run(dfIn, parameters)")
+                val result = conn.eval("dfOut <- run(dfIn, inParameters)")
+
+                val retMap = calcDef.outParameters.map { it.key to RValuesTransceiverFactory.get(it.value, conn) }
+                        .map { it.first to it.second.receive(it.first, null, calcDef) }.toMap()
+                log.debug(retMap.entries.joinToString())
 
                 tsTransceiver.receive("dfOut", result, calcDef) as R?
             } catch (ex: RserveException) {
