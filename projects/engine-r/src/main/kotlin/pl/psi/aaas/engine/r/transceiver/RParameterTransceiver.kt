@@ -1,14 +1,12 @@
 package pl.psi.aaas.engine.r.transceiver
 
 import org.rosuda.REngine.REXP
-import org.rosuda.REngine.REXPDouble
 import org.rosuda.REngine.Rserve.RConnection
 import pl.psi.aaas.engine.r.RValuesTransceiver
 import pl.psi.aaas.usecase.CalculationDefinition
 import pl.psi.aaas.usecase.parameters.DataFrame
 import pl.psi.aaas.usecase.parameters.Parameter
 import pl.psi.aaas.usecase.parameters.Vector
-import java.time.ZonedDateTime
 
 open class RNativeTransceiver<in V : Parameter<*>, R>(
         override val session: RConnection,
@@ -27,24 +25,6 @@ open class RNativeTransceiver<in V : Parameter<*>, R>(
             inTransformer(result)
     }
 }
-
-class ArrayDateTimeTransceiver(override val session: RConnection)
-    : RValuesTransceiver<Parameter<Array<ZonedDateTime>>, Parameter<Array<ZonedDateTime>>, CalculationDefinition> {
-
-    override fun send(name: String, value: Parameter<Array<ZonedDateTime>>, definition: CalculationDefinition) {
-        val epochSecond = value.value.map { it.toEpochSecond() }
-                .map { it.toDouble() }.toDoubleArray()
-
-        session.assign(name, REXPDouble(epochSecond))
-        session.voidEval("$name <- structure($name, class=c('POSIXt','POSIXct'))")
-        session.voidEval("""attr($name, "tzone") <- "UTC"""")
-    }
-
-    override fun receive(name: String, result: Any?, definition: CalculationDefinition): Parameter<Array<ZonedDateTime>>? {
-        TODO("not implemented")
-    }
-}
-
 
 class DataFrameTransceiver(override val session: RConnection)
     : RValuesTransceiver<DataFrame, DataFrame, CalculationDefinition> {
