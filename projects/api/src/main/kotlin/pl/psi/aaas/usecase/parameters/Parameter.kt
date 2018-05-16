@@ -153,6 +153,9 @@ data class DataFrame internal constructor(override var value: Array<Column> = em
     override fun isEmpty(): Boolean =
             internalMap.isEmpty()
 
+    fun rowIterator(): Iterator<Array<Any>> =
+            DataFrameIterator.of(this)
+
     internal constructor(value: Array<Column>, columnClasses: Array<Class<Any>>) : this(value, clazz(), columnClasses)
 
     companion object {
@@ -162,5 +165,27 @@ data class DataFrame internal constructor(override var value: Array<Column> = em
             return arrayOf(Column("A", vector as Vector<Any>)).javaClass
         }
     }
+}
+
+private class DataFrameIterator(private val iterators: Array<Iterator<Any>>) : Iterator<Array<Any>> {
+    companion object {
+        @JvmStatic
+        fun of(dataFrame: DataFrame): DataFrameIterator {
+            val iterators = dataFrame.value.map { it.vector.value.iterator() }.toTypedArray() as Array<Iterator<Any>>
+            return DataFrameIterator(iterators)
+        }
+    }
+
+    override fun hasNext(): Boolean =
+            if (iterators.size > 0)
+                iterators[0].hasNext()
+            else
+                false
+
+    override fun next(): Array<Any> =
+            if (!hasNext())
+                throw IndexOutOfBoundsException()
+            else
+                iterators.map { it.next() }.toTypedArray()
 }
 
