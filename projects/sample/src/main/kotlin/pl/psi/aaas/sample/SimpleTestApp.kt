@@ -34,8 +34,9 @@ object SimpleTestApp {
         val boolVec = Parameter.ofArrayNotNull(arrayOf(true, false, true), Boolean::class.java)
         val boolNullVec = Parameter.ofArray(arrayOf(true, false, null), Boolean::class.java)
         val dfColumns = arrayOf(Column("dt", dtVec as Vector<Any>), Column("longs", longVec as Vector<Any>), Column("doubles", doubleVec as Vector<Any>))
+        val dfColumnClasses = arrayOf(ZonedDateTime::class.java, Long::class.java, Double::class.java) as Array<Class<Any>>
 
-        val parameters = mapOf(
+        val parameters = mutableMapOf(
                 "str" to Parameter.ofPrimitive("str_value")
                 , "dt" to Parameter.ofPrimitive(DateTime.now())
                 , "d" to Parameter.ofPrimitive(0.75)
@@ -48,14 +49,16 @@ object SimpleTestApp {
                 , "doubleNullV" to doubleNullVec
                 , "boolV" to boolVec
                 , "boolNullV" to boolNullVec
-//                , "df" to Parameter.ofDataFrame(dfColumns)
+                , "df" to Parameter.ofDataFrame(dfColumns, dfColumnClasses)
         )
 
-        return TSCalcDef(inIds, outIds, begin, end, "add", parameters, parameters)
+        return TSCalcDef(inIds, outIds, begin, end, "add",
+                parameters,
+                parameters)
     }
 }
 
-val localConfiguration = REngineConfiguration("localhost", 6311)
+val localConfiguration = REngineConfiguration("192.168.99.100", 6311)
 
 class LocalRConnectionProvider(override var configuration: REngineConfiguration = localConfiguration) : RConnectionProvider
 

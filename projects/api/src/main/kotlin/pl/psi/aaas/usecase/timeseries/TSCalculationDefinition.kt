@@ -38,8 +38,8 @@ data class TSCalcDef(override val timeSeriesIdsIn: Map<Symbol, Long> = emptyMap(
                      override val begin: DateTime,
                      override val end: DateTime,
                      override val calculationScript: String,
-                     override val inParameters: Parameters = emptyMap(),
-                     override val outParameters: Parameters = emptyMap()) : TSCalculationDefinition
+                     override val inParameters: Parameters = mutableMapOf(),
+                     override val outParameters: Parameters = mutableMapOf()) : TSCalculationDefinition
 
 data class TSCalcDefWithValues(override val timeSeriesIdsIn: Map<Symbol, Long>,
                                override val timeSeriesIdsOut: Map<Symbol, Long>,
