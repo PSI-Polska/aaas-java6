@@ -81,7 +81,7 @@ internal class DateTimeTransceiver(override val session: RConnection)
     override fun receive(name: String, result: Any?, definition: CalculationDefinition): DateTime? {
         val result = session.get(name, null, true)
         return with(result.asDouble().toLong()) {
-            ZonedDateTime.ofInstant(Instant.ofEpochSecond(this), ZoneOffset.UTC)
+            DateTime(this * 1000, DateTimeZone.UTC)
         }
     }
 }

@@ -34,7 +34,7 @@ object SimpleTestApp {
         val boolVec = Parameter.ofArrayNotNull(arrayOf(true, false, true), Boolean::class.java)
         val boolNullVec = Parameter.ofArray(arrayOf(true, false, null), Boolean::class.java)
         val dfColumns = arrayOf(Column("dt", dtVec as Vector<Any>), Column("longs", longVec as Vector<Any>), Column("doubles", doubleVec as Vector<Any>))
-        val dfColumnClasses = arrayOf(ZonedDateTime::class.java, Long::class.java, Double::class.java) as Array<Class<Any>>
+        val dfColumnClasses = arrayOf(DateTime::class.java, Long::class.java, Double::class.java) as Array<Class<Any>>
 
         val parameters = mutableMapOf(
                 "str" to Parameter.ofPrimitive("str_value")
