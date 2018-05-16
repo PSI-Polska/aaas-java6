@@ -82,7 +82,7 @@ internal class RArrayTransceiver<in V : Parameter<Array<*>>, R>(
     }
 }
 
-class ArrayDateTimeTransceiver(override val session: RConnection)
+internal class ArrayDateTimeTransceiver(override val session: RConnection)
     : RValuesTransceiver<Parameter<Array<ZonedDateTime>>, Array<ZonedDateTime?>, CalculationDefinition> {
 
     override fun send(name: String, value: Parameter<Array<ZonedDateTime>>, definition: CalculationDefinition) {
@@ -95,14 +95,13 @@ class ArrayDateTimeTransceiver(override val session: RConnection)
     }
 
     override fun receive(name: String, result: Any?, definition: CalculationDefinition): Array<ZonedDateTime?>? {
-        val result = session.get(name, null, true)
-        return if (result.isNull)
-            null
-        else with(result.asDoubles()) {
-            this.map { it?.toLong() ?: 0L }
-                    .map { Instant.ofEpochSecond(it) }
-                    .map { ZonedDateTime.ofInstant(it, ZoneOffset.UTC) }.toTypedArray()
-        }
+        val result = if (result == null)
+            session.get(name, null, true)
+        else result as REXP
+
+        return result.asDoubles().map { it.toLong() }
+                .map { Instant.ofEpochSecond(it) }
+                .map { ZonedDateTime.ofInstant(it, ZoneOffset.UTC) }.toTypedArray()
     }
 }
 
