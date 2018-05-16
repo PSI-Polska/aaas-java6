@@ -88,6 +88,9 @@ sealed class Parameter<T : Any>(open var value: T, open val clazz: Class<T>) {
             }
         }
 
+        fun emptyVector(elemClazz: Class<out Any>): Vector<Any> =
+                ofArrayNotNull(emptyArray(), elemClazz as Class<Any>)
+
         @JvmStatic
         private fun isSupported(clazz: Class<*>): Boolean = supportedClasses.contains(clazz)
     }

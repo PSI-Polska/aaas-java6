@@ -6,6 +6,7 @@ import pl.psi.aaas.Facade
 import pl.psi.aaas.engine.r.RConnectionProvider
 import pl.psi.aaas.engine.r.REngineConfiguration
 import pl.psi.aaas.engine.r.RServeEngine
+import pl.psi.aaas.usecase.Parameters
 import pl.psi.aaas.usecase.parameters.Column
 import pl.psi.aaas.usecase.parameters.Parameter
 import pl.psi.aaas.usecase.parameters.Vector
@@ -52,9 +53,16 @@ object SimpleTestApp {
                 , "df" to Parameter.ofDataFrame(dfColumns, dfColumnClasses)
         )
 
+        val outColumns = arrayOf(Column("DateTime", Parameter.emptyVector(DateTime::class.java)),
+                Column("A", Parameter.emptyVector(Double::class.java)),
+                Column("B", Parameter.emptyVector(Double::class.java)))
+        val outClassees = arrayOf(DateTime::class.java, Double::class.java, Double::class.java) as Array<Class<Any>>
+        val outDF = Parameter.ofDataFrame(outColumns, outClassees)
+        val outParameters = mapOf("dfOut" to outDF)
+
         return TSCalcDef(inIds, outIds, begin, end, "add",
                 parameters,
-                parameters)
+                outParameters)
     }
 }
 
@@ -63,7 +71,7 @@ val localConfiguration = REngineConfiguration("192.168.99.100", 6311)
 class LocalRConnectionProvider(override var configuration: REngineConfiguration = localConfiguration) : RConnectionProvider
 
 object FixedTSFacade : Facade<TSCalculationDefinition> {
-    private val engine: Engine<TSCalcDefWithValues, TSDataFrame, TSDataFrame> = RServeEngine(LocalRConnectionProvider())
+    private val engine: Engine<TSCalcDefWithValues, TSDataFrame, Parameters> = RServeEngine(LocalRConnectionProvider())
     private val tsRepository: TSRepository = MockTimeSeriesRepository()
 
     override fun callScript(calcDef: TSCalculationDefinition) {
