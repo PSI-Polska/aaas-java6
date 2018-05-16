@@ -14,7 +14,7 @@ import java.time.ZonedDateTime
 
 // TODO 09.05.2018 kskitek: this factory has to be generic in terms ofPrimitive Engine impl; provided separately; registration ofPrimitive impls with SPI
 // TODO rather than using instanceof and casting use visitor/handler as a chain of first
-object RValuesTransceiverFactory {
+internal object RValuesTransceiverFactory {
     fun get(param: Parameter<*>, conn: RConnection): RValuesTransceiver<Parameter<*>, *, CalculationDefinition> =
             when (param) {
                 is Primitive -> primitiveTransceiver(param.clazz as Class<Any>, conn)

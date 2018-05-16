@@ -46,7 +46,7 @@ class RServeEngine<in D : CalculationDefinitonWithValues<V>, V, out R>(private v
 
                 val retMap = calcDef.outParameters.map { it.key to RValuesTransceiverFactory.get(it.value, conn) }
                         .map { it.first to it.second.receive(it.first, null, calcDef) }.toMap()
-                log.debug(retMap.entries.joinToString())
+                log.debug(retMap.entries.joinToString("\n"))
 
                 tsTransceiver.receive("dfOut", result, calcDef) as R?
             } catch (ex: RserveException) {
