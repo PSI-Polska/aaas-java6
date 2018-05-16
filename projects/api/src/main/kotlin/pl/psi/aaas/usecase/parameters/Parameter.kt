@@ -74,11 +74,11 @@ sealed class Parameter<T : Any>(open var value: T, open val clazz: Class<T>) {
          * Array cannot be null.
          */
         @JvmStatic
-        fun ofDataFrame(value: Array<Column>): DataFrame {
+        fun ofDataFrame(value: Array<Column>, columnClasses: Array<Class<Any>>): DataFrame {
             val unsupported = value.map { it.vector.elemClazz }.filterNot { isSupported(it) }
             return when (unsupported.size) {
                 0 -> when (value.map { it.vector.value.size }.distinct().size) {
-                    1 -> DataFrame(value)
+                    1    -> DataFrame(value, columnClasses)
                     else -> throw IllegalArgumentException("")
                 }
                 else -> {
@@ -110,7 +110,8 @@ data class Primitive<T : Any> internal constructor(override var value: T, overri
  * Vector of primitive values.
  * Supports only types supported by [Primitive].
  */
-data class Vector<T : Any> internal constructor(override var value: Array<T?> = emptyArray<Any>() as Array<T?>, override val clazz: Class<Array<T?>>, val elemClazz: Class<*>)
+data class Vector<T : Any> internal constructor(override var value: Array<T?> = emptyArray<Any>() as Array<T?>,
+                                                override val clazz: Class<Array<T?>>, val elemClazz: Class<*>)
     : Parameter<Array<T?>>(value, clazz)
 
 /**
@@ -128,10 +129,12 @@ data class Column(val symbol: Symbol, val vector: Vector<in Any>)
  * Represents DataFrame - array of names, heterogeneous [Vector]s.
  * Only types supported by [Vector] can be used.
  */
-data class DataFrame internal constructor(override var value: Array<Column> = emptyArray(), override val clazz: Class<Array<Column>>)
+data class DataFrame internal constructor(override var value: Array<Column> = emptyArray(),
+                                          override val clazz: Class<Array<Column>>,
+                                          val columnClasses: Array<Class<Any>>)
     : Parameter<Array<Column>>(value, clazz) {
 
-    internal constructor(value: Array<Column>) : this(value, clazz())
+    internal constructor(value: Array<Column>, columnClasses: Array<Class<Any>>) : this(value, clazz(), columnClasses)
 
     companion object {
         private fun clazz(): Class<Array<Column>> {

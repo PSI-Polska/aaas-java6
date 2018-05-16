@@ -60,12 +60,11 @@ internal class RPrimitiveTransceiver<in V : Parameter<*>, R>(
             session.assign(name, outTransformer(value))
 
     override fun receive(name: String, result: Any?, definition: CalculationDefinition): R? {
-        val result = session.get(name, null, true)
-        return if (result.isNull)
-            null
-        else {
-            inTransformer(result)
-        }
+        val result = if (result == null)
+            session.get(name, null, true)
+        else
+            result as REXP
+        return inTransformer(result)
     }
 }
 
@@ -81,10 +80,8 @@ internal class DateTimeTransceiver(override val session: RConnection)
 
     override fun receive(name: String, result: Any?, definition: CalculationDefinition): DateTime? {
         val result = session.get(name, null, true)
-        return if (result.isNull)
-            null
-        else with(result.asDouble().toLong()) {
-            DateTime(this * 1000, DateTimeZone.UTC)
+        return with(result.asDouble().toLong()) {
+            ZonedDateTime.ofInstant(Instant.ofEpochSecond(this), ZoneOffset.UTC)
         }
     }
 }
