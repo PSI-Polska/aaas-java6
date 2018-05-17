@@ -78,7 +78,7 @@ sealed class Parameter<T : Any>(open var value: T, open val clazz: Class<T>) {
             val unsupported = value.map { it.vector.elemClazz }.filterNot { isSupported(it) }
             return when (unsupported.size) {
                 0 -> when (value.map { it.vector.value.size }.distinct().size) {
-                    1    -> DataFrame(value, columnClasses)
+                    1 -> DataFrame(value, columnClasses)
                     else -> throw IllegalArgumentException("")
                 }
                 else -> {
@@ -135,7 +135,33 @@ data class Column(val symbol: Symbol, val vector: Vector<in Any>)
 data class DataFrame internal constructor(override var value: Array<Column> = emptyArray(),
                                           override val clazz: Class<Array<Column>>,
                                           val columnClasses: Array<Class<Any>>)
-    : Parameter<Array<Column>>(value, clazz) {
+    : Parameter<Array<Column>>(value, clazz), Map<String, Vector<Any>> {
+
+    private val internalMap: Map<String, Vector<Any>> by lazy { value.map { it.symbol to it.vector as Vector<Any> }.toMap() }
+
+    override val entries: Set<Map.Entry<String, Vector<Any>>>
+        get() = internalMap.entries
+    override val keys: Set<String>
+        get() = internalMap.keys
+    override val size: Int
+        get() = internalMap.size
+    override val values: Collection<Vector<Any>>
+        get() = internalMap.values
+
+    override fun containsKey(key: String): Boolean =
+            keys.contains(key)
+
+    override fun containsValue(value: Vector<Any>): Boolean =
+            values.contains(value)
+
+    override fun get(key: String): Vector<Any>? =
+            internalMap[key]
+
+    override fun isEmpty(): Boolean =
+            internalMap.isEmpty()
+
+    fun rowIterator(): Iterator<Array<Any>> =
+            DataFrameIterator.of(this)
 
     internal constructor(value: Array<Column>, columnClasses: Array<Class<Any>>) : this(value, clazz(), columnClasses)
 
@@ -146,5 +172,27 @@ data class DataFrame internal constructor(override var value: Array<Column> = em
             return arrayOf(Column("A", vector as Vector<Any>)).javaClass
         }
     }
+}
+
+private class DataFrameIterator(private val iterators: Array<Iterator<Any>>) : Iterator<Array<Any>> {
+    companion object {
+        @JvmStatic
+        fun of(dataFrame: DataFrame): DataFrameIterator {
+            val iterators = dataFrame.value.map { it.vector.value.iterator() }.toTypedArray() as Array<Iterator<Any>>
+            return DataFrameIterator(iterators)
+        }
+    }
+
+    override fun hasNext(): Boolean =
+            if (iterators.size > 0)
+                iterators[0].hasNext()
+            else
+                false
+
+    override fun next(): Array<Any> =
+            if (!hasNext())
+                throw IndexOutOfBoundsException()
+            else
+                iterators.map { it.next() }.toTypedArray()
 }
 
