@@ -67,7 +67,7 @@ object SimpleTestApp {
     }
 }
 
-val localConfiguration = REngineConfiguration("localhost", 6311)
+val localConfiguration = REngineConfiguration("192.168.99.100", 6311)
 
 class LocalRConnectionProvider(override var configuration: REngineConfiguration = localConfiguration) : RConnectionProvider
 
