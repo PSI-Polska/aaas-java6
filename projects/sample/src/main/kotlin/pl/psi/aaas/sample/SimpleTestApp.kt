@@ -12,6 +12,7 @@ import pl.psi.aaas.usecase.parameters.Parameter
 import pl.psi.aaas.usecase.parameters.Vector
 import pl.psi.aaas.usecase.timeseries.*
 
+// TODO make integration tests from this class....
 object SimpleTestApp {
     @JvmStatic
     fun main(args: Array<String>) {
@@ -66,7 +67,7 @@ object SimpleTestApp {
     }
 }
 
-val localConfiguration = REngineConfiguration("192.168.99.100", 6311)
+val localConfiguration = REngineConfiguration("localhost", 6311)
 
 class LocalRConnectionProvider(override var configuration: REngineConfiguration = localConfiguration) : RConnectionProvider
 
