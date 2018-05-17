@@ -30,5 +30,3 @@ data class TSQuery(val tsId: TsId, val begin: DateTime, val end: DateTime) : Que
  * TimeSeries data repository used by TimeSeries based [CalculationExecution] implementations.
  */
 interface TSRepository : ValuesRepository<TSQuery, TS, DataFrame>
-
-// TODO 05.05.2018 kskitek: maybe also provide TSRepo : ValuesRepository<Map<Symbol, TSQuery>, MappedTS, MappedTS>

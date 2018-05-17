@@ -20,7 +20,7 @@ internal class MockTimeSeriesRepository : TSRepository {
         log.info("SAVING")
         log.info("\ttsId = ${query.tsId}")
         log.info("\tcolumns = " + values.value.map { it.symbol }.joinToString())
-//        log.info("\tsizes = ${values.value.}")
+        values.rowIterator().forEach { println(it.joinToString()) }
     }
 
 }
