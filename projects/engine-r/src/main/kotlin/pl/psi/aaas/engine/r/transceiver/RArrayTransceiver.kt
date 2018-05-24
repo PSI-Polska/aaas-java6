@@ -85,7 +85,7 @@ internal class ArrayDateTimeTransceiver(override val session: RConnection)
     : RValuesTransceiver<Parameter<Array<DateTime>>, Array<DateTime?>, CalculationDefinition> {
 
     override fun send(name: String, value: Parameter<Array<DateTime>>, definition: CalculationDefinition) {
-        val epochSecond = value.value.map { it.millis * 1000.0 }.toDoubleArray()
+        val epochSecond = value.value.map { it.millis / 1000.0 }.toDoubleArray()
 
         session.assign(name, REXPDouble(epochSecond))
         session.voidEval("$name <- structure($name, class=c('POSIXt','POSIXct'))")

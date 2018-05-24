@@ -72,8 +72,8 @@ internal class DateTimeTransceiver(override val session: RConnection)
     : RValuesTransceiver<Parameter<DateTime>, DateTime, CalculationDefinition> {
 
     override fun send(name: String, value: Parameter<DateTime>, definition: CalculationDefinition) {
-        val epochSecond = value.value.millis / 1000
-        session.assign(name, REXPDouble(epochSecond.toDouble()))
+        val epochSecond = value.value.millis / 1000.0
+        session.assign(name, REXPDouble(epochSecond))
         session.voidEval("$name <- structure($name, class=c('POSIXt','POSIXct'))")
         session.voidEval("""attr($name, "tzone") <- "UTC"""")
     }
