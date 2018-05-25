@@ -29,8 +29,16 @@ class TSValuesTransceiver(override val session: RConnection) : RValuesTransceive
                 .forEach {
                     val doubleArray = values[it]?.toDoubleArray(REXPDouble.NA) ?: DoubleArray(0)
                     session.assign(it, doubleArray)
+                    if ("DateTime".equals(it)) { // TODO get rid of this ugly if..
+                        dobulesToDateTime(it)
+                    }
                 }
         session.voidEval("""$name <- data.frame($vectorCSV)""")
+    }
+
+    private fun dobulesToDateTime(name: String) {
+        session.voidEval("$name <- structure($name, class=c('POSIXt','POSIXct'))")
+        session.voidEval("""attr($name, "tzone") <- "UTC"""")
     }
 
     override fun receive(name: String, result: Any?, definition: TSCalculationDefinition): TSDataFrame? =
