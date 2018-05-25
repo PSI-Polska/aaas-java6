@@ -1,6 +1,7 @@
 package pl.psi.aaas.usecase.timeseries
 
 import org.joda.time.DateTime
+import org.joda.time.Duration
 import pl.psi.aaas.usecase.CalculationDefinition
 import pl.psi.aaas.usecase.CalculationDefinitonWithValues
 import pl.psi.aaas.usecase.Parameters
@@ -20,6 +21,7 @@ interface TSCalculationDefinition : CalculationDefinition {
     val timeSeriesIdsOut: Map<Symbol, Long>
     val begin: DateTime
     val end: DateTime
+    val resolution: Duration
 }
 // TODO add dataSource based interface?
 
@@ -39,7 +41,8 @@ data class TSCalcDef(override val timeSeriesIdsIn: Map<Symbol, Long> = emptyMap(
                      override val end: DateTime,
                      override val calculationScript: String,
                      override val inParameters: Parameters = mutableMapOf(),
-                     override val outParameters: Parameters = mutableMapOf()) : TSCalculationDefinition
+                     override val outParameters: Parameters = mutableMapOf(),
+                     override val resolution: Duration = Duration.standardHours(1)) : TSCalculationDefinition
 
 data class TSCalcDefWithValues(override val timeSeriesIdsIn: Map<Symbol, Long>,
                                override val timeSeriesIdsOut: Map<Symbol, Long>,
@@ -48,7 +51,8 @@ data class TSCalcDefWithValues(override val timeSeriesIdsIn: Map<Symbol, Long>,
                                override val calculationScript: String,
                                override val inParameters: Parameters,
                                override val outParameters: Parameters,
-                               override val values: TSDataFrame)
+                               override val values: TSDataFrame,
+                               override val resolution: Duration = Duration.standardHours(1))
     : TSCalculationDefinition, CalculationDefinitonWithValues<TSDataFrame> {
 
     constructor(def: TSCalculationDefinition, values: TSDataFrame)
