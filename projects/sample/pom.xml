@@ -5,7 +5,7 @@
     <parent>
         <artifactId>aaas</artifactId>
         <groupId>pl.psi.aaas</groupId>
-        <version>0.3-jdk6-SNAPSHOT</version>
+        <version>0.2.2-jdk6-SNAPSHOT</version>
     </parent>
 
     <artifactId>sample</artifactId>
