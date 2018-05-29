@@ -4,7 +4,7 @@
 
     <groupId>pl.psi.aaas</groupId>
     <artifactId>aaas</artifactId>
-    <version>0.2.2-jdk6</version>
+    <version>0.2.3-jdk6-SNAPSHOT</version>
     <packaging>pom</packaging>
     <name>AaaS</name>
 
@@ -157,7 +157,7 @@
         <connection>scm:git:git@gitlab.com:edmpsi/aaas.git</connection>
         <developerConnection>scm:git:git@gitlab.com:edmpsi/aaas.git</developerConnection>
         <url>git@gitlab.com:edmpsi/aaas.git</url>
-        <tag>aaas-0.2.2-jdk6</tag>
+        <tag>HEAD</tag>
     </scm>
 
 
