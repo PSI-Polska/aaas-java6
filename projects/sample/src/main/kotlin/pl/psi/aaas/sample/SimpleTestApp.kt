@@ -54,20 +54,12 @@ object SimpleTestApp {
                 , "df" to Parameter.ofDataFrame(dfColumns, dfColumnClasses)
         )
 
-        val outColumns = arrayOf(Column("DateTime", Parameter.emptyVector(DateTime::class.java)),
-                Column("A", Parameter.emptyVector(Double::class.java)),
-                Column("B", Parameter.emptyVector(Double::class.java)))
-        val outClassees = arrayOf(DateTime::class.java, Double::class.java, Double::class.java) as Array<Class<Any>>
-        val outDF = Parameter.ofDataFrame(outColumns, outClassees)
-        val outParameters = mapOf("dfOut" to outDF)
-
         return TSCalcDef(inIds, outIds, begin, end, "add",
-                parameters,
-                outParameters)
+                parameters, emptyMap())
     }
 }
 
-val localConfiguration = REngineConfiguration("192.168.99.100", 6311)
+val localConfiguration = REngineConfiguration("localhost", 6311)
 
 class LocalRConnectionProvider(override var configuration: REngineConfiguration = localConfiguration) : RConnectionProvider
 
