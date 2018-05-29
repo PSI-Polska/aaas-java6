@@ -74,11 +74,21 @@ sealed class Parameter<T : Any>(open var value: T, open val clazz: Class<T>) {
          * Array cannot be null.
          */
         @JvmStatic
-        fun ofDataFrame(value: Array<Column>, columnClasses: Array<Class<Any>>): DataFrame {
-            val unsupported = value.map { it.vector.elemClazz }.filterNot { isSupported(it) }
+        @Deprecated("There is no point in specifying type two times", replaceWith = ReplaceWith("ofDataFrame(Array<Column>)"))
+        fun ofDataFrame(value: Array<Column>, columnClasses: Array<Class<Any>>): DataFrame =
+                ofDataFrame(value)
+
+        /**
+         * Returns a [DataFrame] - array of [Column]s.
+         * Array cannot be null.
+         */
+        @JvmStatic
+        fun ofDataFrame(value: Array<Column>): DataFrame {
+            val classes = value.map { it.vector.elemClazz }.toTypedArray() as Array<Class<Any>>
+            val unsupported = classes.filterNot { isSupported(it) }
             return when (unsupported.size) {
                 0 -> when (value.map { it.vector.value.size }.distinct().size) {
-                    1 -> DataFrame(value, columnClasses)
+                    1 -> DataFrame(value, classes)
                     else -> throw IllegalArgumentException("")
                 }
                 else -> {

@@ -1,18 +1,19 @@
 package pl.psi.aaas.engine.r
 
+import org.joda.time.DateTime
 import org.rosuda.REngine.Rserve.RConnection
 import org.rosuda.REngine.Rserve.RserveException
 import org.slf4j.LoggerFactory
 import pl.psi.aaas.Engine
 import pl.psi.aaas.engine.r.RServeEngine.Companion.baseUserScriptPath
 import pl.psi.aaas.engine.r.RServeEngine.Companion.log
-import pl.psi.aaas.engine.r.transceiver.DataFrameTransceiver
 import pl.psi.aaas.engine.r.transceiver.RValuesTransceiverFactory
-import pl.psi.aaas.usecase.CalculationDefinition
-import pl.psi.aaas.usecase.CalculationDefinitonWithValues
-import pl.psi.aaas.usecase.CalculationException
-import pl.psi.aaas.usecase.Parameters
-import pl.psi.aaas.usecase.parameters.DataFrame
+import pl.psi.aaas.usecase.*
+import pl.psi.aaas.usecase.parameters.Column
+import pl.psi.aaas.usecase.parameters.Parameter
+import pl.psi.aaas.usecase.parameters.Vector
+import pl.psi.aaas.usecase.timeseries.TSCalcDef
+import pl.psi.aaas.usecase.timeseries.TSCalculationDefinition
 import pl.psi.aaas.usecase.timeseries.TSDataFrame
 
 /**
@@ -44,18 +45,43 @@ class RServeEngine<in D : CalculationDefinitonWithValues<V>, V>(private val conn
                 debugR(calcDef.inParameters, conn)
 
                 log.debug("Calling script")
-                val result = conn.eval("dfOut <- run(dfIn, inParameters)")
+                calcDef.outParameters.keys.forEach { conn.voidEval("$it <- c()") }
+                val ret = conn.eval("dfOut <- run(dfIn, inParameters)")
 
+                debugR(calcDef.outParameters, conn)
                 val retMap = calcDef.outParameters.map { it.key to RValuesTransceiverFactory.get(it.value, conn) }
                         .map { it.first to it.second.receive(it.first, null, calcDef) }.toMap() as Parameters
+                val p3DRetParams = getP3DParams(conn, calcDef)
+
                 log.debug(retMap.entries.joinToString("\n"))
-                retMap
+                val mutableRetMap = mutableMapOf<Symbol, Parameter<*>>()
+                mutableRetMap.putAll(retMap)
+                mutableRetMap.putAll(p3DRetParams)
+                mutableRetMap
 
 //                tsTransceiver.receive("dfOut", result, calcDef) as R?
             } catch (ex: RserveException) {
                 ex.printStackTrace()
                 throw CalculationException(ex.message ?: "There was an error during calculation.")
             }
+
+    @Deprecated("This function is only valid for P3D")
+    private fun getP3DParams(conn: RConnection, calcDef: D): Parameters {
+        val dates = Parameter.ofArray(emptyArray<DateTime?>(), DateTime::class.java) as Vector<in Any>
+        val values = Parameter.ofArray(emptyArray<Double?>(), Double::class.java) as Vector<in Any>
+        val columns = arrayOf(Column("TSDATE_TZ", dates), Column("VALUES", values))
+        val dataFrame = Parameter.ofDataFrame(columns)
+        val newOutParameters = mapOf("dfOut" to dataFrame as Parameter<*>)
+
+        return if (calcDef is TSCalculationDefinition) {
+            val newCalcDef = TSCalcDef(calcDef.timeSeriesIdsIn, calcDef.timeSeriesIdsOut, calcDef.begin, calcDef.end,
+                    calcDef.calculationScript, calcDef.inParameters, newOutParameters, calcDef.resolution)
+            mapOf("dfOut" to RValuesTransceiverFactory.get(dataFrame, conn)
+                    .receive("dfOut", null, newCalcDef) as Parameter<*>)
+        } else {
+            emptyMap()
+        }
+    }
 
     private fun debugR(parameters: Parameters, conn: RConnection) =
             parameters.map { it.key }
