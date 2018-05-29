@@ -1,7 +1,5 @@
 package pl.psi.aaas.engine.r.transceiver
 
-import org.joda.time.DateTime
-import org.rosuda.REngine.REXP
 import org.rosuda.REngine.Rserve.RConnection
 import pl.psi.aaas.engine.r.RValuesTransceiver
 import pl.psi.aaas.usecase.CalculationDefinition
@@ -15,8 +13,7 @@ internal class DataFrameTransceiver(override val session: RConnection)
     : RValuesTransceiver<DataFrame, DataFrame, CalculationDefinition> {
 
     private fun findAllTransceivers(df: DataFrame): Array<Q> =
-            df.value.map { it.symbol to it.vector }
-                    .map { Q(it.first, it.second, RValuesTransceiverFactory.get(it.second, session), it.second.elemClazz as Class<Any>) }
+            df.value.map { Q(it.symbol, it.vector, RValuesTransceiverFactory.get(it.vector, session), it.vector.elemClazz as Class<Any>) }
                     .toTypedArray()
 
     override fun send(name: String, value: DataFrame, definition: CalculationDefinition) {
@@ -42,17 +39,20 @@ internal class DataFrameTransceiver(override val session: RConnection)
 
     override fun receive(name: String, result: Any?, definition: CalculationDefinition): DataFrame? {
         val result = session.get(name, null, true)
-        val df = definition.outParameters[name]?.let { it as DataFrame } ?: throw Exception("")
-        val transceivers = findAllTransceivers(df)
-        val rDFasList = result.asList()
+        if (!result.isList)
+            throw IllegalStateException("$name has to be data.frame")
+        val dfDefinition = definition.outParameters[name]?.let { it as DataFrame } ?: throw Exception("")
+        val transceivers = findAllTransceivers(dfDefinition)
+        val dfFromR = result.asList()
 
         val columns = transceivers.map {
-            val transformedValues = it.transceiver.receive(it.symbol, rDFasList[it.symbol], definition) as Array<Any?>
-            val vector = Parameter.ofArray(transformedValues, it.clazz)
-            Column(it.symbol, vector)
+            dfFromR[it.symbol]
+                    ?: throw IllegalStateException("Result DataFrame $name does not contain column ${it.symbol}.")
+            val receivedValues = it.transceiver.receive(it.symbol, dfFromR[it.symbol], definition) as Array<Any?>
+            Column(it.symbol, Parameter.ofArray(receivedValues, it.clazz))
         }.toTypedArray()
 
-        return Parameter.ofDataFrame(columns, df.columnClasses)
+        return Parameter.ofDataFrame(columns, dfDefinition.columnClasses)
     }
 
     private data class Q(val symbol: Symbol,

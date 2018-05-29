@@ -64,7 +64,9 @@ internal class RPrimitiveTransceiver<in V : Parameter<*>, R>(
             session.get(name, null, true)
         else
             result as REXP
-        return inTransformer(result)
+        return if (result == null)
+            null
+        else inTransformer(result)
     }
 }
 
