@@ -24,7 +24,8 @@ class TSCalculationExecution(val tsRepository: TSRepository,
 
         val result = engine.call(TSCalcDefWithValues(calcDef, TSDataFrame(inTs))) ?: emptyMap()
 
-        tsRepository.save(prepQuery(1, calcDef), result.get("dfOut") as DataFrame);
+        calcDef.timeSeriesIdsOut.map { it.value to result.get(it.key) as DataFrame }
+                .forEach { tsRepository.save(prepQuery(it.first, calcDef), it.second) }
     }
 
     private fun prepQuery(id: Long, calcDef: TSCalculationDefinition) =
