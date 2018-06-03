@@ -3,10 +3,9 @@
 # Created by: kskitek
 # Created on: 2017-08-22
 
-#' Multiplies series
+#' Multiplies vectors
 #' @param A, B
 #' @return C
-run <- function(dfIn, additionalParameters) {
-    C = dfIn$A * dfIn$B
-    data.frame(C)
+run <- function() {
+    C <<- A * B
 }
