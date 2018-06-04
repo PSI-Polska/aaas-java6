@@ -1,0 +1,21 @@
+FROM r-base:3.4.4
+
+LABEL maintainer = "krzysztof.skitek@gmail.com"
+
+ENV TZ=UTC
+RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone
+
+RUN mkdir -p /var/userScripts \
+    && mkdir -p /var/trainedModels
+
+RUN apt-get update \
+    && apt-get install -y git libpq-dev libcurl4-openssl-dev
+
+COPY src/R/installBasePackages.R /usr/local/src/scripts/installPackages.R
+RUN ["Rscript", "/usr/local/src/scripts/installPackages.R"]
+
+COPY src/docker/start.sh /usr/local/src/scripts/start.sh
+
+ENTRYPOINT ["/usr/local/src/scripts/start.sh"]
+
+

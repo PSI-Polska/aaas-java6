@@ -25,9 +25,9 @@ class TSCalculationExecution(val tsRepository: TSRepository,
         val result = engine.call(TSCalcDefWithValues(calcDef, TSDataFrame(inTs))) ?: emptyMap()
         val missingVariables = calcDef.timeSeriesIdsOut.filterKeys { result[it] == null }.map { it.key }.toList().joinToString()
         if (missingVariables.isNotEmpty())
-            throw CalculationException("Missing out variables: $missingVariables")
+            throw CalculationException("Missing return variables: $missingVariables")
 
-        calcDef.timeSeriesIdsOut.map { it.value to result.get(it.key) as DataFrame }
+        calcDef.timeSeriesIdsOut.map { it.value to result[it.key] as DataFrame }
                 .forEach { tsRepository.save(prepQuery(it.first, calcDef), it.second) }
     }
 
