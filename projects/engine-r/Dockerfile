@@ -7,6 +7,9 @@ ENV REPOSITORY_ADDRESS scriptsRepo
 
 EXPOSE $RPORT
 
+ENV TZ=UTC
+RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone
+
 RUN mkdir -p /var/userScripts \
     && mkdir -p /var/trainedModels
 

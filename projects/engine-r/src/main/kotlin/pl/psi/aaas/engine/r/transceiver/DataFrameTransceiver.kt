@@ -34,7 +34,7 @@ internal class DataFrameTransceiver(override val session: RConnection)
         session.voidEval("names($name) <- c($columnNamesCSV)")
     }
 
-    private fun generateNames(name: String, size: Int) =
+    private fun generateNames(name: String, size: Int): List<String> =
             (0 until size).map { "${name}Col$it" }
 
     override fun receive(name: String, result: Any?, definition: CalculationDefinition): DataFrame? {

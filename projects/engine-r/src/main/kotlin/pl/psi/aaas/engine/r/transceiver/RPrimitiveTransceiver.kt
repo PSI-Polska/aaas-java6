@@ -47,10 +47,10 @@ internal class RPrimitiveTransceiver<in V : Parameter<*>, R>(
                 { REXPLogical(it.value) },
                 {
                     if (it.isLogical) when (it.asInteger().toByte()) {
-                        REXPLogical.TRUE -> true
+                        REXPLogical.TRUE  -> true
                         REXPLogical.FALSE -> false
-                        REXPLogical.NA -> null
-                        else -> throw IllegalStateException("Value ${it.asBytes()[0]} is not of type Boolean")
+                        REXPLogical.NA    -> null
+                        else              -> throw IllegalStateException("Value ${it.asBytes()[0]} is not of type Boolean")
                     }
                     else null
                 })

@@ -23,6 +23,7 @@ object SimpleTestApp {
     private fun prepCalcDef1(): TSCalcDef {
         val inIds = mapOf("A" to 1L, "B" to 2L)
         val outIds = mapOf("dfOut" to 3L)
+//        val outIds = mapOf("C" to 3L)
         val begin = DateTime.now()
         val end = begin.plusDays(1)
 

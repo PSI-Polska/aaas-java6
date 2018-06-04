@@ -48,8 +48,8 @@ internal class RArrayTransceiver<in V : Parameter<Array<*>>, R>(
                 {
                     REXPLogical(it.value.map {
                         when (it) {
-                            null -> REXPLogical.NA
-                            true -> REXPLogical.TRUE
+                            null  -> REXPLogical.NA
+                            true  -> REXPLogical.TRUE
                             false -> REXPLogical.FALSE
                         }
                     }.toByteArray())
@@ -58,10 +58,10 @@ internal class RArrayTransceiver<in V : Parameter<Array<*>>, R>(
                     if (it.isLogical)
                         it.asBytes().map {
                             when (it) {
-                                REXPLogical.TRUE -> true
+                                REXPLogical.TRUE  -> true
                                 REXPLogical.FALSE -> false
-                                REXPLogical.NA -> null
-                                else -> throw IllegalStateException("Value ${it} is not of type Boolean")
+                                REXPLogical.NA    -> null
+                                else              -> throw IllegalStateException("Value ${it} is not of type Boolean")
                             }
                         }.toTypedArray()
                     else emptyArray()

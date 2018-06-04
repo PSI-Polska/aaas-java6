@@ -58,6 +58,16 @@ sealed class Parameter<T : Any>(open var value: T, open val clazz: Class<T>) {
                 }
 
         /**
+         * Returns empty [Vector] of nullable elements.
+         *
+         * @param value the array
+         * @param elemClazz Class of element of an array
+         */
+        @JvmStatic
+        inline fun <reified T : Any> ofArray(elemClazz: Class<T>): Vector<T> =
+                ofArray(emptyArray<T?>(), elemClazz)
+
+        /**
          * Returns a [Vector] of not null elements.
          * Array cannot be null.
          *
@@ -87,8 +97,8 @@ sealed class Parameter<T : Any>(open var value: T, open val clazz: Class<T>) {
             val classes = value.map { it.vector.elemClazz }.toTypedArray() as Array<Class<Any>>
             val unsupported = classes.filterNot { isSupported(it) }
             return when (unsupported.size) {
-                0 -> when (value.map { it.vector.value.size }.distinct().size) {
-                    1 -> DataFrame(value, classes)
+                0    -> when (value.map { it.vector.value.size }.distinct().size) {
+                    1    -> DataFrame(value, classes)
                     else -> throw IllegalArgumentException("")
                 }
                 else -> {
