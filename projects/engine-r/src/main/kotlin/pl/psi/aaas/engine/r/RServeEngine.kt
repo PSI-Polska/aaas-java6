@@ -34,6 +34,8 @@ class RServeEngine<in D : CalculationDefinitonWithValues<V>, V>(private val conn
                 log.debug("Evaluating $calcDef")
 
                 calcDef.sourceScript(conn)
+                conn.voidEval("env <- environment()")
+
 
                 tsTransceiver.send("dfIn", calcDef.values as TSDataFrame, calcDef)
                 // TODO we can remove the above line - use only inParameters?
@@ -42,11 +44,14 @@ class RServeEngine<in D : CalculationDefinitonWithValues<V>, V>(private val conn
                     t.send(it.key, it.value, calcDef)
                 }
 
-                debugR(calcDef.inParameters, conn)
+                conn.voidEval("print(ls.str(env))")
+//                debugR(calcDef.inParameters, conn)
 
                 log.debug("Calling script")
-                calcDef.outParameters.keys.forEach { conn.voidEval("$it <- c()") }
-                val ret = conn.eval("dfOut <- run(dfIn, inParameters)")
+                conn.eval("run(env)")
+
+                conn.voidEval("""print("## After execution")""")
+                conn.voidEval("print(ls(env))")
 
                 debugR(calcDef.outParameters, conn)
                 val retMap = calcDef.outParameters.map { it.key to RValuesTransceiverFactory.get(it.value, conn) }
@@ -58,8 +63,6 @@ class RServeEngine<in D : CalculationDefinitonWithValues<V>, V>(private val conn
                 mutableRetMap.putAll(retMap)
                 mutableRetMap.putAll(p3DRetParams)
                 mutableRetMap
-
-//                tsTransceiver.receive("dfOut", result, calcDef) as R?
             } catch (ex: RserveException) {
                 ex.printStackTrace()
                 throw CalculationException(ex.message ?: "There was an error during calculation.")
@@ -67,8 +70,8 @@ class RServeEngine<in D : CalculationDefinitonWithValues<V>, V>(private val conn
 
     @Deprecated("This function is only valid for P3D")
     private fun getP3DParams(conn: RConnection, calcDef: D): Parameters {
-        val dates = Parameter.ofArray(emptyArray<DateTime?>(), DateTime::class.java) as Vector<in Any>
-        val values = Parameter.ofArray(emptyArray<Double?>(), Double::class.java) as Vector<in Any>
+        val dates = Parameter.ofArray(DateTime::class.java) as Vector<in Any>
+        val values = Parameter.ofArray(Double::class.java) as Vector<in Any>
         val columns = arrayOf(Column("TSDATE_TZ", dates), Column("VALUES", values))
         val dataFrame = Parameter.ofDataFrame(columns)
         val newOutParameters = mapOf("dfOut" to dataFrame as Parameter<*>)

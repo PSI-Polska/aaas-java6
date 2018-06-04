@@ -6,8 +6,6 @@
 #' Adds two vectors
 #' @param A, B
 #' @return C
-run <- function() {
-    ls.str(environment())
-    C <<- A + B
-    # alternative way: env$C <- A + B
+run <- function(env) {
+    env$C <- env$A + env$B
 }
