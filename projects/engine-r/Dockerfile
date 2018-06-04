@@ -1,4 +1,4 @@
-FROM r-base:3.4.3
+FROM registry.gitlab.com/edmpsi/aaas/engine/r-base:0.2
 
 LABEL maintainer = "krzysztof.skitek@gmail.com"
 
@@ -7,27 +7,9 @@ ENV REPOSITORY_ADDRESS scriptsRepo
 
 EXPOSE $RPORT
 
-ENV TZ=UTC
-RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone
-
-RUN mkdir -p /var/userScripts \
-    && mkdir -p /var/trainedModels
-
-# TODO git repo keys directory
-
-RUN apt-get update \
-    && apt-get install -y git libpq-dev libcurl4-openssl-dev
-
 COPY src/R/*.R /var/userScripts/
 COPY src/R/standard/*.R /var/userScripts/
 
 COPY src/docker/*.rds /var/trainedModels/
 
-COPY src/docker/start.sh /usr/local/src/scripts/start.sh
-
-COPY src/R/installPackages.R /usr/local/src/scripts/installPackages.R
-RUN ["Rscript", "/usr/local/src/scripts/installPackages.R"]
-
 WORKDIR /var/userScripts/
-
-ENTRYPOINT ["/usr/local/src/scripts/start.sh"]

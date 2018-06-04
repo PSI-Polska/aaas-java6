@@ -45,7 +45,6 @@ class RServeEngine<in D : CalculationDefinitonWithValues<V>, V>(private val conn
                 }
 
                 conn.voidEval("print(ls.str(env))")
-//                debugR(calcDef.inParameters, conn)
 
                 log.debug("Calling script")
                 conn.eval("run(env)")
@@ -53,7 +52,6 @@ class RServeEngine<in D : CalculationDefinitonWithValues<V>, V>(private val conn
                 conn.voidEval("""print("## After execution")""")
                 conn.voidEval("print(ls(env))")
 
-                debugR(calcDef.outParameters, conn)
                 val retMap = calcDef.outParameters.map { it.key to RValuesTransceiverFactory.get(it.value, conn) }
                         .map { it.first to it.second.receive(it.first, null, calcDef) }.toMap() as Parameters
                 val p3DRetParams = getP3DParams(conn, calcDef)
@@ -85,13 +83,6 @@ class RServeEngine<in D : CalculationDefinitonWithValues<V>, V>(private val conn
             emptyMap()
         }
     }
-
-    private fun debugR(parameters: Parameters, conn: RConnection) =
-            parameters.map { it.key }
-                    .forEach {
-                        conn.voidEval("print(\"## $it\")")
-                        conn.voidEval("str($it)")
-                    }
 }
 
 private fun CalculationDefinition.sourceScript(conn: RConnection) {

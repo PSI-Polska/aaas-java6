@@ -97,8 +97,8 @@ sealed class Parameter<T : Any>(open var value: T, open val clazz: Class<T>) {
             val classes = value.map { it.vector.elemClazz }.toTypedArray() as Array<Class<Any>>
             val unsupported = classes.filterNot { isSupported(it) }
             return when (unsupported.size) {
-                0    -> when (value.map { it.vector.value.size }.distinct().size) {
-                    1    -> DataFrame(value, classes)
+                0 -> when (value.map { it.vector.value.size }.distinct().size) {
+                    1 -> DataFrame(value, classes)
                     else -> throw IllegalArgumentException("")
                 }
                 else -> {
@@ -142,7 +142,7 @@ data class Vector<T : Any> internal constructor(override var value: Array<T?> = 
  * @param symbol column name
  * @param vector rows of given column
  */
-data class Column(val symbol: Symbol, val vector: Vector<in Any>)
+data class Column(val symbol: Symbol, val vector: Vector<Any>)
 
 // TODO impl me!!
 //data class Matrix<T : Any> internal constructor(override var value: Array<Array<T?>>, override val clazz: Class<Array<Array<T?>>>, val elemClazz: Class<T>)
