@@ -77,8 +77,12 @@ class RServeEngine<in D : CalculationDefinitonWithValues<V>, V>(private val conn
         return if (calcDef is TSCalculationDefinition) {
             val newCalcDef = TSCalcDef(calcDef.timeSeriesIdsIn, calcDef.timeSeriesIdsOut, calcDef.begin, calcDef.end,
                     calcDef.calculationScript, calcDef.inParameters, newOutParameters, calcDef.resolution)
-            mapOf("dfOut" to RValuesTransceiverFactory.get(dataFrame, conn)
-                    .receive("dfOut", null, newCalcDef) as Parameter<*>)
+            try {
+                mapOf("dfOut" to RValuesTransceiverFactory.get(dataFrame, conn)
+                        .receive("dfOut", null, newCalcDef) as Parameter<*>)
+            } catch (ex: Exception) {
+                return emptyMap()
+            }
         } else {
             emptyMap()
         }
