@@ -23,7 +23,8 @@ import pl.psi.aaas.usecase.Symbol
 sealed class Parameter<T : Any>(open var value: T, open val clazz: Class<T>) {
     companion object {
         @JvmStatic
-        val supportedClasses: List<Class<*>> = listOf(String::class.java,
+        val supportedClasses: List<Class<*>> = listOf(
+                java.lang.String::class.java, String::class.java,
                 java.lang.Long::class.java, Long::class.java,
                 java.lang.Double::class.java, Double::class.java,
                 java.lang.Boolean::class.java, Boolean::class.java,
