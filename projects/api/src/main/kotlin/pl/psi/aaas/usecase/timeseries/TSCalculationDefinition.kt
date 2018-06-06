@@ -2,10 +2,7 @@ package pl.psi.aaas.usecase.timeseries
 
 import org.joda.time.DateTime
 import org.joda.time.Duration
-import pl.psi.aaas.usecase.CalculationDefinition
-import pl.psi.aaas.usecase.CalculationDefinitonWithValues
-import pl.psi.aaas.usecase.Parameters
-import pl.psi.aaas.usecase.Symbol
+import pl.psi.aaas.usecase.*
 
 
 /**
@@ -41,7 +38,7 @@ data class TSCalcDef(override val timeSeriesIdsIn: Map<Symbol, Long> = emptyMap(
                      override val end: DateTime,
                      override val calculationScript: String,
                      override val inParameters: Parameters = mutableMapOf(),
-                     override val outParameters: Parameters = mutableMapOf(),
+                     override val outParameters: OutParameters = mutableMapOf(),
                      override val resolution: Duration = Duration.standardHours(1)) : TSCalculationDefinition
 
 data class TSCalcDefWithValues(override val timeSeriesIdsIn: Map<Symbol, Long>,
@@ -50,7 +47,7 @@ data class TSCalcDefWithValues(override val timeSeriesIdsIn: Map<Symbol, Long>,
                                override val end: DateTime,
                                override val calculationScript: String,
                                override val inParameters: Parameters,
-                               override val outParameters: Parameters,
+                               override val outParameters: OutParameters,
                                override val values: TSDataFrame,
                                override val resolution: Duration = Duration.standardHours(1))
     : TSCalculationDefinition, CalculationDefinitonWithValues<TSDataFrame> {

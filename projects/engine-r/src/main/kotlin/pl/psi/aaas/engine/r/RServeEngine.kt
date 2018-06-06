@@ -72,7 +72,7 @@ class RServeEngine<in D : CalculationDefinitonWithValues<V>, V>(private val conn
         val values = Parameter.ofArray(Double::class.java) as Vector<in Any>
         val columns = arrayOf(Column("TSDATE_TZ", dates), Column("VALUES", values))
         val dataFrame = Parameter.ofDataFrame(columns)
-        val newOutParameters = mapOf("dfOut" to dataFrame as Parameter<*>)
+        val newOutParameters = mutableMapOf("dfOut" to dataFrame as Parameter<*>)
 
         return if (calcDef is TSCalculationDefinition) {
             val newCalcDef = TSCalcDef(calcDef.timeSeriesIdsIn, calcDef.timeSeriesIdsOut, calcDef.begin, calcDef.end,

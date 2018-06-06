@@ -7,6 +7,7 @@ import pl.psi.aaas.engine.r.RConnectionProvider
 import pl.psi.aaas.engine.r.REngineConfiguration
 import pl.psi.aaas.engine.r.RServeEngine
 import pl.psi.aaas.usecase.Parameters
+import pl.psi.aaas.usecase.Symbol
 import pl.psi.aaas.usecase.parameters.Column
 import pl.psi.aaas.usecase.parameters.Parameter
 import pl.psi.aaas.usecase.parameters.Vector
