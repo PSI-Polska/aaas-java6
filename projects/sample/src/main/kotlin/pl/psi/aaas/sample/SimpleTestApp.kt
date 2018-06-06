@@ -57,7 +57,7 @@ object SimpleTestApp {
         )
 
         return TSCalcDef(inIds, outIds, begin, end, "add",
-                parameters, emptyMap())
+                parameters, mutableMapOf())
     }
 }
 
