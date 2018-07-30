@@ -166,26 +166,26 @@
             <snapshots>
                 <enabled>false</enabled>
             </snapshots>
-            <id>terefere-releases</id>
-            <url>http://46.101.212.137:8081/repository/terefere-releases/</url>
+            <id>ppl-poz-svmvn3-releases</id>
+            <url>http://ppl-poz-svmvn3:8081/nexus/content/repositories/ppl-release/</url>
         </repository>
         <repository>
             <snapshots>
                 <enabled>true</enabled>
             </snapshots>
-            <id>terefere-snapshots</id>
-            <url>http://46.101.212.137:8081/repository/terefere-snapshots/</url>
+            <id>ppl-poz-svmvn3-snapshots</id>
+            <url>http://ppl-poz-svmvn3:8081/nexus/content/repositories/ppl-snapshots/</url>
         </repository>
     </repositories>
 
     <distributionManagement>
         <repository>
-            <id>terefere</id>
-            <url>http://46.101.212.137:8081/repository/terefere-releases/</url>
+            <id>ppl-poz-svmvn3-releases</id>
+            <url>http://ppl-poz-svmvn3:8081/nexus/content/repositories/ppl-release/</url>
         </repository>
         <snapshotRepository>
-            <id>terefere</id>
-            <url>http://46.101.212.137:8081/repository/terefere-snapshots/</url>
+            <id>ppl-poz-svmvn3-snapshots</id>
+            <url>http://ppl-poz-svmvn3:8081/nexus/content/repositories/ppl-snapshots/</url>
         </snapshotRepository>
     </distributionManagement>
 
