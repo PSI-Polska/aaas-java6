@@ -160,24 +160,6 @@
         <tag>aaas-0.2.4-jdk6</tag>
     </scm>
 
-
-    <repositories>
-        <repository>
-            <snapshots>
-                <enabled>false</enabled>
-            </snapshots>
-            <id>ppl-poz-svmvn3-releases</id>
-            <url>http://ppl-poz-svmvn3:8081/nexus/content/repositories/ppl-release/</url>
-        </repository>
-        <repository>
-            <snapshots>
-                <enabled>true</enabled>
-            </snapshots>
-            <id>ppl-poz-svmvn3-snapshots</id>
-            <url>http://ppl-poz-svmvn3:8081/nexus/content/repositories/ppl-snapshots/</url>
-        </repository>
-    </repositories>
-
     <distributionManagement>
         <repository>
             <id>ppl-poz-svmvn3-releases</id>
