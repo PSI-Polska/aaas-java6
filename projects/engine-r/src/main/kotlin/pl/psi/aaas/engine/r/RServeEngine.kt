@@ -55,6 +55,7 @@ class RServeEngine<in D : CalculationDefinitonWithValues<V>, V>(private val conn
                 val retMap = calcDef.outParameters.map { it.key to RValuesTransceiverFactory.get(it.value, conn) }
                         .map { it.first to it.second.receive(it.first, null, calcDef) }.toMap() as Parameters
                 val p3DRetParams = getP3DParams(conn, calcDef)
+                conn.close()
 
                 log.debug(retMap.entries.joinToString("\n"))
                 val mutableRetMap = mutableMapOf<Symbol, Parameter<*>>()
