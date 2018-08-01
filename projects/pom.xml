@@ -124,7 +124,6 @@
                 <version>2.5.3</version>
 				<configuration>
 					<autoVersionSubmodules>true</autoVersionSubmodules>
-					<branchBase>java6</branchBase>
                 </configuration>
             </plugin>
 
